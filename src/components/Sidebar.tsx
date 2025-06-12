@@ -1,17 +1,22 @@
 
-import { Home, BarChart3, Users, Settings, Zap, TrendingUp, Activity } from 'lucide-react';
+import { Home, BarChart3, Users, Settings, Zap, TrendingUp, Activity, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const navItems = [
-  { icon: Home, label: 'Dashboard', active: true },
-  { icon: BarChart3, label: 'Analytics' },
-  { icon: TrendingUp, label: 'Revenue' },
-  { icon: Users, label: 'Users' },
-  { icon: Activity, label: 'Activity' },
-  { icon: Settings, label: 'Settings' },
+  { icon: Home, label: 'Dashboard', path: '/' },
+  { icon: Target, label: 'Campaigns', path: '/campaigns' },
+  { icon: BarChart3, label: 'Analytics', path: '/analytics' },
+  { icon: TrendingUp, label: 'Revenue', path: '/revenue' },
+  { icon: Users, label: 'Users', path: '/users' },
+  { icon: Activity, label: 'Activity', path: '/activity' },
+  { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
     <div className="w-16 h-screen bg-card border-r border-border flex flex-col items-center py-6">
       {/* Logo */}
@@ -23,22 +28,26 @@ export const Sidebar = () => {
 
       {/* Navigation */}
       <nav className="flex-1 flex flex-col space-y-2">
-        {navItems.map((item) => (
-          <Button
-            key={item.label}
-            variant={item.active ? "default" : "ghost"}
-            size="icon"
-            className={`
-              w-10 h-10 rounded-lg
-              ${item.active 
-                ? 'bg-primary text-primary-foreground' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-              }
-            `}
-          >
-            <item.icon className="w-4 h-4" />
-          </Button>
-        ))}
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Button
+              key={item.label}
+              variant={isActive ? "default" : "ghost"}
+              size="icon"
+              className={`
+                w-10 h-10 rounded-lg
+                ${isActive 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                }
+              `}
+              onClick={() => navigate(item.path)}
+            >
+              <item.icon className="w-4 h-4" />
+            </Button>
+          );
+        })}
       </nav>
 
       {/* Profile */}
