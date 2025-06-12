@@ -70,7 +70,17 @@ export default {
 			animation: {
 				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
 				'fade-in-up': 'fade-in-up 0.6s ease-out',
-				'slide-in-right': 'slide-in-right 0.6s ease-out'
+				'slide-in-right': 'slide-in-right 0.6s ease-out',
+				'shimmer': 'shimmer 2s ease-in-out infinite',
+				'spin-slow': 'spin-slow 3s linear infinite',
+				'float': 'float 3s ease-in-out infinite',
+			},
+			perspective: {
+				'1000': '1000px',
+			},
+			rotate: {
+				'x-2': '2deg',
+				'y-5': '5deg',
 			}
 		}
 	},

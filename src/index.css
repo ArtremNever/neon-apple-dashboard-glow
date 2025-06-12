@@ -55,7 +55,7 @@
 
   body {
     @apply bg-background text-foreground;
-    background: linear-gradient(135deg, hsl(220 13% 8%) 0%, hsl(220 13% 6%) 100%);
+    background: radial-gradient(ellipse at top, hsl(220 13% 12%) 0%, hsl(220 13% 8%) 50%, hsl(220 13% 6%) 100%);
     min-height: 100vh;
   }
 }
@@ -75,6 +75,18 @@
   .neon-text {
     color: hsl(var(--neon-green));
     text-shadow: 0 0 10px hsl(var(--neon-green) / 0.5);
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .rotate-x-2 {
+    transform: rotateX(2deg);
+  }
+
+  .rotate-y-5 {
+    transform: rotateY(5deg);
   }
 }
 
@@ -109,6 +121,33 @@
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
@@ -121,8 +160,25 @@
   animation: slide-in-right 0.6s ease-out;
 }
 
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 /* Stagger animation delays */
 .animate-delay-100 { animation-delay: 0.1s; }
 .animate-delay-200 { animation-delay: 0.2s; }
 .animate-delay-300 { animation-delay: 0.3s; }
 .animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-600 { animation-delay: 0.6s; }
+
+.animation-delay-75 { animation-delay: 75ms; }
+.animation-delay-150 { animation-delay: 150ms; }
