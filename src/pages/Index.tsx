@@ -1,186 +1,126 @@
 
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
-import { EnhancedMetricCard } from '@/components/EnhancedMetricCard';
+import { MetricCard } from '@/components/MetricCard';
 import { Chart } from '@/components/Chart';
 import { ActivityFeed } from '@/components/ActivityFeed';
-import { ParticleBackground } from '@/components/ParticleBackground';
-import { WaveAnimation } from '@/components/WaveAnimation';
-import { DollarSign, Users, TrendingUp, Zap, Sparkles, Rocket } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, Zap } from 'lucide-react';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background flex relative overflow-hidden">
-      {/* Animated particle background */}
-      <ParticleBackground />
-      
-      {/* Wave animation at bottom */}
-      <WaveAnimation />
-      
+    <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
       <Sidebar />
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col relative z-10">
+      <div className="flex-1 flex flex-col">
         {/* Header */}
         <Header />
         
         {/* Dashboard Content */}
-        <main className="flex-1 p-6 space-y-8 relative">
-          {/* Hero Section with floating elements */}
-          <div className="relative mb-8">
-            <div className="text-center space-y-4 py-8">
-              <div className="relative inline-block">
-                <h1 className="text-4xl font-bold neon-text animate-fade-in-up">
-                  Инновационная Панель
-                </h1>
-                <div className="absolute -top-6 -right-6">
-                  <Sparkles className="w-8 h-8 text-neon-green animate-spin-slow" />
-                </div>
-                <div className="absolute -bottom-4 -left-8">
-                  <Rocket className="w-6 h-6 text-neon-green/70 animate-bounce" />
-                </div>
-              </div>
-              <p className="text-lg text-muted-foreground animate-fade-in-up animation-delay-200">
-                Будущее аналитики уже здесь
-              </p>
-            </div>
+        <main className="flex-1 p-8 space-y-8">
+          {/* Simple Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-light text-foreground mb-2">
+              Dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Overview of your performance
+            </p>
           </div>
 
-          {/* Enhanced Metrics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <EnhancedMetricCard
-              title="Общий доход"
+          {/* Clean Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <MetricCard
+              title="Revenue"
               value="$124,500"
               change="+12.5%"
               icon={DollarSign}
               trend="up"
-              delay={0.1}
-              gradient="from-green-500/20 via-emerald-500/10 to-transparent"
+              delay={0}
             />
-            <EnhancedMetricCard
-              title="Активные пользователи"
+            <MetricCard
+              title="Users"
               value="8,549"
               change="+5.2%"
               icon={Users}
               trend="up"
-              delay={0.2}
-              gradient="from-blue-500/20 via-cyan-500/10 to-transparent"
+              delay={0.1}
             />
-            <EnhancedMetricCard
-              title="Рост"
+            <MetricCard
+              title="Growth"
               value="23.1%"
               change="+8.1%"
               icon={TrendingUp}
               trend="up"
-              delay={0.3}
-              gradient="from-purple-500/20 via-violet-500/10 to-transparent"
+              delay={0.2}
             />
-            <EnhancedMetricCard
-              title="Производительность"
+            <MetricCard
+              title="Performance"
               value="94.2%"
               change="-2.1%"
               icon={Zap}
               trend="down"
-              delay={0.4}
-              gradient="from-red-500/20 via-rose-500/10 to-transparent"
+              delay={0.3}
             />
           </div>
 
-          {/* Charts and Activity with enhanced styling */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-neon-green/20 to-blue-500/20 rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition duration-1000"></div>
-              <div className="relative">
-                <Chart />
-              </div>
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <Chart />
             </div>
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition duration-1000"></div>
-              <div className="relative">
-                <ActivityFeed />
-              </div>
+            <div>
+              <ActivityFeed />
             </div>
           </div>
 
-          {/* Enhanced Additional Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-neon-green/10 to-transparent rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition duration-1000"></div>
-              <div className="relative glass-card p-8 animate-fade-in-up animate-delay-500 border-border/50 hover:scale-[1.02] transition-transform duration-300">
-                <h3 className="text-xl font-semibold mb-6 text-foreground flex items-center gap-3">
-                  <div className="w-2 h-8 bg-gradient-to-b from-neon-green to-neon-green-dark rounded-full"></div>
-                  Быстрая статистика
-                </h3>
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                    <span className="text-muted-foreground">Конверсия</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
-                        <div className="w-1/3 h-full bg-neon-green rounded-full animate-pulse"></div>
-                      </div>
-                      <span className="text-neon-green font-medium">4.2%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                    <span className="text-muted-foreground">Отказы</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
-                        <div className="w-1/2 h-full bg-yellow-400 rounded-full animate-pulse"></div>
-                      </div>
-                      <span className="text-foreground font-medium">32.1%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                    <span className="text-muted-foreground">Время сессии</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
-                        <div className="w-3/4 h-full bg-blue-400 rounded-full animate-pulse"></div>
-                      </div>
-                      <span className="text-foreground font-medium">4m 32s</span>
-                    </div>
-                  </div>
+          {/* Additional Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="text-lg font-medium mb-4 text-foreground">
+                Quick Stats
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground text-sm">Conversion Rate</span>
+                  <span className="text-foreground font-medium">4.2%</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground text-sm">Bounce Rate</span>
+                  <span className="text-foreground font-medium">32.1%</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground text-sm">Session Time</span>
+                  <span className="text-foreground font-medium">4m 32s</span>
                 </div>
               </div>
             </div>
 
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition duration-1000"></div>
-              <div className="relative glass-card p-8 animate-fade-in-up animate-delay-600 border-border/50 hover:scale-[1.02] transition-transform duration-300">
-                <h3 className="text-xl font-semibold mb-6 text-foreground flex items-center gap-3">
-                  <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-purple-500 rounded-full"></div>
-                  Статус системы
-                </h3>
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                    <span className="text-muted-foreground">API статус</span>
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
-                        <div className="absolute inset-0 w-3 h-3 bg-neon-green rounded-full animate-ping opacity-75"></div>
-                      </div>
-                      <span className="text-neon-green text-sm font-medium">Онлайн</span>
-                    </div>
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="text-lg font-medium mb-4 text-foreground">
+                System Status
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground text-sm">API Status</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-foreground">Online</span>
                   </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                    <span className="text-muted-foreground">База данных</span>
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
-                        <div className="absolute inset-0 w-3 h-3 bg-neon-green rounded-full animate-ping opacity-75"></div>
-                      </div>
-                      <span className="text-neon-green text-sm font-medium">Исправна</span>
-                    </div>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground text-sm">Database</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-foreground">Healthy</span>
                   </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                    <span className="text-muted-foreground">CDN</span>
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-                        <div className="absolute inset-0 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-75"></div>
-                      </div>
-                      <span className="text-yellow-400 text-sm font-medium">Предупреждение</span>
-                    </div>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground text-sm">CDN</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <span className="text-sm text-foreground">Warning</span>
                   </div>
                 </div>
               </div>

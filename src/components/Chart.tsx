@@ -14,16 +14,16 @@ const data = [
 
 export const Chart = () => {
   return (
-    <Card className="glass-card p-6 animate-fade-in-up animate-delay-300 border-border/50">
+    <Card className="p-6 bg-card border-border">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-foreground">Revenue Overview</h3>
+        <h3 className="text-lg font-medium text-foreground">Revenue Overview</h3>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-neon-green"></div>
+            <div className="w-3 h-3 rounded-full bg-primary"></div>
             <span className="text-sm text-muted-foreground">Revenue</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-blue-400"></div>
+            <div className="w-3 h-3 rounded-full bg-blue-500"></div>
             <span className="text-sm text-muted-foreground">Users</span>
           </div>
         </div>
@@ -33,16 +33,16 @@ export const Chart = () => {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient id="neonGreen" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(142 76% 36%)" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(142 76% 36%)" stopOpacity={0}/>
+              <linearGradient id="primary" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
+                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#60A5FA" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1}/>
+                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="name" 
               axisLine={false}
@@ -57,15 +57,15 @@ export const Chart = () => {
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="hsl(142 76% 36%)"
+              stroke="hsl(var(--primary))"
               strokeWidth={2}
               fillOpacity={1}
-              fill="url(#neonGreen)"
+              fill="url(#primary)"
             />
             <Area
               type="monotone"
               dataKey="value"
-              stroke="#60A5FA"
+              stroke="#3B82F6"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#blue)"

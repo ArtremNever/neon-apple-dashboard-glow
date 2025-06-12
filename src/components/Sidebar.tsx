@@ -13,39 +13,37 @@ const navItems = [
 
 export const Sidebar = () => {
   return (
-    <div className="w-20 h-screen glass-card border-r border-border/50 flex flex-col items-center py-6 animate-slide-in-right">
+    <div className="w-16 h-screen bg-card border-r border-border flex flex-col items-center py-6">
       {/* Logo */}
       <div className="mb-8">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-green to-neon-green-dark flex items-center justify-center neon-glow">
-          <Zap className="w-6 h-6 text-black" />
+        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+          <Zap className="w-4 h-4 text-primary-foreground" />
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 flex flex-col space-y-4">
-        {navItems.map((item, index) => (
+      <nav className="flex-1 flex flex-col space-y-2">
+        {navItems.map((item) => (
           <Button
             key={item.label}
             variant={item.active ? "default" : "ghost"}
             size="icon"
             className={`
-              w-12 h-12 rounded-xl transition-all duration-300 hover:scale-110
+              w-10 h-10 rounded-lg
               ${item.active 
-                ? 'bg-neon-green text-black shadow-lg shadow-neon-green/30 animate-pulse-glow' 
-                : 'hover:bg-secondary/50 text-muted-foreground hover:text-foreground'
+                ? 'bg-primary text-primary-foreground' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
               }
             `}
-            style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <item.icon className="w-5 h-5" />
+            <item.icon className="w-4 h-4" />
           </Button>
         ))}
       </nav>
 
       {/* Profile */}
       <div className="mt-auto">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-neon-green/30">
-        </div>
+        <div className="w-8 h-8 rounded-lg bg-muted"></div>
       </div>
     </div>
   );

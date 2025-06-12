@@ -3,8 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
-
 @layer base {
   :root {
     --background: 220 13% 8%;
@@ -23,28 +21,19 @@
     --secondary-foreground: 210 40% 98%;
 
     --muted: 220 13% 15%;
-    --muted-foreground: 210 40% 70%;
+    --muted-foreground: 210 40% 60%;
 
-    --accent: 142 76% 36%;
-    --accent-foreground: 220 13% 8%;
+    --accent: 220 13% 15%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 13% 18%;
-    --input: 220 13% 15%;
+    --border: 220 13% 15%;
+    --input: 220 13% 12%;
     --ring: 142 76% 36%;
 
-    --radius: 0.75rem;
-    
-    /* Neon Green Variants */
-    --neon-green: 142 76% 36%;
-    --neon-green-light: 142 76% 45%;
-    --neon-green-dark: 142 76% 25%;
-    
-    /* Glass Effect */
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --radius: 0.5rem;
   }
 }
 
@@ -54,55 +43,16 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    background: radial-gradient(ellipse at top, hsl(220 13% 12%) 0%, hsl(220 13% 8%) 50%, hsl(220 13% 6%) 100%);
+    @apply bg-background text-foreground font-light;
+    background: hsl(var(--background));
     min-height: 100vh;
-  }
-}
-
-@layer components {
-  .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  }
-  
-  .neon-glow {
-    box-shadow: 0 0 20px hsl(var(--neon-green) / 0.3);
-  }
-  
-  .neon-text {
-    color: hsl(var(--neon-green));
-    text-shadow: 0 0 10px hsl(var(--neon-green) / 0.5);
-  }
-
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .rotate-x-2 {
-    transform: rotateX(2deg);
-  }
-
-  .rotate-y-5 {
-    transform: rotateY(5deg);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px hsl(var(--neon-green) / 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px hsl(var(--neon-green) / 0.6);
   }
 }
 
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -110,75 +60,6 @@
   }
 }
 
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out;
+  animation: fade-in-up 0.3s ease-out;
 }
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.6s ease-out;
-}
-
-.animate-shimmer {
-  animation: shimmer 2s ease-in-out infinite;
-}
-
-.animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Stagger animation delays */
-.animate-delay-100 { animation-delay: 0.1s; }
-.animate-delay-200 { animation-delay: 0.2s; }
-.animate-delay-300 { animation-delay: 0.3s; }
-.animate-delay-400 { animation-delay: 0.4s; }
-.animate-delay-500 { animation-delay: 0.5s; }
-.animate-delay-600 { animation-delay: 0.6s; }
-
-.animation-delay-75 { animation-delay: 75ms; }
-.animation-delay-150 { animation-delay: 150ms; }
