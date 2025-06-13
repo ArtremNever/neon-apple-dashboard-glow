@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Trash2, Target, Smartphone, Globe, Megaphone, Users, Palette } from 'lucide-react';
 import { BuilderBlock } from '@/types/campaign';
 
-export interface HierarchyNodeData {
+export interface HierarchyNodeData extends Record<string, unknown> {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;
@@ -54,8 +54,9 @@ const getValidationColor = (isValid: boolean, hasErrors: number) => {
   return 'border-yellow-500/50 shadow-yellow-500/20';
 };
 
-const HierarchyNode = memo<NodeProps<HierarchyNodeData>>(({ data }) => {
-  const { block, onSelect, onDelete, isSelected } = data;
+const HierarchyNode = memo<NodeProps>(({ data }) => {
+  const hierarchyData = data as HierarchyNodeData;
+  const { block, onSelect, onDelete, isSelected } = hierarchyData;
   const Icon = getBlockIcon(block.type);
   const gradientClass = getBlockGradient(block.type);
   const borderClass = getBlockBorder(block.type);

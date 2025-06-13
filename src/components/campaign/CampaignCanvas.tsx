@@ -9,6 +9,7 @@ import {
   useReactFlow,
   Controls,
   Background,
+  BackgroundVariant,
   NodeTypes,
   addEdge,
   Connection,
@@ -41,7 +42,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 }: CampaignCanvasProps) => {
   const { zoomTo } = useReactFlow();
 
-  const initialNodes: Node<HierarchyNodeData>[] = useMemo(() => 
+  const initialNodes: Node[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
@@ -51,7 +52,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      },
+      } as HierarchyNodeData,
     })),
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
@@ -112,7 +113,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 
   // Update nodes when blocks change
   useEffect(() => {
-    const newNodes: Node<HierarchyNodeData>[] = blocks.map((block) => ({
+    const newNodes: Node[] = blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
@@ -121,7 +122,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      },
+      } as HierarchyNodeData,
     }));
     setNodes(newNodes);
   }, [blocks, selectedBlock, onBlockSelect, onBlockDelete, setNodes]);
@@ -160,12 +161,13 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
           color="#334155" 
           gap={20} 
           className="opacity-30"
-          variant="dots"
+          variant={BackgroundVariant.Dots}
         />
         <MiniMap 
           className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg"
           nodeColor={(node) => {
-            const type = node.data?.block?.type;
+            const nodeData = node.data as HierarchyNodeData;
+            const type = nodeData?.block?.type;
             switch (type) {
               case 'client': return '#3b82f6';
               case 'application': return '#8b5cf6';
