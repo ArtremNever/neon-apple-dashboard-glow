@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Plus, Undo, Redo, ZoomIn, ZoomOut, Play, Sparkles } from 'lucide-react';
-import { BuilderBlock } from '@/pages/CampaignManagement';
+import { BuilderBlock } from '@/types/campaign';
 import { useState } from 'react';
 
 interface CampaignToolbarProps {

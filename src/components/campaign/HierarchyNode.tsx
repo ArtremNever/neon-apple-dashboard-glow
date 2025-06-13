@@ -1,8 +1,9 @@
+
 import { Handle, Position, NodeResizer } from '@xyflow/react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Github, CheckCircle, XCircle } from 'lucide-react';
-import { BuilderBlock } from '@/pages/CampaignManagement';
+import { BuilderBlock } from '@/types/campaign';
 import { cn } from '@/lib/utils';
 
 interface HierarchyNodeProps {

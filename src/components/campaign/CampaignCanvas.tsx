@@ -14,7 +14,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { BuilderBlock } from '@/pages/CampaignManagement';
+import { BuilderBlock } from '@/types/campaign';
 import { HierarchyNode } from './HierarchyNode';
 
 interface CampaignCanvasProps {
