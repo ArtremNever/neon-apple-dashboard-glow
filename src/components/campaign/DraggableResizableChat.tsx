@@ -2,20 +2,27 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Move, RotateCcw } from 'lucide-react';
 import { AiChatPanel } from './AiChatPanel';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 interface DraggableResizableChatProps {
   onClose: () => void;
 }
 
+type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
+
 export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps) => {
   const [position, setPosition] = useState({ x: window.innerWidth - 400, y: 100 });
   const [size, setSize] = useState({ width: 380, height: 500 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState<ResizeDirection | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isResizing, setIsResizing] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+
+  const minSize = { width: 300, height: 250 };
+  const maxSize = { 
+    width: Math.min(800, window.innerWidth - 20), 
+    height: window.innerHeight - 76 
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (headerRef.current && headerRef.current.contains(e.target as Node)) {
@@ -41,19 +48,73 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
 
   const handleMouseUp = () => {
     setIsDragging(false);
-  };
-
-  const handleResizeStart = () => {
-    setIsResizing(true);
-  };
-
-  const handleResizeEnd = () => {
-    setIsResizing(false);
+    setIsResizing(null);
   };
 
   const resetPosition = () => {
     setPosition({ x: window.innerWidth - 400, y: 100 });
     setSize({ width: 380, height: 500 });
+  };
+
+  const startResize = (direction: ResizeDirection, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(direction);
+    
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = size.width;
+    const startHeight = size.height;
+    const startPosX = position.x;
+    const startPosY = position.y;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      
+      let newWidth = startWidth;
+      let newHeight = startHeight;
+      let newX = startPosX;
+      let newY = startPosY;
+
+      // Handle horizontal resizing
+      if (direction.includes('e')) {
+        newWidth = Math.max(minSize.width, Math.min(maxSize.width, startWidth + deltaX));
+      } else if (direction.includes('w')) {
+        const proposedWidth = startWidth - deltaX;
+        if (proposedWidth >= minSize.width && proposedWidth <= maxSize.width) {
+          newWidth = proposedWidth;
+          newX = startPosX + deltaX;
+        }
+      }
+
+      // Handle vertical resizing
+      if (direction.includes('s')) {
+        newHeight = Math.max(minSize.height, Math.min(maxSize.height, startHeight + deltaY));
+      } else if (direction.includes('n')) {
+        const proposedHeight = startHeight - deltaY;
+        if (proposedHeight >= minSize.height && proposedHeight <= maxSize.height) {
+          newHeight = proposedHeight;
+          newY = startPosY + deltaY;
+        }
+      }
+
+      // Ensure position stays within bounds
+      newX = Math.max(0, Math.min(window.innerWidth - newWidth, newX));
+      newY = Math.max(56, Math.min(window.innerHeight - newHeight, newY));
+
+      setSize({ width: newWidth, height: newHeight });
+      setPosition({ x: newX, y: newY });
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(null);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   useEffect(() => {
@@ -65,11 +126,10 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDragging, dragOffset, size, isResizing]);
+  }, [isDragging, dragOffset, size]);
 
   useEffect(() => {
     const handleResize = () => {
-      // Adjust position if window is resized
       setPosition(prev => ({
         x: Math.max(0, Math.min(window.innerWidth - size.width, prev.x)),
         y: Math.max(56, Math.min(window.innerHeight - size.height, prev.y)),
@@ -80,26 +140,40 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
     return () => window.removeEventListener('resize', handleResize);
   }, [size]);
 
+  const resizeHandles = [
+    // Corners
+    { direction: 'nw' as ResizeDirection, className: 'top-0 left-0 w-3 h-3 cursor-nw-resize' },
+    { direction: 'ne' as ResizeDirection, className: 'top-0 right-0 w-3 h-3 cursor-ne-resize' },
+    { direction: 'sw' as ResizeDirection, className: 'bottom-0 left-0 w-3 h-3 cursor-sw-resize' },
+    { direction: 'se' as ResizeDirection, className: 'bottom-0 right-0 w-3 h-3 cursor-se-resize' },
+    // Edges
+    { direction: 'n' as ResizeDirection, className: 'top-0 left-3 right-3 h-1 cursor-n-resize' },
+    { direction: 's' as ResizeDirection, className: 'bottom-0 left-3 right-3 h-1 cursor-s-resize' },
+    { direction: 'w' as ResizeDirection, className: 'left-0 top-3 bottom-3 w-1 cursor-w-resize' },
+    { direction: 'e' as ResizeDirection, className: 'right-0 top-3 bottom-3 w-1 cursor-e-resize' },
+  ];
+
   return (
     <div
       ref={chatRef}
-      className="fixed z-30 bg-slate-900/95 backdrop-blur-sm border border-green-500/30 rounded-lg shadow-2xl shadow-green-500/10 overflow-hidden"
+      className="fixed z-30 bg-slate-900/95 backdrop-blur-sm border border-green-500/30 rounded-lg shadow-2xl shadow-green-500/10 overflow-hidden flex flex-col"
       style={{
         left: position.x,
         top: position.y,
         width: size.width,
         height: size.height,
-        minWidth: 280,
-        minHeight: 300,
-        maxWidth: Math.min(800, window.innerWidth - 20),
-        maxHeight: window.innerHeight - 76,
+        minWidth: minSize.width,
+        minHeight: minSize.height,
+        maxWidth: maxSize.width,
+        maxHeight: maxSize.height,
       }}
     >
       {/* Draggable Header */}
       <div
         ref={headerRef}
-        className="flex items-center justify-between p-3 bg-slate-800/80 border-b border-green-500/30 cursor-move select-none"
+        className="flex items-center justify-between p-3 bg-slate-800/80 border-b border-green-500/30 cursor-move select-none flex-shrink-0"
         onMouseDown={handleMouseDown}
+        style={{ height: '52px' }}
       >
         <div className="flex items-center gap-2">
           <Move className="w-4 h-4 text-green-400/70" />
@@ -123,104 +197,26 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
         </div>
       </div>
 
-      {/* Resizable Content */}
-      <ResizablePanelGroup
-        direction="vertical"
-        className="h-[calc(100%-52px)]"
-        onLayout={(sizes) => {
-          // We don't need to track individual panel sizes for this use case
-        }}
-      >
-        <ResizablePanel defaultSize={100} minSize={20}>
-          <div className="h-full">
-            <AiChatPanel />
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-
-      {/* Resize Handles */}
-      <div
-        className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-green-500/20 hover:bg-green-500/40 transition-colors"
-        onMouseDown={(e) => {
-          e.preventDefault();
-          setIsResizing(true);
-          
-          const startX = e.clientX;
-          const startY = e.clientY;
-          const startWidth = size.width;
-          const startHeight = size.height;
-
-          const handleMouseMove = (e: MouseEvent) => {
-            const newWidth = Math.max(280, Math.min(800, startWidth + (e.clientX - startX)));
-            const newHeight = Math.max(300, Math.min(window.innerHeight - 76, startHeight + (e.clientY - startY)));
-            
-            setSize({ width: newWidth, height: newHeight });
-          };
-
-          const handleMouseUp = () => {
-            setIsResizing(false);
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-          };
-
-          document.addEventListener('mousemove', handleMouseMove);
-          document.addEventListener('mouseup', handleMouseUp);
-        }}
-      >
-        <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-green-500/50"></div>
+      {/* Chat Content */}
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <AiChatPanel />
       </div>
 
-      {/* Right resize handle */}
-      <div
-        className="absolute top-0 right-0 w-1 h-full cursor-e-resize hover:bg-green-500/20 transition-colors"
-        onMouseDown={(e) => {
-          e.preventDefault();
-          setIsResizing(true);
-          
-          const startX = e.clientX;
-          const startWidth = size.width;
-
-          const handleMouseMove = (e: MouseEvent) => {
-            const newWidth = Math.max(280, Math.min(800, startWidth + (e.clientX - startX)));
-            setSize(prev => ({ ...prev, width: newWidth }));
-          };
-
-          const handleMouseUp = () => {
-            setIsResizing(false);
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-          };
-
-          document.addEventListener('mousemove', handleMouseMove);
-          document.addEventListener('mouseup', handleMouseUp);
-        }}
-      />
-
-      {/* Bottom resize handle */}
-      <div
-        className="absolute bottom-0 left-0 w-full h-1 cursor-s-resize hover:bg-green-500/20 transition-colors"
-        onMouseDown={(e) => {
-          e.preventDefault();
-          setIsResizing(true);
-          
-          const startY = e.clientY;
-          const startHeight = size.height;
-
-          const handleMouseMove = (e: MouseEvent) => {
-            const newHeight = Math.max(300, Math.min(window.innerHeight - 76, startHeight + (e.clientY - startY)));
-            setSize(prev => ({ ...prev, height: newHeight }));
-          };
-
-          const handleMouseUp = () => {
-            setIsResizing(false);
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-          };
-
-          document.addEventListener('mousemove', handleMouseMove);
-          document.addEventListener('mouseup', handleMouseUp);
-        }}
-      />
+      {/* Resize Handles */}
+      {resizeHandles.map(({ direction, className }) => (
+        <div
+          key={direction}
+          className={`absolute ${className} hover:bg-green-500/20 transition-colors z-10`}
+          onMouseDown={(e) => startResize(direction, e)}
+        >
+          {/* Visual indicator for corners */}
+          {direction.length === 2 && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-1 h-1 bg-green-500/50 rounded-full"></div>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 };
