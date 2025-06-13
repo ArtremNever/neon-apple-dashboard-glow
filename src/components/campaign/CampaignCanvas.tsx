@@ -21,6 +21,7 @@ interface CampaignCanvasProps {
   onBlockSelect: (block: BuilderBlock) => void;
   onBlockUpdate: (blockId: string, updates: Partial<BuilderBlock>) => void;
   onBlockDelete: (blockId: string) => void;
+  onCanvasClick: () => void;
   selectedBlock: BuilderBlock | null;
 }
 
@@ -33,6 +34,7 @@ export const CampaignCanvas = ({
   onBlockSelect,
   onBlockUpdate,
   onBlockDelete,
+  onCanvasClick,
   selectedBlock,
 }: CampaignCanvasProps) => {
   const initialNodes: Node[] = useMemo(() => 
@@ -84,6 +86,10 @@ export const CampaignCanvas = ({
     [blocks, onBlockUpdate]
   );
 
+  const onPaneClick = useCallback(() => {
+    onCanvasClick();
+  }, [onCanvasClick]);
+
   // Update nodes when blocks change
   useMemo(() => {
     setNodes(blocks.map((block) => ({
@@ -105,7 +111,7 @@ export const CampaignCanvas = ({
 
   if (blocks.length === 0) {
     return (
-      <div className="flex-1 p-6 bg-slate-950 overflow-auto">
+      <div className="flex-1 p-6 bg-slate-950 overflow-auto" onClick={onPaneClick}>
         <div className="flex items-center justify-center h-full">
           <div className="text-center text-green-400/70">
             <div className="text-4xl mb-4">🎯</div>
@@ -126,6 +132,7 @@ export const CampaignCanvas = ({
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDragStop={onNodeDragStop}
+        onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
         fitView
         className="bg-slate-950"

@@ -25,6 +25,7 @@ const CampaignManagement = () => {
   const [selectedBlock, setSelectedBlock] = useState<BuilderBlock | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [forecast, setForecast] = useState({ cpi: 0 });
+  const [showAiChat, setShowAiChat] = useState(false);
 
   const addBlock = (type: BuilderBlock['type']) => {
     const newBlock: BuilderBlock = {
@@ -65,6 +66,10 @@ const CampaignManagement = () => {
     }
   };
 
+  const handleCanvasClick = () => {
+    setSelectedBlock(null);
+  };
+
   const isValidPlan = blocks.length > 0 && blocks.every(block => block.isValid);
 
   const runPlan = async () => {
@@ -81,11 +86,10 @@ const CampaignManagement = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 flex">
-      {/* Sidebar Navigation */}
       <Sidebar />
       
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
         <div className="h-14 bg-slate-900 border-b border-green-500/30 flex items-center justify-between px-6 flex-shrink-0">
           <div className="flex items-center gap-2 text-sm text-green-400/70">
             <span>Dashboard</span>
@@ -93,13 +97,21 @@ const CampaignManagement = () => {
             <span className="text-green-400">Visual Builder</span>
           </div>
           
-          <KpiForecast forecast={forecast} />
+          <div className="flex items-center gap-4">
+            <KpiForecast forecast={forecast} />
+            <button
+              onClick={() => setShowAiChat(!showAiChat)}
+              className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 rounded-lg text-green-400 text-sm transition-colors"
+            >
+              {showAiChat ? 'Hide AI' : 'Show AI'}
+            </button>
+          </div>
         </div>
 
-        {/* Main Content Area with Responsive Layout */}
-        <div className="flex-1 flex min-h-0 relative">
-          {/* Canvas Area - Takes remaining space */}
-          <div className="flex-1 flex flex-col min-w-0 min-h-0">
+        {/* Main Content */}
+        <div className="flex-1 flex relative">
+          {/* Main Canvas Area */}
+          <div className="flex-1 flex flex-col">
             <CampaignToolbar
               onAddBlock={addBlock}
               onRunPlan={runPlan}
@@ -112,27 +124,35 @@ const CampaignManagement = () => {
               onBlockSelect={setSelectedBlock}
               onBlockUpdate={updateBlock}
               onBlockDelete={deleteBlock}
+              onCanvasClick={handleCanvasClick}
               selectedBlock={selectedBlock}
             />
           </div>
 
-          {/* Right Side Panels Container */}
-          <div className="flex flex-shrink-0">
-            {/* Configuration Panel - Shows when block is selected */}
+          {/* Sliding Configuration Panel */}
+          <div className={`
+            fixed top-14 right-0 h-[calc(100vh-3.5rem)] 
+            bg-slate-900/95 backdrop-blur-sm border-l border-green-500/30
+            transform transition-transform duration-300 ease-in-out z-10
+            ${selectedBlock ? 'translate-x-0' : 'translate-x-full'}
+            ${showAiChat ? 'w-96' : 'w-80'}
+          `}>
             {selectedBlock && (
-              <div className="w-80 border-l border-green-500/30">
-                <CampaignSidePanel
-                  selectedBlock={selectedBlock}
-                  onBlockUpdate={updateBlock}
-                />
-              </div>
+              <CampaignSidePanel
+                selectedBlock={selectedBlock}
+                onBlockUpdate={updateBlock}
+              />
             )}
-
-            {/* AI Chat Panel - Always visible but collapsible */}
-            <div className="w-80 border-l border-green-500/30">
-              <AiChatPanel />
-            </div>
           </div>
+
+          {/* Floating AI Chat */}
+          {showAiChat && (
+            <div className="fixed bottom-6 right-6 w-80 h-96 z-20">
+              <div className="bg-slate-900/95 backdrop-blur-sm border border-green-500/30 rounded-lg shadow-2xl shadow-green-500/10 h-full">
+                <AiChatPanel />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
