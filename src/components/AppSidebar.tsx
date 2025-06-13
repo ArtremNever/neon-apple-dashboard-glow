@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { UserMenu } from '@/components/UserMenu';
 
@@ -28,21 +29,30 @@ const navItems = [
 export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { state } = useSidebar();
+  const isCollapsed = state === 'collapsed';
 
   return (
-    <Sidebar className="border-r border-green-500/30">
+    <Sidebar 
+      className="border-r border-green-500/30 bg-slate-900/95 backdrop-blur-xl"
+      collapsible="icon"
+    >
       <SidebarHeader className="p-4">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 rounded-lg bg-green-500/20 border border-green-500/50 flex items-center justify-center shadow-lg shadow-green-500/20">
             <Zap className="w-4 h-4 text-green-400" />
           </div>
-          <span className="text-white font-semibold">Dashboard</span>
+          {!isCollapsed && (
+            <span className="text-white font-semibold">Dashboard</span>
+          )}
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-green-400/60">Navigation</SidebarGroupLabel>
+          {!isCollapsed && (
+            <SidebarGroupLabel className="text-green-400/60">Navigation</SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => {
@@ -58,9 +68,10 @@ export function AppSidebar() {
                           : 'text-green-400/60 hover:text-green-400 hover:bg-green-500/10'
                         }
                       `}
+                      tooltip={isCollapsed ? item.label : undefined}
                     >
                       <item.icon className="w-4 h-4" />
-                      <span>{item.label}</span>
+                      {!isCollapsed && <span>{item.label}</span>}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

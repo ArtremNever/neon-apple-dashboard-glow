@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
+import { AiChatPanel } from '@/components/campaign/AiChatPanel';
 import { ReactFlowProvider } from '@xyflow/react';
 
 export interface BuilderBlock {
@@ -100,7 +101,7 @@ const CampaignManagement = () => {
           onZoomChange={setZoom}
         />
         
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden min-h-0">
           <ReactFlowProvider>
             <CampaignCanvas
               blocks={blocks}
@@ -113,11 +114,17 @@ const CampaignManagement = () => {
             />
           </ReactFlowProvider>
           
-          <div className="w-80 border-l border-green-500/30">
-            <CampaignSidePanel
-              selectedBlock={selectedBlock}
-              onBlockUpdate={updateBlock}
-            />
+          <div className="flex flex-col w-80 border-l border-green-500/30">
+            {selectedBlock ? (
+              <CampaignSidePanel
+                selectedBlock={selectedBlock}
+                onBlockUpdate={updateBlock}
+              />
+            ) : (
+              <div className="flex-1">
+                <AiChatPanel />
+              </div>
+            )}
           </div>
         </div>
       </div>
