@@ -14,24 +14,24 @@
     --popover: 220 13% 10%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 142 76% 36%;
+    --primary: 125 82% 55%;
     --primary-foreground: 220 13% 8%;
 
     --secondary: 220 13% 15%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary-foreground: 125 82% 55%;
 
     --muted: 220 13% 15%;
-    --muted-foreground: 210 40% 60%;
+    --muted-foreground: 125 82% 55%;
 
     --accent: 220 13% 15%;
-    --accent-foreground: 210 40% 98%;
+    --accent-foreground: 125 82% 55%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 13% 15%;
+    --border: 125 82% 35%;
     --input: 220 13% 12%;
-    --ring: 142 76% 36%;
+    --ring: 125 82% 55%;
 
     --radius: 0.5rem;
   }
@@ -71,6 +71,15 @@
   }
 }
 
+@keyframes neon-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px #10b981, 0 0 10px #10b981, 0 0 15px #10b981;
+  }
+  50% {
+    box-shadow: 0 0 10px #10b981, 0 0 20px #10b981, 0 0 30px #10b981;
+  }
+}
+
 .animate-fade-in-up {
   animation: fade-in-up 0.3s ease-out;
 }
@@ -79,34 +88,40 @@
   animation: slide-in-right 0.3s ease-out;
 }
 
-/* React Flow Dark Theme Overrides */
+.animate-neon-glow {
+  animation: neon-glow 2s ease-in-out infinite;
+}
+
+/* React Flow Dark Theme with Neon Green Overrides */
 .react-flow {
-  background: #0f172a;
+  background: #020617;
 }
 
 .react-flow__controls {
-  background: #1e293b !important;
-  border: 1px solid #334155 !important;
+  background: #0f172a !important;
+  border: 1px solid #10b981 !important;
 }
 
 .react-flow__controls button {
-  background: #334155 !important;
-  border-bottom: 1px solid #475569 !important;
-  color: #e2e8f0 !important;
+  background: #1e293b !important;
+  border-bottom: 1px solid #10b981 !important;
+  color: #10b981 !important;
 }
 
 .react-flow__controls button:hover {
-  background: #475569 !important;
+  background: #334155 !important;
+  color: #22c55e !important;
 }
 
 .react-flow__handle {
-  background: #64748b !important;
-  border: 2px solid #94a3b8 !important;
+  background: #10b981 !important;
+  border: 2px solid #22c55e !important;
 }
 
 .react-flow__handle:hover {
-  background: #10b981 !important;
-  border-color: #10b981 !important;
+  background: #22c55e !important;
+  border-color: #16a34a !important;
+  box-shadow: 0 0 10px #10b981;
 }
 
 .react-flow__edge-path {
@@ -125,21 +140,22 @@
   }
 }
 
-/* Node Resizer Styles */
+/* Node Resizer Styles with Neon Green */
 .react-flow__resize-control {
   background: #10b981 !important;
-  border: 2px solid #059669 !important;
+  border: 2px solid #22c55e !important;
   width: 8px !important;
   height: 8px !important;
   border-radius: 2px !important;
 }
 
 .react-flow__resize-control:hover {
-  background: #059669 !important;
-  border-color: #047857 !important;
+  background: #22c55e !important;
+  border-color: #16a34a !important;
+  box-shadow: 0 0 5px #10b981;
 }
 
 .react-flow__resize-control.handle {
   background: #10b981 !important;
-  border-color: #059669 !important;
+  border-color: #22c55e !important;
 }

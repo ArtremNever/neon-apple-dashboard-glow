@@ -18,11 +18,11 @@ export const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <div className="w-16 h-screen bg-card border-r border-border flex flex-col items-center py-6">
+    <div className="w-16 h-screen bg-slate-950 border-r border-green-500/30 flex flex-col items-center py-6">
       {/* Logo */}
       <div className="mb-8">
-        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-          <Zap className="w-4 h-4 text-primary-foreground" />
+        <div className="w-8 h-8 rounded-lg bg-green-500/20 border border-green-500/50 flex items-center justify-center shadow-lg shadow-green-500/20">
+          <Zap className="w-4 h-4 text-green-400" />
         </div>
       </div>
 
@@ -33,13 +33,13 @@ export const Sidebar = () => {
           return (
             <Button
               key={item.label}
-              variant={isActive ? "default" : "ghost"}
+              variant="ghost"
               size="icon"
               className={`
-                w-10 h-10 rounded-lg
+                w-10 h-10 rounded-lg transition-all duration-200
                 ${isActive 
-                  ? 'bg-primary text-primary-foreground' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/50 shadow-lg shadow-green-500/20' 
+                  : 'text-green-400/60 hover:text-green-400 hover:bg-green-500/10 hover:border hover:border-green-500/30'
                 }
               `}
               onClick={() => navigate(item.path)}
@@ -52,7 +52,7 @@ export const Sidebar = () => {
 
       {/* Profile */}
       <div className="mt-auto">
-        <div className="w-8 h-8 rounded-lg bg-muted"></div>
+        <div className="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/30"></div>
       </div>
     </div>
   );

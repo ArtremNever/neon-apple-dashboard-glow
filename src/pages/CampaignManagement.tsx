@@ -5,6 +5,7 @@ import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { KpiForecast } from '@/components/campaign/KpiForecast';
 import { AiChatPanel } from '@/components/campaign/AiChatPanel';
+import { Sidebar } from '@/components/Sidebar';
 
 export interface BuilderBlock {
   id: string;
@@ -79,50 +80,55 @@ const CampaignManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Top Bar */}
-      <div className="h-14 bg-card border-b border-border flex items-center justify-between px-6">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span>Dashboard</span>
-          <span>{'>'}</span>
-          <span className="text-foreground">Visual Builder</span>
-        </div>
-        
-        <KpiForecast forecast={forecast} />
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex">
-        {/* Canvas Area */}
-        <div className="flex-1 flex flex-col">
-          <CampaignToolbar
-            onAddBlock={addBlock}
-            onRunPlan={runPlan}
-            isValid={isValidPlan}
-            isLoading={isLoading}
-          />
+    <div className="min-h-screen bg-slate-950 flex">
+      {/* Sidebar Navigation */}
+      <Sidebar />
+      
+      <div className="flex-1 flex flex-col">
+        {/* Top Bar */}
+        <div className="h-14 bg-slate-900 border-b border-green-500/30 flex items-center justify-between px-6">
+          <div className="flex items-center gap-2 text-sm text-green-400/70">
+            <span>Dashboard</span>
+            <span>{'>'}</span>
+            <span className="text-green-400">Visual Builder</span>
+          </div>
           
-          <CampaignCanvas
-            blocks={blocks}
-            onBlockSelect={setSelectedBlock}
-            onBlockUpdate={updateBlock}
-            onBlockDelete={deleteBlock}
-            selectedBlock={selectedBlock}
-          />
+          <KpiForecast forecast={forecast} />
         </div>
 
-        {/* Side Panels Container */}
-        <div className="flex">
-          {/* Configuration Panel - conditionally rendered */}
-          {selectedBlock && (
-            <CampaignSidePanel
-              selectedBlock={selectedBlock}
-              onBlockUpdate={updateBlock}
+        {/* Main Content */}
+        <div className="flex-1 flex">
+          {/* Canvas Area */}
+          <div className="flex-1 flex flex-col">
+            <CampaignToolbar
+              onAddBlock={addBlock}
+              onRunPlan={runPlan}
+              isValid={isValidPlan}
+              isLoading={isLoading}
             />
-          )}
+            
+            <CampaignCanvas
+              blocks={blocks}
+              onBlockSelect={setSelectedBlock}
+              onBlockUpdate={updateBlock}
+              onBlockDelete={deleteBlock}
+              selectedBlock={selectedBlock}
+            />
+          </div>
 
-          {/* AI Chat Panel */}
-          <AiChatPanel />
+          {/* Side Panels Container */}
+          <div className="flex">
+            {/* Configuration Panel - conditionally rendered */}
+            {selectedBlock && (
+              <CampaignSidePanel
+                selectedBlock={selectedBlock}
+                onBlockUpdate={updateBlock}
+              />
+            )}
+
+            {/* AI Chat Panel */}
+            <AiChatPanel />
+          </div>
         </div>
       </div>
     </div>

@@ -11,7 +11,6 @@ import {
   Edge,
   Node,
   BackgroundVariant,
-  ResizeParams,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/pages/CampaignManagement';
@@ -85,22 +84,6 @@ export const CampaignCanvas = ({
     [blocks, onBlockUpdate]
   );
 
-  const onResize = useCallback(
-    (event: any, params: ResizeParams) => {
-      const { id, x, y, width, height } = params;
-      
-      onBlockUpdate(id, {
-        layout: {
-          x,
-          y,
-          w: Math.max(1, Math.round((width - 64) / 80)),
-          h: Math.max(1, Math.round((height - 32) / 60)),
-        },
-      });
-    },
-    [onBlockUpdate]
-  );
-
   // Update nodes when blocks change
   useMemo(() => {
     setNodes(blocks.map((block) => ({
@@ -122,12 +105,12 @@ export const CampaignCanvas = ({
 
   if (blocks.length === 0) {
     return (
-      <div className="flex-1 p-6 bg-slate-900 overflow-auto">
+      <div className="flex-1 p-6 bg-slate-950 overflow-auto">
         <div className="flex items-center justify-center h-full">
-          <div className="text-center text-muted-foreground">
+          <div className="text-center text-green-400/70">
             <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-lg font-medium mb-2 text-white">Start Building Your Campaign</h3>
-            <p className="text-sm text-slate-400">Add blocks from the toolbar to create your campaign hierarchy</p>
+            <h3 className="text-lg font-medium mb-2 text-green-400">Start Building Your Campaign</h3>
+            <p className="text-sm text-green-400/60">Add blocks from the toolbar to create your campaign hierarchy</p>
           </div>
         </div>
       </div>
@@ -135,7 +118,7 @@ export const CampaignCanvas = ({
   }
 
   return (
-    <div className="flex-1 bg-slate-900">
+    <div className="flex-1 bg-slate-950">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -143,18 +126,17 @@ export const CampaignCanvas = ({
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDragStop={onNodeDragStop}
-        onResize={onResize}
         nodeTypes={nodeTypes}
         fitView
-        className="bg-slate-900"
-        style={{ backgroundColor: '#0f172a' }}
+        className="bg-slate-950"
+        style={{ backgroundColor: '#020617' }}
       >
-        <Controls className="bg-slate-800 border-slate-700 text-white" />
+        <Controls className="bg-slate-800 border-green-500/30 text-green-400" />
         <Background 
           variant={BackgroundVariant.Dots} 
           gap={20} 
           size={1}
-          color="#334155"
+          color="#10b981"
         />
       </ReactFlow>
     </div>
