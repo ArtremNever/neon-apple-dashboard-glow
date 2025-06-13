@@ -55,15 +55,17 @@ export function AppSidebar() {
               <Zap className="w-5 h-5 text-blue-400" />
             </div>
             {!isCollapsed && (
-              <div className="flex flex-col">
-                <span className="text-slate-200 font-semibold text-lg">Analytics</span>
-                <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
-              </div>
+              <>
+                <div className="flex flex-col">
+                  <span className="text-slate-200 font-semibold text-lg">Analytics</span>
+                  <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
+                </div>
+                <div className="ml-auto">
+                  <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
+                </div>
+              </>
             )}
           </div>
-          {!isCollapsed && (
-            <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
-          )}
         </div>
         
         {/* Expand trigger for collapsed state - positioned under logo */}
