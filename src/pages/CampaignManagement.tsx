@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
@@ -109,8 +110,8 @@ const CampaignManagement = () => {
 
         {/* Main Content */}
         <div className="flex-1 flex relative">
-          {/* Main Canvas Area */}
-          <div className="flex-1 flex flex-col">
+          {/* Main Canvas Area - now responsive to side panel */}
+          <div className={`flex-1 flex flex-col transition-all duration-300 ${selectedBlock ? 'mr-80' : ''}`}>
             <CampaignToolbar
               onAddBlock={addBlock}
               onRunPlan={runPlan}
@@ -128,11 +129,11 @@ const CampaignManagement = () => {
             />
           </div>
 
-          {/* Sliding Configuration Panel */}
+          {/* Sliding Configuration Panel - now positioned relative to adjusted canvas */}
           <div className={`
             fixed top-14 right-0 h-[calc(100vh-3.5rem)] 
             bg-slate-900/95 backdrop-blur-sm border-l border-green-500/30
-            transform transition-transform duration-300 ease-in-out z-10
+            transform transition-transform duration-300 ease-in-out z-20
             ${selectedBlock ? 'translate-x-0' : 'translate-x-full'}
             w-80
           `}>
