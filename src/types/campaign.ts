@@ -1,6 +1,7 @@
 
 export interface BuilderBlock {
   id: string;
+  name?: string;
   type: 'client' | 'application' | 'platform' | 'campaign' | 'adset' | 'creative';
   props: Record<string, any>;
   layout: {

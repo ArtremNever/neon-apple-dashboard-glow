@@ -17,58 +17,52 @@ interface CampaignToolbarProps {
 
 const workflowColors = {
   client: {
-    gradient: 'from-blue-500/20 via-blue-600/30 to-blue-700/20',
-    border: 'border-blue-500/30',
-    shadow: 'shadow-blue-500/20',
-    hoverShadow: 'hover:shadow-blue-500/40',
-    text: 'text-blue-200',
-    hoverText: 'hover:text-blue-100',
-    bg: 'hover:bg-blue-500/10'
+    gradient: 'from-blue-500/80 via-blue-600/90 to-blue-700/80',
+    border: 'border-blue-500/40',
+    shadow: 'shadow-blue-500/30',
+    hoverShadow: 'hover:shadow-blue-500/50',
+    text: 'text-blue-100',
+    glow: 'hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]'
   },
   application: {
-    gradient: 'from-purple-500/20 via-purple-600/30 to-purple-700/20',
-    border: 'border-purple-500/30',
-    shadow: 'shadow-purple-500/20',
-    hoverShadow: 'hover:shadow-purple-500/40',
-    text: 'text-purple-200',
-    hoverText: 'hover:text-purple-100',
-    bg: 'hover:bg-purple-500/10'
+    gradient: 'from-purple-500/80 via-purple-600/90 to-purple-700/80',
+    border: 'border-purple-500/40',
+    shadow: 'shadow-purple-500/30',
+    hoverShadow: 'hover:shadow-purple-500/50',
+    text: 'text-purple-100',
+    glow: 'hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]'
   },
   platform: {
-    gradient: 'from-cyan-500/20 via-cyan-600/30 to-cyan-700/20',
-    border: 'border-cyan-500/30',
-    shadow: 'shadow-cyan-500/20',
-    hoverShadow: 'hover:shadow-cyan-500/40',
-    text: 'text-cyan-200',
-    hoverText: 'hover:text-cyan-100',
-    bg: 'hover:bg-cyan-500/10'
+    gradient: 'from-cyan-500/80 via-cyan-600/90 to-cyan-700/80',
+    border: 'border-cyan-500/40',
+    shadow: 'shadow-cyan-500/30',
+    hoverShadow: 'hover:shadow-cyan-500/50',
+    text: 'text-cyan-100',
+    glow: 'hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]'
   },
   campaign: {
-    gradient: 'from-orange-500/20 via-orange-600/30 to-orange-700/20',
-    border: 'border-orange-500/30',
-    shadow: 'shadow-orange-500/20',
-    hoverShadow: 'hover:shadow-orange-500/40',
-    text: 'text-orange-200',
-    hoverText: 'hover:text-orange-100',
-    bg: 'hover:bg-orange-500/10'
+    gradient: 'from-orange-500/80 via-orange-600/90 to-orange-700/80',
+    border: 'border-orange-500/40',
+    shadow: 'shadow-orange-500/30',
+    hoverShadow: 'hover:shadow-orange-500/50',
+    text: 'text-orange-100',
+    glow: 'hover:shadow-[0_0_20px_rgba(249,115,22,0.4)]'
   },
   adset: {
-    gradient: 'from-amber-500/20 via-amber-600/30 to-amber-700/20',
-    border: 'border-amber-500/30',
-    shadow: 'shadow-amber-500/20',
-    hoverShadow: 'hover:shadow-amber-500/40',
-    text: 'text-amber-200',
-    hoverText: 'hover:text-amber-100',
-    bg: 'hover:bg-amber-500/10'
+    gradient: 'from-amber-500/80 via-amber-600/90 to-amber-700/80',
+    border: 'border-amber-500/40',
+    shadow: 'shadow-amber-500/30',
+    hoverShadow: 'hover:shadow-amber-500/50',
+    text: 'text-amber-100',
+    glow: 'hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]'
   },
   creative: {
-    gradient: 'from-emerald-500/20 via-emerald-600/30 to-emerald-700/20',
-    border: 'border-emerald-500/30',
-    shadow: 'shadow-emerald-500/20',
-    hoverShadow: 'hover:shadow-emerald-500/40',
-    text: 'text-emerald-200',
-    hoverText: 'hover:text-emerald-100',
-    bg: 'hover:bg-emerald-500/10'
+    gradient: 'from-emerald-500/80 via-emerald-600/90 to-emerald-700/80',
+    border: 'border-emerald-500/40',
+    shadow: 'shadow-emerald-500/30',
+    hoverShadow: 'hover:shadow-emerald-500/50',
+    text: 'text-emerald-100',
+    glow: 'hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]'
   }
 };
 
@@ -92,7 +86,7 @@ export const CampaignToolbar = ({
   onToggleBlocksVisibility,
 }: CampaignToolbarProps) => {
   return (
-    <div className="h-20 bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-xl border-b border-slate-700/50 flex items-center justify-between px-8 shadow-2xl relative">
+    <div className="h-20 bg-slate-900/95 backdrop-blur-xl border-b border-slate-700/50 flex items-center justify-between px-8 shadow-2xl relative">
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-cyan-500/5 pointer-events-none"></div>
       
@@ -105,24 +99,21 @@ export const CampaignToolbar = ({
               key={type}
               onClick={() => onAddBlock(type)}
               className={`
-                group relative px-6 py-3.5 rounded-2xl font-bold text-xs backdrop-blur-sm
-                bg-gradient-to-br ${colors.gradient} ${colors.border} ${colors.text} ${colors.hoverText}
+                group relative px-4 py-3 rounded-xl font-bold text-xs backdrop-blur-sm
+                bg-gradient-to-br ${colors.gradient} ${colors.border} ${colors.text}
                 transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden
                 shadow-lg ${colors.shadow} ${colors.hoverShadow} hover:shadow-xl
-                ${colors.bg} hover:-translate-y-0.5
-                before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/0 before:via-white/5 before:to-white/0 
+                ${colors.glow} hover:-translate-y-0.5
+                before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/0 before:via-white/10 before:to-white/0 
                 before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
               `}
             >
-              <div className="flex items-center gap-2.5 relative z-10">
+              <div className="flex items-center gap-2 relative z-10">
                 <Icon className="w-4 h-4 drop-shadow-sm group-hover:drop-shadow-md transition-all duration-200" />
                 <span className="font-black tracking-wider drop-shadow-sm group-hover:drop-shadow-md">
                   {label}
                 </span>
               </div>
-              
-              {/* Glow effect on hover */}
-              <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-md bg-gradient-to-br ${colors.gradient.replace('/20', '/40').replace('/30', '/60')}`}></div>
             </button>
           );
         })}
@@ -131,17 +122,17 @@ export const CampaignToolbar = ({
       {/* Right Section - Controls */}
       <div className="flex items-center gap-6 relative z-10">
         {/* Zoom Controls */}
-        <div className="flex items-center gap-2 glass-medium rounded-2xl p-2.5 border border-slate-600/40 backdrop-blur-xl shadow-lg">
+        <div className="flex items-center gap-2 bg-slate-800/80 backdrop-blur-xl rounded-xl p-2 border border-slate-600/40 shadow-lg">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onZoomChange(Math.max(25, zoom - 25))}
-            className="h-9 w-9 p-0 text-slate-300 hover:text-white hover:bg-slate-700/60 rounded-xl transition-all duration-200 hover:scale-105"
+            className="h-8 w-8 p-0 text-slate-300 hover:text-white hover:bg-slate-700/60 rounded-lg transition-all duration-200 hover:scale-105"
           >
             <ZoomOut className="w-4 h-4" />
           </Button>
           
-          <div className="px-4 py-2 text-sm font-bold text-slate-200 min-w-16 text-center glass-light rounded-lg border border-slate-600/30">
+          <div className="px-3 py-1.5 text-sm font-bold text-slate-200 min-w-12 text-center bg-slate-700/60 rounded-lg border border-slate-600/30">
             {zoom}%
           </div>
           
@@ -149,7 +140,7 @@ export const CampaignToolbar = ({
             variant="ghost"
             size="sm"
             onClick={() => onZoomChange(Math.min(200, zoom + 25))}
-            className="h-9 w-9 p-0 text-slate-300 hover:text-white hover:bg-slate-700/60 rounded-xl transition-all duration-200 hover:scale-105"
+            className="h-8 w-8 p-0 text-slate-300 hover:text-white hover:bg-slate-700/60 rounded-lg transition-all duration-200 hover:scale-105"
           >
             <ZoomIn className="w-4 h-4" />
           </Button>
@@ -163,10 +154,10 @@ export const CampaignToolbar = ({
           size="sm"
           onClick={onToggleBlocksVisibility}
           className={`
-            h-11 px-5 rounded-2xl transition-all duration-300 border font-semibold backdrop-blur-sm
+            h-10 px-4 rounded-xl transition-all duration-300 border font-semibold backdrop-blur-sm
             ${blocksVisible 
-              ? 'text-blue-200 hover:text-blue-100 glass-medium border-blue-500/40 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:bg-blue-500/10' 
-              : 'text-slate-300 hover:text-white glass-light border-slate-600/40 hover:bg-slate-700/30'
+              ? 'text-blue-200 hover:text-blue-100 bg-slate-800/80 border-blue-500/40 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:bg-blue-500/10' 
+              : 'text-slate-300 hover:text-white bg-slate-800/60 border-slate-600/40 hover:bg-slate-700/30'
             }
             hover:scale-105 hover:-translate-y-0.5
           `}
@@ -184,10 +175,10 @@ export const CampaignToolbar = ({
           onClick={onRunPlan}
           disabled={!isValid || isLoading}
           className={`
-            h-12 px-8 rounded-2xl font-bold text-sm transition-all duration-300 overflow-hidden relative
+            h-11 px-6 rounded-xl font-bold text-sm transition-all duration-300 overflow-hidden relative
             ${isValid 
               ? 'bg-gradient-to-r from-blue-500/80 via-blue-600/90 to-purple-600/80 hover:from-blue-400/90 hover:via-blue-500/95 hover:to-purple-500/90 text-white shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105 border border-white/20 backdrop-blur-sm' 
-              : 'glass-light text-slate-400 cursor-not-allowed border border-slate-600/30'
+              : 'bg-slate-800/60 text-slate-400 cursor-not-allowed border border-slate-600/30'
             }
             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
             before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/0 before:via-white/20 before:to-white/0 
@@ -195,13 +186,13 @@ export const CampaignToolbar = ({
           `}
         >
           {isLoading ? (
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <div className="flex items-center gap-2 relative z-10">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               <span className="tracking-wide">Running...</span>
             </div>
           ) : (
-            <div className="flex items-center gap-3 relative z-10">
-              <Play className="w-5 h-5 fill-current drop-shadow-sm" />
+            <div className="flex items-center gap-2 relative z-10">
+              <Play className="w-4 h-4 fill-current drop-shadow-sm" />
               <span className="tracking-wide">Run Plan</span>
             </div>
           )}
