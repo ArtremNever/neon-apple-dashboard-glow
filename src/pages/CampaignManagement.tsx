@@ -1,4 +1,3 @@
-
 import { Layout } from '@/components/Layout';
 import { useState, useCallback } from 'react';
 import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
@@ -7,6 +6,8 @@ import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { FloatingChatButton } from '@/components/campaign/FloatingChatButton';
 import { ReactFlowProvider } from '@xyflow/react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Eye } from 'lucide-react';
 
 export interface BuilderBlock {
   id: string;
@@ -27,6 +28,7 @@ const CampaignManagement = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [zoom, setZoom] = useState(100);
   const [blocksVisible, setBlocksVisible] = useState(true);
+  const [sidePanelVisible, setSidePanelVisible] = useState(true);
 
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -46,6 +48,7 @@ const CampaignManagement = () => {
     
     setBlocks(prev => [...prev, newBlock]);
     setSelectedBlock(newBlock);
+    setSidePanelVisible(true);
     
     toast.success(`Added new ${type} block`, {
       description: `Block ${newBlock.id.slice(-4)} has been created`,
@@ -71,6 +74,7 @@ const CampaignManagement = () => {
     setBlocks(prev => prev.filter(block => block.id !== blockId));
     if (selectedBlock?.id === blockId) {
       setSelectedBlock(null);
+      setSidePanelVisible(false);
     }
     
     if (blockToDelete) {
@@ -84,11 +88,13 @@ const CampaignManagement = () => {
 
   const selectBlock = useCallback((block: BuilderBlock) => {
     setSelectedBlock(block);
+    setSidePanelVisible(true);
     console.log('Selected block:', block);
   }, []);
 
   const clearSelection = useCallback(() => {
     setSelectedBlock(null);
+    setSidePanelVisible(false);
     console.log('Cleared selection');
   }, []);
 
@@ -146,12 +152,30 @@ const CampaignManagement = () => {
             />
           </ReactFlowProvider>
           
-          {selectedBlock && (
+          {selectedBlock && sidePanelVisible && (
             <div className="w-80 border-l border-slate-700/50 bg-slate-900/95 backdrop-blur-xl shadow-2xl">
               <CampaignSidePanel
                 selectedBlock={selectedBlock}
                 onBlockUpdate={updateBlock}
               />
+            </div>
+          )}
+
+          {selectedBlock && !sidePanelVisible && (
+            <div className="absolute right-4 top-4 z-10">
+              <Button
+                onClick={() => setSidePanelVisible(true)}
+                className="
+                  h-12 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-105
+                  bg-gradient-to-r from-blue-600/80 to-indigo-600/80 hover:from-blue-500/90 hover:to-indigo-500/90
+                  border border-blue-500/40 hover:border-blue-400/60 text-white shadow-lg hover:shadow-blue-500/25
+                "
+              >
+                <div className="flex items-center gap-2">
+                  <Eye className="w-4 h-4" />
+                  <span>Show Configure</span>
+                </div>
+              </Button>
             </div>
           )}
         </div>
