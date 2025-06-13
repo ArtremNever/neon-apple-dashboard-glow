@@ -49,29 +49,27 @@ export function AppSidebar() {
       collapsible="icon"
     >
       <SidebarHeader className="p-4">
-        <div className="flex items-center gap-3">
-          <div className={`rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10 flex-shrink-0 ${
-            isCollapsed ? 'w-10 h-10 mx-auto' : 'w-10 h-10'
-          }`}>
-            <Zap className="w-5 h-5 text-blue-400" />
-          </div>
-          {!isCollapsed && (
-            <>
-              <div className="flex flex-col min-w-0 flex-1">
-                <span className="text-slate-200 font-semibold text-lg leading-tight">Analytics</span>
-                <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
-              </div>
-              <div className="flex-shrink-0 ml-3">
-                <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
-              </div>
-            </>
-          )}
-        </div>
-        
-        {/* Expand trigger for collapsed state - positioned under logo */}
-        {isCollapsed && (
-          <div className="mt-4 flex justify-center">
+        {isCollapsed ? (
+          // Collapsed state - center the logo
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10">
+              <Zap className="w-5 h-5 text-blue-400" />
+            </div>
             <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-10 h-10 rounded-xl hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
+          </div>
+        ) : (
+          // Expanded state - original layout
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10 flex-shrink-0">
+              <Zap className="w-5 h-5 text-blue-400" />
+            </div>
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-slate-200 font-semibold text-lg leading-tight">Analytics</span>
+              <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
+            </div>
+            <div className="flex-shrink-0 ml-3">
+              <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
+            </div>
           </div>
         )}
       </SidebarHeader>
