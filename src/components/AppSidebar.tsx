@@ -50,7 +50,9 @@ export function AppSidebar() {
     >
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10 flex-shrink-0">
+          <div className={`rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10 flex-shrink-0 ${
+            isCollapsed ? 'w-10 h-10 mx-auto' : 'w-10 h-10'
+          }`}>
             <Zap className="w-5 h-5 text-blue-400" />
           </div>
           {!isCollapsed && (
