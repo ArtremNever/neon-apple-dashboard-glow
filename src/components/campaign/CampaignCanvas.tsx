@@ -28,7 +28,7 @@ interface CampaignCanvasProps {
   zoom: number;
 }
 
-interface HierarchyNodeData {
+export interface HierarchyNodeData extends Record<string, unknown> {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;
@@ -69,7 +69,7 @@ export const CampaignCanvas = ({
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState<HierarchyNodeData>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   // Apply zoom when it changes

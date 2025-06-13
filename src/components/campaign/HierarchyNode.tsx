@@ -3,13 +3,7 @@ import { memo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { BuilderBlock } from '@/types/campaign';
 import { X, Settings } from 'lucide-react';
-
-interface HierarchyNodeData {
-  block: BuilderBlock;
-  onSelect: (block: BuilderBlock) => void;
-  onDelete: (blockId: string) => void;
-  isSelected: boolean;
-}
+import { HierarchyNodeData } from './CampaignCanvas';
 
 export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
   const { block, onSelect, onDelete, isSelected } = data;
