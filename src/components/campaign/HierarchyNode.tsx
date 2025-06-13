@@ -4,15 +4,15 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { BuilderBlock } from '@/types/campaign';
 import { X, Settings } from 'lucide-react';
 
-export interface HierarchyNodeData {
+export interface HierarchyNodeData extends Record<string, unknown> {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;
   isSelected: boolean;
 }
 
-export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
-  const { block, onSelect, onDelete, isSelected } = data;
+export const HierarchyNode = memo(({ data }: NodeProps) => {
+  const { block, onSelect, onDelete, isSelected } = data as HierarchyNodeData;
 
   const getBlockIcon = (type: BuilderBlock['type']) => {
     const icons = {

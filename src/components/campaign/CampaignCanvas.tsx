@@ -17,7 +17,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/types/campaign';
-import { HierarchyNode } from './HierarchyNode';
+import { HierarchyNode, HierarchyNodeData } from './HierarchyNode';
 
 interface CampaignCanvasProps {
   blocks: BuilderBlock[];
@@ -27,13 +27,6 @@ interface CampaignCanvasProps {
   onCanvasClick: () => void;
   selectedBlock: BuilderBlock | null;
   zoom: number;
-}
-
-export interface HierarchyNodeData {
-  block: BuilderBlock;
-  onSelect: (block: BuilderBlock) => void;
-  onDelete: (blockId: string) => void;
-  isSelected: boolean;
 }
 
 const nodeTypes: NodeTypes = {
@@ -51,7 +44,7 @@ export const CampaignCanvas = ({
 }: CampaignCanvasProps) => {
   const { zoomTo } = useReactFlow();
 
-  const initialNodes: Node<HierarchyNodeData>[] = useMemo(() => 
+  const initialNodes: Node[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
@@ -65,7 +58,7 @@ export const CampaignCanvas = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      },
+      } as HierarchyNodeData,
     })),
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
@@ -125,7 +118,7 @@ export const CampaignCanvas = ({
 
   // Update nodes when blocks change
   useEffect(() => {
-    const newNodes: Node<HierarchyNodeData>[] = blocks.map((block) => ({
+    const newNodes: Node[] = blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
@@ -138,7 +131,7 @@ export const CampaignCanvas = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      },
+      } as HierarchyNodeData,
     }));
     setNodes(newNodes);
   }, [blocks, selectedBlock, onBlockSelect, onBlockDelete, setNodes]);
