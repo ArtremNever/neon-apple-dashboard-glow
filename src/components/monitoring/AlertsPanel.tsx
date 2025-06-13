@@ -12,7 +12,8 @@ import {
   Eye,
   Check,
   VolumeX,
-  ArrowRight
+  ArrowRight,
+  CheckCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -40,28 +41,28 @@ export const AlertsPanel = ({ alerts, newAlertsCount = 0 }: AlertsPanelProps) =>
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'critical': return <AlertCircle className="w-4 h-4 text-red-400" />;
-      case 'warning': return <AlertTriangle className="w-4 h-4 text-yellow-400" />;
-      case 'info': return <Info className="w-4 h-4 text-blue-400" />;
-      default: return <Info className="w-4 h-4 text-gray-400" />;
+      case 'critical': return <AlertCircle className="w-4 h-4" />;
+      case 'warning': return <AlertTriangle className="w-4 h-4" />;
+      case 'info': return <Info className="w-4 h-4" />;
+      default: return <Info className="w-4 h-4" />;
+    }
+  };
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return 'text-red-400 bg-red-500/10 border-red-500/20';
+      case 'warning': return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20';
+      case 'info': return 'text-blue-400 bg-blue-500/10 border-blue-500/20';
+      default: return 'text-gray-400 bg-gray-500/10 border-gray-500/20';
     }
   };
 
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-600 text-red-100';
-      case 'warning': return 'bg-yellow-600 text-yellow-100';
-      case 'info': return 'bg-blue-600 text-blue-100';
-      default: return 'bg-gray-600 text-gray-100';
-    }
-  };
-
-  const getAlertBorder = (severity: string) => {
-    switch (severity) {
-      case 'critical': return 'border-l-red-500 bg-red-500/5';
-      case 'warning': return 'border-l-yellow-500 bg-yellow-500/5';
-      case 'info': return 'border-l-blue-500 bg-blue-500/5';
-      default: return 'border-l-gray-500 bg-gray-500/5';
+      case 'critical': return 'bg-red-500/20 text-red-300 border-red-500/30';
+      case 'warning': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'info': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
     }
   };
 
@@ -91,20 +92,29 @@ export const AlertsPanel = ({ alerts, newAlertsCount = 0 }: AlertsPanelProps) =>
   );
 
   return (
-    <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-      <CardHeader>
+    <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-xl shadow-xl">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-white flex items-center gap-2">
-            <AlertTriangle className={cn(
-              "w-5 h-5",
-              newAlertsCount > 0 && "animate-pulse text-red-400"
-            )} />
-            Recent Alerts
-            {newAlertsCount > 0 && (
-              <Badge className="bg-red-600 text-red-100 text-xs px-2 py-1 animate-pulse">
-                {newAlertsCount}
-              </Badge>
-            )}
+          <CardTitle className="text-white flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-slate-800/50">
+              <AlertTriangle className={cn(
+                "w-5 h-5 text-red-400",
+                newAlertsCount > 0 && "animate-pulse"
+              )} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                Recent Alerts
+                {newAlertsCount > 0 && (
+                  <Badge className="bg-red-500/20 text-red-300 border-red-500/30 text-xs px-2 py-1 animate-pulse">
+                    {newAlertsCount}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-sm text-slate-400 font-normal mt-1">
+                System notifications and alerts
+              </p>
+            </div>
           </CardTitle>
         </div>
         
@@ -114,10 +124,10 @@ export const AlertsPanel = ({ alerts, newAlertsCount = 0 }: AlertsPanelProps) =>
               key={filter}
               onClick={() => setActiveFilter(filter)}
               className={cn(
-                "px-3 py-1 rounded-full text-xs font-medium transition-colors",
+                "px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
                 activeFilter === filter
-                  ? "bg-blue-600 text-blue-100"
-                  : "bg-slate-800 text-slate-400 hover:text-slate-300"
+                  ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                  : "bg-slate-800/50 text-slate-400 hover:text-slate-300 hover:bg-slate-800/80 border border-transparent"
               )}
             >
               {filter}
@@ -126,98 +136,101 @@ export const AlertsPanel = ({ alerts, newAlertsCount = 0 }: AlertsPanelProps) =>
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="pt-0">
         <div className="space-y-3 max-h-96 overflow-y-auto">
           {filteredAlerts.map(alert => (
             <div
               key={alert.id}
               className={cn(
-                "p-4 rounded-lg border-l-4 transition-all duration-200",
-                getAlertBorder(alert.severity),
-                alert.isNew && "ring-2 ring-blue-500/50 animate-fade-in"
+                "p-4 rounded-xl border transition-all duration-200 hover:scale-[1.02]",
+                getSeverityColor(alert.severity),
+                alert.isNew && "ring-1 ring-blue-500/50 animate-fade-in"
               )}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    {getSeverityIcon(alert.severity)}
-                    <Badge className={cn("text-xs border-none", getSeverityBadge(alert.severity))}>
-                      {alert.severity.toUpperCase()}
-                    </Badge>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2">
+                      {getSeverityIcon(alert.severity)}
+                      <Badge className={cn("text-xs border", getSeverityBadge(alert.severity))}>
+                        {alert.severity.toUpperCase()}
+                      </Badge>
+                    </div>
                     {alert.isNew && (
-                      <Badge className="bg-blue-600 text-blue-100 text-xs animate-pulse">
+                      <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs animate-pulse">
                         NEW
                       </Badge>
                     )}
                     {alert.resolved && (
-                      <Badge className="bg-green-600 text-green-100 text-xs">
+                      <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-xs">
                         RESOLVED
                       </Badge>
                     )}
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-slate-500 ml-auto">
                       {formatTimestamp(alert.timestamp)}
                     </span>
                   </div>
                   
-                  <h4 className="font-medium text-white mb-1">{alert.title}</h4>
-                  <p className="text-sm text-slate-300 mb-2">{alert.description}</p>
+                  <h4 className="font-semibold text-white mb-2 text-sm">{alert.title}</h4>
+                  <p className="text-xs text-slate-300 mb-3 leading-relaxed">{alert.description}</p>
                   
                   {alert.service && (
-                    <div className="text-xs text-slate-400">
+                    <div className="text-xs text-slate-400 mb-3 flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-500" />
                       Service: <span className="text-slate-300">{alert.service}</span>
                     </div>
                   )}
                   
                   {expandedAlerts.has(alert.id) && (
-                    <div className="mt-3 pt-3 border-t border-slate-700/50 space-y-2 animate-fade-in">
-                      <div className="text-xs space-y-1">
-                        <div className="flex justify-between">
+                    <div className="mt-4 pt-3 border-t border-slate-700/50 space-y-2 animate-fade-in">
+                      <div className="text-xs space-y-2">
+                        <div className="flex justify-between py-1">
                           <span className="text-slate-500">Alert ID:</span>
-                          <span className="text-slate-300 font-mono">{alert.id}</span>
+                          <span className="text-slate-300 font-mono text-xs">{alert.id}</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between py-1">
                           <span className="text-slate-500">First Seen:</span>
-                          <span className="text-slate-300">{new Date(alert.timestamp).toLocaleString()}</span>
+                          <span className="text-slate-300 text-xs">{new Date(alert.timestamp).toLocaleString()}</span>
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
                 
-                <div className="flex items-center gap-2 ml-4">
+                <div className="flex items-center gap-1 ml-4">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 w-7 p-0 text-slate-400 hover:text-blue-400"
+                    className="h-7 w-7 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10"
                     title="Investigate"
                   >
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-3.5 h-3.5" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 w-7 p-0 text-slate-400 hover:text-green-400"
+                    className="h-7 w-7 p-0 text-slate-400 hover:text-green-400 hover:bg-green-500/10"
                     title="Acknowledge"
                   >
-                    <Check className="w-4 h-4" />
+                    <Check className="w-3.5 h-3.5" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 w-7 p-0 text-slate-400 hover:text-yellow-400"
+                    className="h-7 w-7 p-0 text-slate-400 hover:text-yellow-400 hover:bg-yellow-500/10"
                     title="Silence"
                   >
-                    <VolumeX className="w-4 h-4" />
+                    <VolumeX className="w-3.5 h-3.5" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => toggleExpanded(alert.id)}
-                    className="h-7 w-7 p-0 text-slate-400 hover:text-white"
+                    className="h-7 w-7 p-0 text-slate-400 hover:text-white hover:bg-slate-700/50"
                   >
                     {expandedAlerts.has(alert.id) ? 
-                      <ChevronDown className="w-4 h-4" /> : 
-                      <ChevronRight className="w-4 h-4" />
+                      <ChevronDown className="w-3.5 h-3.5" /> : 
+                      <ChevronRight className="w-3.5 h-3.5" />
                     }
                   </Button>
                 </div>
@@ -226,9 +239,10 @@ export const AlertsPanel = ({ alerts, newAlertsCount = 0 }: AlertsPanelProps) =>
           ))}
           
           {filteredAlerts.length === 0 && (
-            <div className="text-center py-8">
+            <div className="text-center py-8 bg-slate-800/30 rounded-xl border border-slate-700/50">
               <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-3" />
               <p className="text-slate-400">No {activeFilter.toLowerCase()} alerts</p>
+              <p className="text-xs text-slate-500 mt-1">All systems are running smoothly</p>
             </div>
           )}
         </div>
@@ -236,7 +250,7 @@ export const AlertsPanel = ({ alerts, newAlertsCount = 0 }: AlertsPanelProps) =>
         <div className="mt-6 pt-4 border-t border-slate-700/50">
           <Button
             variant="ghost"
-            className="w-full text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
+            className="w-full text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-all duration-200"
           >
             View Alert History
             <ArrowRight className="w-4 h-4 ml-2" />
