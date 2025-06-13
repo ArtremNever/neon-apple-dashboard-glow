@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
 import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { KpiForecast } from '@/components/campaign/KpiForecast';
-import { AiChatPanel } from '@/components/campaign/AiChatPanel';
+import { DraggableResizableChat } from '@/components/campaign/DraggableResizableChat';
 import { Sidebar } from '@/components/Sidebar';
 
 export interface BuilderBlock {
@@ -135,7 +134,7 @@ const CampaignManagement = () => {
             bg-slate-900/95 backdrop-blur-sm border-l border-green-500/30
             transform transition-transform duration-300 ease-in-out z-10
             ${selectedBlock ? 'translate-x-0' : 'translate-x-full'}
-            ${showAiChat ? 'w-96' : 'w-80'}
+            w-80
           `}>
             {selectedBlock && (
               <CampaignSidePanel
@@ -145,13 +144,9 @@ const CampaignManagement = () => {
             )}
           </div>
 
-          {/* Floating AI Chat */}
+          {/* Draggable Resizable AI Chat */}
           {showAiChat && (
-            <div className="fixed bottom-6 right-6 w-80 h-96 z-20">
-              <div className="bg-slate-900/95 backdrop-blur-sm border border-green-500/30 rounded-lg shadow-2xl shadow-green-500/10 h-full">
-                <AiChatPanel />
-              </div>
-            </div>
+            <DraggableResizableChat onClose={() => setShowAiChat(false)} />
           )}
         </div>
       </div>

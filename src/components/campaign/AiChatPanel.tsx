@@ -1,6 +1,5 @@
-
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, X } from 'lucide-react';
+import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -97,19 +96,6 @@ export const AiChatPanel = () => {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="p-3 border-b border-green-500/30 flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/50">
-            <Bot className="w-3 h-3 text-green-400" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-xs text-green-400">AI Ассистент</h3>
-            <p className="text-xs text-green-400/70">Онлайн</p>
-          </div>
-        </div>
-      </div>
-
       {/* Messages */}
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-3">
         <div className="space-y-3">
@@ -124,12 +110,12 @@ export const AiChatPanel = () => {
                 </div>
               )}
               
-              <Card className={`max-w-[200px] p-2 border-green-500/30 ${
+              <Card className={`max-w-[75%] p-2 border-green-500/30 ${
                 message.isBot 
                   ? 'bg-slate-800/80 text-slate-200 shadow-green-500/10' 
                   : 'bg-green-500/20 text-green-100 ml-auto border-green-500/50 shadow-green-500/20'
               }`}>
-                <p className="text-xs leading-relaxed">{message.text}</p>
+                <p className="text-xs leading-relaxed break-words">{message.text}</p>
                 <p className={`text-xs mt-1 ${
                   message.isBot ? 'text-green-400/70' : 'text-green-200/70'
                 }`}>
