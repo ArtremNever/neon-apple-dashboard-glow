@@ -16,7 +16,9 @@ import {
   CheckCircle,
   AlertCircle,
   Clock,
-  Lightbulb
+  Lightbulb,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 
 interface Message {
@@ -42,50 +44,50 @@ const AIChat = () => {
     {
       id: '1',
       role: 'assistant',
-      content: 'Hello! I\'m your AI campaign management assistant. I can help you create, optimize, and manage your advertising campaigns. What would you like to do today?',
+      content: 'Привет! Я ваш AI-ассистент для управления кампаниями. Помогу создать, оптимизировать и управлять рекламными кампаниями. Что хотите сделать сегодня?',
       timestamp: '2024-01-13T10:00:00Z',
     },
     {
       id: '2',
       role: 'user',
-      content: 'Create a new gaming app install campaign for iOS with a $5000 daily budget targeting users in the US',
+      content: 'Создай новую кампанию для игрового приложения на iOS с бюджетом $5000 в день, таргетинг на США',
       timestamp: '2024-01-13T10:01:00Z',
     },
     {
       id: '3',
       role: 'assistant',
-      content: 'I\'ll create a gaming app install campaign for you. Let me analyze the requirements and set up the optimal configuration.',
+      content: 'Отлично! Создам кампанию для установок игрового приложения. Анализирую требования и настрою оптимальную конфигурацию.',
       timestamp: '2024-01-13T10:01:30Z',
       reasoning: [
         {
           id: 'r1',
           type: 'analysis',
-          title: 'Campaign Requirements Analysis',
-          description: 'Analyzing campaign parameters: Gaming vertical, iOS platform, $5000 daily budget, US geo-targeting',
+          title: 'Анализ требований кампании',
+          description: 'Анализирую параметры: игровая вертикаль, iOS платформа, бюджет $5000/день, таргетинг США',
           status: 'completed',
           data: { vertical: 'Gaming', platform: 'iOS', budget: 5000, geo: 'US' }
         },
         {
           id: 'r2',
           type: 'decision',
-          title: 'Platform Selection',
-          description: 'Selecting optimal ad networks for gaming app installs: Facebook, Google UAC, Unity Ads',
+          title: 'Выбор платформ',
+          description: 'Подбираю оптимальные рекламные сети для игровых приложений: Facebook, Google UAC, Unity Ads',
           status: 'completed',
           data: { platforms: ['Facebook', 'Google UAC', 'Unity Ads'] }
         },
         {
           id: 'r3',
           type: 'action',
-          title: 'Campaign Configuration',
-          description: 'Setting up campaign structure with 3 ad sets targeting different audience segments',
+          title: 'Настройка кампании',
+          description: 'Создаю структуру кампании с 3 группами объявлений для разных сегментов аудитории',
           status: 'processing',
           data: { adSets: 3, targetingTypes: ['Lookalike', 'Interest', 'Behavioral'] }
         },
         {
           id: 'r4',
           type: 'validation',
-          title: 'Budget & Bid Optimization',
-          description: 'Calculating optimal bid strategies and budget distribution across ad sets',
+          title: 'Оптимизация бюджета и ставок',
+          description: 'Рассчитываю оптимальные стратегии ставок и распределение бюджета по группам',
           status: 'pending',
           data: null
         }
@@ -111,7 +113,7 @@ const AIChat = () => {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'I understand your request. Let me process that for you...',
+        content: 'Понял ваш запрос. Обрабатываю информацию...',
         timestamp: new Date().toISOString(),
       };
       setMessages(prev => [...prev, aiResponse]);
@@ -120,7 +122,7 @@ const AIChat = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed': return <CheckCircle className="w-4 h-4 text-green-400" />;
+      case 'completed': return <CheckCircle className="w-4 h-4 text-emerald-400" />;
       case 'processing': return <Clock className="w-4 h-4 text-blue-400 animate-spin" />;
       case 'failed': return <AlertCircle className="w-4 h-4 text-red-400" />;
       default: return <Clock className="w-4 h-4 text-slate-400" />;
@@ -142,149 +144,172 @@ const AIChat = () => {
       case 'analysis': return 'text-purple-400';
       case 'decision': return 'text-yellow-400';
       case 'action': return 'text-blue-400';
-      case 'validation': return 'text-green-400';
+      case 'validation': return 'text-emerald-400';
       default: return 'text-slate-400';
     }
   };
 
   return (
     <Layout>
-      <div className="p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-2">AI Campaign Assistant</h1>
-            <p className="text-slate-400">Chat with AI to create and manage your advertising campaigns</p>
+      <div className="h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col">
+        {/* Modern Header */}
+        <div className="border-b border-slate-800/50 bg-slate-900/80 backdrop-blur-xl">
+          <div className="max-w-4xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                    <Bot className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-slate-900 flex items-center justify-center">
+                    <div className="w-2 h-2 bg-emerald-600 rounded-full animate-pulse" />
+                  </div>
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                    AI Ассистент
+                    <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
+                  </h1>
+                  <p className="text-sm text-slate-400">Умный помощник для управления кампаниями</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20">
+                  <Zap className="w-3 h-3 mr-1" />
+                  Онлайн
+                </Badge>
+              </div>
+            </div>
           </div>
+        </div>
 
-          {/* Chat Container */}
-          <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-            <CardContent className="p-0">
-              {/* Messages */}
-              <div className="h-96 overflow-y-auto p-6 space-y-6">
-                {messages.map((msg) => (
-                  <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    {msg.role === 'assistant' && (
-                      <Avatar className="w-8 h-8 bg-blue-600">
-                        <Bot className="w-4 h-4 text-white" />
-                      </Avatar>
-                    )}
-                    
-                    <div className={`max-w-2xl ${msg.role === 'user' ? 'order-2' : ''}`}>
-                      <div className={`p-4 rounded-lg ${
-                        msg.role === 'user' 
-                          ? 'bg-blue-600 text-white ml-auto' 
-                          : 'bg-slate-800 text-slate-200'
-                      }`}>
-                        <p>{msg.content}</p>
-                        <p className="text-xs opacity-70 mt-2">
-                          {new Date(msg.timestamp).toLocaleTimeString()}
-                        </p>
+        {/* Chat Container */}
+        <div className="flex-1 max-w-4xl mx-auto w-full flex flex-col min-h-0">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            {messages.map((msg) => (
+              <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                {msg.role === 'assistant' && (
+                  <div className="relative flex-shrink-0">
+                    <Avatar className="w-10 h-10 border-2 border-blue-500/20">
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-white" />
                       </div>
+                    </Avatar>
+                  </div>
+                )}
+                
+                <div className={`max-w-2xl ${msg.role === 'user' ? 'order-2' : ''}`}>
+                  <div className={`p-4 rounded-2xl shadow-lg backdrop-blur-sm ${
+                    msg.role === 'user' 
+                      ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white ml-auto border border-blue-500/30' 
+                      : 'bg-slate-800/80 text-slate-100 border border-slate-700/50'
+                  }`}>
+                    <p className="leading-relaxed">{msg.content}</p>
+                    <p className={`text-xs mt-3 ${msg.role === 'user' ? 'text-blue-100/70' : 'text-slate-400'}`}>
+                      {new Date(msg.timestamp).toLocaleTimeString('ru-RU', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                    </p>
+                  </div>
 
-                      {/* Reasoning Chain */}
-                      {msg.reasoning && (
-                        <div className="mt-4 space-y-3 pl-4 border-l-2 border-slate-600">
-                          <div className="flex items-center gap-2 text-sm font-medium text-slate-300">
-                            <Brain className="w-4 h-4" />
-                            AI Reasoning Process
-                          </div>
-                          
-                          {msg.reasoning.map((step, index) => (
-                            <div key={step.id} className="relative">
-                              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <div className={`p-1.5 rounded-lg bg-slate-700 ${getStepTypeColor(step.type)}`}>
-                                      {getStepTypeIcon(step.type)}
-                                    </div>
-                                    <div>
-                                      <h4 className="text-sm font-medium text-white">{step.title}</h4>
-                                      <Badge className={`text-xs mt-1 ${
-                                        step.type === 'analysis' ? 'bg-purple-600 text-purple-100' :
-                                        step.type === 'decision' ? 'bg-yellow-600 text-yellow-100' :
-                                        step.type === 'action' ? 'bg-blue-600 text-blue-100' :
-                                        'bg-green-600 text-green-100'
-                                      } border-none`}>
-                                        {step.type}
-                                      </Badge>
-                                    </div>
+                  {/* Enhanced Reasoning Chain */}
+                  {msg.reasoning && (
+                    <div className="mt-6 space-y-4">
+                      <div className="flex items-center gap-3 px-4">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center border border-purple-500/30">
+                          <Brain className="w-4 h-4 text-purple-400" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-semibold text-white">Процесс рассуждений AI</h4>
+                          <p className="text-xs text-slate-400">Пошаговый анализ решения</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        {msg.reasoning.map((step, index) => (
+                          <div key={step.id} className="relative">
+                            <div className="bg-slate-800/60 rounded-xl p-4 border border-slate-700/40 backdrop-blur-sm">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <div className={`p-2 rounded-xl bg-slate-700/50 ${getStepTypeColor(step.type)} border border-slate-600/50`}>
+                                    {getStepTypeIcon(step.type)}
                                   </div>
+                                  <div>
+                                    <h5 className="text-sm font-medium text-white">{step.title}</h5>
+                                    <Badge className={`text-xs mt-1 border-none ${
+                                      step.type === 'analysis' ? 'bg-purple-600/20 text-purple-300' :
+                                      step.type === 'decision' ? 'bg-yellow-600/20 text-yellow-300' :
+                                      step.type === 'action' ? 'bg-blue-600/20 text-blue-300' :
+                                      'bg-emerald-600/20 text-emerald-300'
+                                    }`}>
+                                      {step.type}
+                                    </Badge>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
                                   {getStatusIcon(step.status)}
                                 </div>
-                                
-                                <p className="text-sm text-slate-300 mb-3">{step.description}</p>
-                                
-                                {step.data && (
-                                  <div className="bg-slate-900/50 rounded p-3 text-xs">
-                                    <pre className="text-slate-400">{JSON.stringify(step.data, null, 2)}</pre>
-                                  </div>
-                                )}
                               </div>
                               
-                              {index < msg.reasoning.length - 1 && (
-                                <div className="flex justify-center my-2">
-                                  <ArrowRight className="w-4 h-4 text-slate-500" />
+                              <p className="text-sm text-slate-300 mb-3 leading-relaxed">{step.description}</p>
+                              
+                              {step.data && (
+                                <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700/30">
+                                  <pre className="text-xs text-slate-400 overflow-x-auto">{JSON.stringify(step.data, null, 2)}</pre>
                                 </div>
                               )}
                             </div>
-                          ))}
-                        </div>
-                      )}
+                            
+                            {index < msg.reasoning.length - 1 && (
+                              <div className="flex justify-center my-3">
+                                <div className="w-px h-8 bg-gradient-to-b from-slate-600 to-transparent" />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-
-                    {msg.role === 'user' && (
-                      <Avatar className="w-8 h-8 bg-slate-600 order-3">
-                        <User className="w-4 h-4 text-white" />
-                      </Avatar>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Input */}
-              <div className="border-t border-slate-700 p-4">
-                <div className="flex gap-2">
-                  <Input
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Ask me to create campaigns, optimize performance, or analyze data..."
-                    className="flex-1 bg-slate-800 border-slate-600 text-slate-200 placeholder:text-slate-400"
-                  />
-                  <Button onClick={handleSendMessage} className="bg-blue-600 hover:bg-blue-700">
-                    <Send className="w-4 h-4" />
-                  </Button>
+                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 h-auto p-4">
-              <div className="text-center">
-                <MessageSquare className="w-6 h-6 mx-auto mb-2" />
-                <div className="font-medium">Create Campaign</div>
-                <div className="text-xs text-slate-400">Start a new campaign</div>
+                {msg.role === 'user' && (
+                  <div className="relative flex-shrink-0 order-3">
+                    <Avatar className="w-10 h-10 border-2 border-slate-600/50">
+                      <div className="w-full h-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center">
+                        <User className="w-5 h-5 text-slate-300" />
+                      </div>
+                    </Avatar>
+                  </div>
+                )}
               </div>
-            </Button>
-            
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 h-auto p-4">
-              <div className="text-center">
-                <Brain className="w-6 h-6 mx-auto mb-2" />
-                <div className="font-medium">Optimize Performance</div>
-                <div className="text-xs text-slate-400">AI-powered optimization</div>
+            ))}
+          </div>
+
+          {/* Modern Input */}
+          <div className="border-t border-slate-800/50 bg-slate-900/80 backdrop-blur-xl p-6">
+            <div className="flex gap-4 items-end">
+              <div className="flex-1 relative">
+                <Input
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Напишите сообщение..."
+                  className="bg-slate-800/60 border-slate-700/50 text-slate-200 placeholder:text-slate-400 rounded-2xl pr-12 py-3 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 backdrop-blur-sm"
+                />
+                <Button 
+                  onClick={handleSendMessage}
+                  disabled={!message.trim()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 border-0 rounded-xl shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:shadow-none"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
               </div>
-            </Button>
-            
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 h-auto p-4">
-              <div className="text-center">
-                <Lightbulb className="w-6 h-6 mx-auto mb-2" />
-                <div className="font-medium">Get Insights</div>
-                <div className="text-xs text-slate-400">Campaign analysis</div>
-              </div>
-            </Button>
+            </div>
+            <p className="text-xs text-slate-500 mt-2 text-center">
+              AI может допускать ошибки. Проверяйте важную информацию.
+            </p>
           </div>
         </div>
       </div>

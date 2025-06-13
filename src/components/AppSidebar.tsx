@@ -49,20 +49,27 @@ export function AppSidebar() {
       collapsible="icon"
     >
       <SidebarHeader className="p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10">
-            <Zap className="w-5 h-5 text-blue-400" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10">
+              <Zap className="w-5 h-5 text-blue-400" />
+            </div>
+            {!isCollapsed && (
+              <div className="flex flex-col">
+                <span className="text-slate-200 font-semibold text-lg">Analytics</span>
+                <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
+              </div>
+            )}
           </div>
           {!isCollapsed && (
-            <div className="flex flex-col">
-              <span className="text-slate-200 font-semibold text-lg">Analytics</span>
-              <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
-            </div>
+            <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
           )}
         </div>
-        {!isCollapsed && (
-          <div className="mt-3">
-            <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20 ml-auto" />
+        
+        {/* Expand trigger for collapsed state - positioned under logo */}
+        {isCollapsed && (
+          <div className="mt-4 flex justify-center">
+            <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-10 h-10 rounded-xl hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
           </div>
         )}
       </SidebarHeader>
@@ -107,14 +114,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <div className="flex flex-col gap-3">
-          {isCollapsed && (
-            <div className="flex justify-center">
-              <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-10 h-10 rounded-xl hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
-            </div>
-          )}
-          <UserMenu />
-        </div>
+        <UserMenu />
       </SidebarFooter>
     </Sidebar>
   );
