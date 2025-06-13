@@ -96,12 +96,10 @@ const CampaignManagement = () => {
           <KpiForecast forecast={forecast} />
         </div>
 
-        {/* Main Content Area with Fixed Layout */}
-        <div className="flex-1 flex min-h-0">
-          {/* Canvas Area - Fixed width calculation */}
-          <div className="flex flex-col min-w-0" style={{ 
-            width: `calc(100% - ${selectedBlock ? '384px' : '0px'} - 384px)` 
-          }}>
+        {/* Main Content Area with Responsive Layout */}
+        <div className="flex-1 flex min-h-0 relative">
+          {/* Canvas Area - Takes remaining space */}
+          <div className="flex-1 flex flex-col min-w-0 min-h-0">
             <CampaignToolbar
               onAddBlock={addBlock}
               onRunPlan={runPlan}
@@ -118,19 +116,22 @@ const CampaignManagement = () => {
             />
           </div>
 
-          {/* Configuration Panel - Fixed Width */}
-          {selectedBlock && (
-            <div className="w-96 flex-shrink-0">
-              <CampaignSidePanel
-                selectedBlock={selectedBlock}
-                onBlockUpdate={updateBlock}
-              />
-            </div>
-          )}
+          {/* Right Side Panels Container */}
+          <div className="flex flex-shrink-0">
+            {/* Configuration Panel - Shows when block is selected */}
+            {selectedBlock && (
+              <div className="w-80 border-l border-green-500/30">
+                <CampaignSidePanel
+                  selectedBlock={selectedBlock}
+                  onBlockUpdate={updateBlock}
+                />
+              </div>
+            )}
 
-          {/* AI Chat Panel - Fixed Width */}
-          <div className="w-96 flex-shrink-0">
-            <AiChatPanel />
+            {/* AI Chat Panel - Always visible but collapsible */}
+            <div className="w-80 border-l border-green-500/30">
+              <AiChatPanel />
+            </div>
           </div>
         </div>
       </div>
