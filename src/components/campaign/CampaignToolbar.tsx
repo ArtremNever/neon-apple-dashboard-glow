@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Plus, Undo, Redo, ZoomIn, ZoomOut, Play, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { BuilderBlock } from '@/types/campaign';
@@ -186,7 +185,7 @@ export const CampaignToolbar = ({
           onClick={onRunPlan}
           disabled={!isValid || isLoading}
           className={`
-            group relative px-4 py-2 rounded-lg font-semibold text-xs
+            group relative px-3 py-2 rounded-lg font-semibold text-xs
             transition-all duration-300 transform-gpu overflow-hidden
             ${isValid && !isLoading 
               ? 'bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 hover:from-green-500 hover:via-green-400 hover:to-emerald-400 border border-green-500/50 hover:border-green-400/70 text-white shadow-lg shadow-green-500/25 hover:shadow-green-500/40 hover:scale-105 active:scale-95' 
@@ -198,12 +197,12 @@ export const CampaignToolbar = ({
             {isLoading ? (
               <>
                 <div className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                <span className="tracking-wide whitespace-nowrap">ВЫПОЛНЯЕТСЯ...</span>
+                <span className="tracking-wide whitespace-nowrap">RUNNING...</span>
               </>
             ) : (
               <>
                 <Play className="w-3 h-3 fill-current drop-shadow-sm" />
-                <span className="tracking-wide whitespace-nowrap">ЗАПУСТИТЬ ПЛАН</span>
+                <span className="tracking-wide whitespace-nowrap">RUN PLAN</span>
                 {isValid && <Sparkles className="w-3 h-3 opacity-80 animate-pulse" />}
               </>
             )}

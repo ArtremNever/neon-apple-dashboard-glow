@@ -1,4 +1,3 @@
-
 import { memo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { BuilderBlock } from '@/types/campaign';
@@ -38,7 +37,6 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
     return labels[type] || type;
   };
 
-  // Get required fields for validation indicators
   const getRequiredFields = (type: BuilderBlock['type']) => {
     switch (type) {
       case 'client':
