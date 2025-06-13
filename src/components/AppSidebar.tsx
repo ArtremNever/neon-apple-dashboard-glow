@@ -40,18 +40,15 @@ export function AppSidebar() {
     >
       <SidebarHeader className="p-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 min-w-0">
             <div className="w-8 h-8 rounded-lg bg-green-500/20 border border-green-500/50 flex items-center justify-center shadow-lg shadow-green-500/20 flex-shrink-0">
               <Zap className="w-4 h-4 text-green-400" />
             </div>
             {!isCollapsed && (
-              <span className="text-white font-semibold">Dashboard</span>
+              <span className="text-white font-semibold truncate">Dashboard</span>
             )}
           </div>
-          {/* Sidebar trigger always visible when expanded */}
-          {!isCollapsed && (
-            <SidebarTrigger className="text-green-400 hover:text-green-300 w-6 h-6 flex-shrink-0" />
-          )}
+          <SidebarTrigger className="text-green-400 hover:text-green-300 w-6 h-6 flex-shrink-0" />
         </div>
       </SidebarHeader>
 
@@ -89,12 +86,6 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        {/* Show trigger when collapsed */}
-        {isCollapsed && (
-          <div className="mb-2">
-            <SidebarTrigger className="text-green-400 hover:text-green-300 w-full justify-center" />
-          </div>
-        )}
         <UserMenu />
       </SidebarFooter>
     </Sidebar>

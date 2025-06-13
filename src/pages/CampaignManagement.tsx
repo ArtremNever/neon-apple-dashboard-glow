@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react';
 import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
-import { AiChatPanel } from '@/components/campaign/AiChatPanel';
 import { FloatingChatButton } from '@/components/campaign/FloatingChatButton';
 import { ReactFlowProvider } from '@xyflow/react';
 
@@ -123,21 +122,16 @@ const CampaignManagement = () => {
             />
           </ReactFlowProvider>
           
-          <div className="flex flex-col w-80 border-l border-green-500/30">
-            {selectedBlock ? (
+          {selectedBlock && (
+            <div className="w-80 border-l border-green-500/30">
               <CampaignSidePanel
                 selectedBlock={selectedBlock}
                 onBlockUpdate={updateBlock}
               />
-            ) : (
-              <div className="flex-1">
-                <AiChatPanel />
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
-        {/* Floating Chat Button */}
         <FloatingChatButton />
       </div>
     </Layout>

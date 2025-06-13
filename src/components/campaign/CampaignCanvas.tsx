@@ -12,6 +12,7 @@ import {
   Node,
   BackgroundVariant,
   useReactFlow,
+  NodeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/types/campaign';
@@ -27,7 +28,7 @@ interface CampaignCanvasProps {
   zoom: number;
 }
 
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   hierarchy: HierarchyNode,
 };
 
