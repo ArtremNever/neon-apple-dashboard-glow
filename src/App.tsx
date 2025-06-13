@@ -12,7 +12,6 @@ import Dashboard from "./pages/Dashboard";
 import CampaignManagement from "./pages/CampaignManagement";
 import Campaigns from "./pages/Campaigns";
 import Analytics from "./pages/Analytics";
-import Revenue from "./pages/Revenue";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import Clients from "./pages/Clients";
@@ -52,11 +51,6 @@ function App() {
               <Route path="/analytics" element={
                 <ProtectedRoute>
                   <Analytics />
-                </ProtectedRoute>
-              } />
-              <Route path="/revenue" element={
-                <ProtectedRoute>
-                  <Revenue />
                 </ProtectedRoute>
               } />
               <Route path="/users" element={

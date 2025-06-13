@@ -5,7 +5,7 @@ import { EnhancedSourceMetricCard } from '@/components/EnhancedSourceMetricCard'
 import { AnalyticsHeader } from '@/components/analytics/AnalyticsHeader';
 import { AnalyticsTabs } from '@/components/analytics/AnalyticsTabs';
 import { PerformanceChart } from '@/components/analytics/PerformanceChart';
-import { AnalyticsTable } from '@/components/analytics/AnalyticsTable';
+import { ModernAnalyticsTable } from '@/components/analytics/ModernAnalyticsTable';
 import { InsightsPanel } from '@/components/analytics/InsightsPanel';
 import { 
   Eye, 
@@ -33,7 +33,7 @@ const Analytics = () => {
     { date: '2024-01-07', impressions: 152000, clicks: 3100, conversions: 208, revenue: 3900 },
   ];
 
-  // Mock data for analytics table
+  // Enhanced mock data for modern analytics table
   const tableData = [
     {
       id: '1',
@@ -43,9 +43,31 @@ const Analytics = () => {
       revenue: 15600,
       ctr: 1.92,
       status: 'active' as const,
+      meta: {
+        campaignCount: 4,
+        adSetCount: 12,
+        lastSync: '5m ago'
+      },
+      historical: [125, 135, 128, 142, 138, 145, 152, 148, 156, 162, 159, 165],
+      trend: 12.3,
+      revenueGoal: 20000,
       campaigns: [
-        { id: '1-1', name: 'Summer Sale Campaign', installs: 1200, revenue: 8900, ctr: 2.1 },
-        { id: '1-2', name: 'Mobile App Install Q4', installs: 1200, revenue: 6700, ctr: 1.8 }
+        { 
+          id: '1-1', 
+          name: 'Summer Sale Campaign', 
+          installs: 1200, 
+          revenue: 8900, 
+          ctr: 2.1,
+          badges: ['A/B Test', 'Mobile']
+        },
+        { 
+          id: '1-2', 
+          name: 'Mobile App Install Q4', 
+          installs: 1200, 
+          revenue: 6700, 
+          ctr: 1.8,
+          badges: ['Automated']
+        }
       ]
     },
     {
@@ -56,8 +78,23 @@ const Analytics = () => {
       revenue: 12340,
       ctr: 2.12,
       status: '**' as const,
+      meta: {
+        campaignCount: 2,
+        adSetCount: 8,
+        lastSync: '12m ago'
+      },
+      historical: [98, 102, 95, 108, 112, 105, 118, 121, 115, 124, 119, 127],
+      trend: -5.7,
+      revenueGoal: 15000,
       campaigns: [
-        { id: '2-1', name: 'Brand Awareness Campaign', installs: 890, revenue: 6200, ctr: 2.3 }
+        { 
+          id: '2-1', 
+          name: 'Brand Awareness Campaign', 
+          installs: 890, 
+          revenue: 6200, 
+          ctr: 2.3,
+          badges: ['Brand', 'Video']
+        }
       ]
     },
     {
@@ -67,7 +104,15 @@ const Analytics = () => {
       installs: 1456,
       revenue: 8900,
       ctr: 1.87,
-      status: 'active' as const
+      status: 'active' as const,
+      meta: {
+        campaignCount: 3,
+        adSetCount: 9,
+        lastSync: '2m ago'
+      },
+      historical: [78, 82, 85, 79, 91, 88, 94, 97, 92, 99, 103, 96],
+      trend: 8.9,
+      revenueGoal: 12000
     }
   ];
 
@@ -190,9 +235,9 @@ const Analytics = () => {
               <PerformanceChart data={performanceData} />
             </div>
             
-            {/* Analytics Table */}
+            {/* Modern Analytics Table */}
             <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
-              <AnalyticsTable 
+              <ModernAnalyticsTable 
                 data={tableData} 
                 onSettingsClick={handleTableSettingsClick}
               />
