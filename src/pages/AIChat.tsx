@@ -182,6 +182,13 @@ const AIChat = () => {
                   )}
                   
                   <div className={`max-w-2xl ${msg.role === 'user' ? 'order-2' : ''}`}>
+                    {/* Reasoning Chain - показывается ПЕРЕД сообщением ассистента */}
+                    {msg.reasoning && msg.role === 'assistant' && (
+                      <div className="mb-4">
+                        <ReasoningChain steps={msg.reasoning} />
+                      </div>
+                    )}
+
                     <Card className={`p-4 shadow-lg backdrop-blur-sm ${
                       msg.role === 'user' 
                         ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white ml-auto border border-blue-500/30' 
@@ -197,13 +204,6 @@ const AIChat = () => {
                         </p>
                       </CardContent>
                     </Card>
-
-                    {/* Reasoning Chain */}
-                    {msg.reasoning && (
-                      <div className="mt-6">
-                        <ReasoningChain steps={msg.reasoning} />
-                      </div>
-                    )}
                   </div>
 
                   {msg.role === 'user' && (
