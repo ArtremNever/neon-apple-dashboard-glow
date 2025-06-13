@@ -1,24 +1,12 @@
-
 import { Layout } from '@/components/Layout';
 import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Search, 
-  Plus, 
-  Settings, 
-  Database, 
-  Zap,
-  Shield,
-  Edit,
-  ChevronDown,
-  ChevronUp,
-  Key,
-  Globe,
-  Activity
-} from 'lucide-react';
+import { Database, Zap, Shield, Activity, Plus } from 'lucide-react';
+import { EnhancedSourceMetricCard } from '@/components/EnhancedSourceMetricCard';
+import { ModernSourceCard } from '@/components/ModernSourceCard';
+import { QuickActionsBar } from '@/components/QuickActionsBar';
+import { ActivityTimeline } from '@/components/ActivityTimeline';
 
 interface Source {
   id: string;
@@ -29,11 +17,15 @@ interface Source {
   apiEndpoint: string;
   lastSync: string;
   campaigns: number;
+  dailySpend: string;
+  impressions: string;
   credentials: {
     apiKey?: string;
     secretKey?: string;
     accessToken?: string;
   };
+  healthScore: number;
+  trendData: Array<{ value: number }>;
 }
 
 const mockSources: Source[] = [
@@ -45,6 +37,13 @@ const mockSources: Source[] = [
     apiEndpoint: 'https://api.bigo.tv/ads/v1',
     lastSync: '2024-01-13T10:30:00Z',
     campaigns: 45,
+    dailySpend: '12.5K',
+    impressions: '2.4M',
+    healthScore: 87,
+    trendData: [
+      { value: 10 }, { value: 15 }, { value: 12 }, { value: 18 }, 
+      { value: 22 }, { value: 19 }, { value: 25 }
+    ],
     credentials: {
       apiKey: '••••••••••••7890',
       secretKey: '••••••••••••5678'
@@ -58,6 +57,13 @@ const mockSources: Source[] = [
     apiEndpoint: 'https://api.mintegral.com/api/v2',
     lastSync: '2024-01-13T09:15:00Z',
     campaigns: 32,
+    dailySpend: '8.2K',
+    impressions: '1.8M',
+    healthScore: 92,
+    trendData: [
+      { value: 8 }, { value: 12 }, { value: 10 }, { value: 16 }, 
+      { value: 14 }, { value: 18 }, { value: 20 }
+    ],
     credentials: {
       apiKey: '••••••••••••1234',
       secretKey: '••••••••••••9876'
@@ -71,6 +77,13 @@ const mockSources: Source[] = [
     apiEndpoint: 'https://api2.appsflyer.com/inappevent',
     lastSync: '2024-01-12T14:20:00Z',
     campaigns: 0,
+    dailySpend: '0',
+    impressions: '0',
+    healthScore: 23,
+    trendData: [
+      { value: 15 }, { value: 12 }, { value: 8 }, { value: 5 }, 
+      { value: 3 }, { value: 1 }, { value: 0 }
+    ],
     credentials: {
       apiKey: '••••••••••••5555',
       accessToken: '••••••••••••3333'
@@ -84,43 +97,98 @@ const mockSources: Source[] = [
     apiEndpoint: 'https://business-api.tiktok.com/open_api',
     lastSync: 'Never',
     campaigns: 0,
+    dailySpend: '0',
+    impressions: '0',
+    healthScore: 0,
+    trendData: [
+      { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, 
+      { value: 0 }, { value: 0 }, { value: 0 }
+    ],
     credentials: {}
   }
+];
+
+const mockTimelineEvents = [
+  {
+    id: '1',
+    timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    type: 'sync' as const,
+    source: 'Bigo Ads',
+    event: 'Sync completed successfully',
+    stats: '+3 new campaigns'
+  },
+  {
+    id: '2',
+    timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+    type: 'connection' as const,
+    source: 'Mintegral DSP',
+    event: 'Connection refreshed',
+    stats: 'API rate limit reset'
+  },
+  {
+    id: '3',
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    type: 'error' as const,
+    source: 'AppsFlyer Attribution',
+    event: 'Sync failed - Invalid credentials',
+    details: 'Authentication failed with error code 401. Please check your API credentials and ensure they have the required permissions.',
+    severity: 'high' as const
+  },
+  {
+    id: '4',
+    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+    type: 'update' as const,
+    source: 'TikTok For Business',
+    event: 'API version updated',
+    stats: 'New features available'
+  },
+  {
+    id: '5',
+    timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+    type: 'new' as const,
+    source: 'Google Ads',
+    event: 'New source connected',
+    stats: 'Initial setup complete'
+  },
+  {
+    id: '6',
+    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    type: 'sync' as const,
+    source: 'Facebook Ads',
+    event: 'Campaign data synced',
+    stats: '+15% conversion rate'
+  },
 ];
 
 const Sources = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedSource, setExpandedSource] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'cards' | 'table' | 'timeline'>('cards');
 
   const filteredSources = mockSources.filter(source =>
     source.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     source.platform.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'connected': return 'bg-green-600 text-green-100';
-      case 'disconnected': return 'bg-gray-600 text-gray-100';
-      case 'error': return 'bg-red-600 text-red-100';
-      default: return 'bg-gray-600 text-gray-100';
-    }
+  const connectedCount = mockSources.filter(s => s.status === 'connected').length;
+  const errorCount = mockSources.filter(s => s.status === 'error').length;
+  const totalCampaigns = mockSources.reduce((sum, s) => sum + s.campaigns, 0);
+
+  const handleAddSource = () => {
+    console.log('Add source clicked');
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'connected': return <Zap className="w-4 h-4" />;
-      case 'disconnected': return <Database className="w-4 h-4" />;
-      case 'error': return <Shield className="w-4 h-4" />;
-      default: return <Database className="w-4 h-4" />;
-    }
+  const handleSyncAll = () => {
+    console.log('Sync all clicked');
   };
 
-  const stats = [
-    { title: 'Total Sources', value: '4', icon: Database, color: 'text-blue-400' },
-    { title: 'Connected', value: '2', icon: Zap, color: 'text-green-400' },
-    { title: 'Active Campaigns', value: '77', icon: Activity, color: 'text-purple-400' },
-    { title: 'Errors', value: '1', icon: Shield, color: 'text-red-400' },
-  ];
+  const handleExportConfig = () => {
+    console.log('Export config clicked');
+  };
+
+  const handleExpandSource = (id: string) => {
+    setExpandedSource(expandedSource === id ? null : id);
+  };
 
   return (
     <Layout>
@@ -131,146 +199,127 @@ const Sources = () => {
             <h1 className="text-3xl font-bold text-white mb-2">Sources</h1>
             <p className="text-slate-400">Manage advertising platform connections and credentials</p>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Source
-          </Button>
         </div>
 
-        {/* Stats */}
+        {/* Enhanced KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat) => (
-            <Card key={stat.title} className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-400 text-sm mb-1">{stat.title}</p>
-                    <p className="text-2xl font-bold text-white">{stat.value}</p>
-                  </div>
-                  <div className="p-3 rounded-lg bg-slate-800/50">
-                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          <EnhancedSourceMetricCard
+            title="Total Sources"
+            value={mockSources.length}
+            icon={Database}
+            donutData={[
+              { name: 'Connected', value: connectedCount, color: '#10b981' },
+              { name: 'Disconnected', value: mockSources.length - connectedCount, color: '#6b7280' }
+            ]}
+            delay={0}
+          />
+          
+          <EnhancedSourceMetricCard
+            title="Connected"
+            value={connectedCount}
+            icon={Zap}
+            status="success"
+            subText="Syncing..."
+            miniChartData={[
+              { value: 1 }, { value: 2 }, { value: 2 }, { value: 2 }, { value: 2 }
+            ]}
+            delay={100}
+          />
+          
+          <EnhancedSourceMetricCard
+            title="Active Campaigns"
+            value={totalCampaigns}
+            icon={Activity}
+            trend="+12 this week"
+            miniChartData={[
+              { value: 65 }, { value: 70 }, { value: 68 }, { value: 75 }, { value: 77 }
+            ]}
+            delay={200}
+          />
+          
+          <EnhancedSourceMetricCard
+            title="Errors"
+            value={errorCount}
+            icon={Shield}
+            status="error"
+            showQuickAction={errorCount > 0}
+            delay={300}
+          />
         </div>
 
-        {/* Search */}
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <Input
-              placeholder="Search sources..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-slate-800/50 border-slate-600 text-slate-200 placeholder:text-slate-400"
-            />
+        {/* Quick Actions Bar */}
+        <QuickActionsBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onAddSource={handleAddSource}
+          onSyncAll={handleSyncAll}
+          onExportConfig={handleExportConfig}
+        />
+
+        {/* Content based on view mode */}
+        {viewMode === 'cards' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {filteredSources.map((source) => (
+              <ModernSourceCard
+                key={source.id}
+                source={source}
+                onExpand={handleExpandSource}
+                isExpanded={expandedSource === source.id}
+              />
+            ))}
           </div>
-          <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">
-            <Settings className="w-4 h-4 mr-2" />
-            Filters
-          </Button>
-        </div>
+        )}
 
-        {/* Sources Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredSources.map((source) => (
-            <Card key={source.id} className="bg-slate-900/50 border-slate-700 backdrop-blur-xl hover:bg-slate-800/50 transition-all duration-200">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center">
-                      <Database className="w-6 h-6 text-slate-300" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-white text-lg">{source.name}</CardTitle>
-                      <p className="text-slate-400 text-sm">{source.platform}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className={`${getStatusColor(source.status)} border-none`}>
-                      <div className="flex items-center gap-1">
-                        {getStatusIcon(source.status)}
-                        <span className="capitalize">{source.status}</span>
-                      </div>
-                    </Badge>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setExpandedSource(expandedSource === source.id ? null : source.id)}
-                      className="text-slate-400 hover:text-white"
-                    >
-                      {expandedSource === source.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
+        {viewMode === 'timeline' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <div className="grid grid-cols-1 gap-6">
+                {filteredSources.map((source) => (
+                  <ModernSourceCard
+                    key={source.id}
+                    source={source}
+                    onExpand={handleExpandSource}
+                    isExpanded={expandedSource === source.id}
+                  />
+                ))}
+              </div>
+            </div>
+            <div>
+              <ActivityTimeline events={mockTimelineEvents} />
+            </div>
+          </div>
+        )}
 
-              <CardContent className="pt-0">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-white">{source.campaigns}</div>
-                    <div className="text-xs text-slate-400">Campaigns</div>
-                  </div>
-                  <div className="text-center flex-1">
-                    <div className="text-sm text-slate-300">Last Sync</div>
-                    <div className="text-xs text-slate-400">
-                      {source.lastSync === 'Never' ? 'Never' : new Date(source.lastSync).toLocaleString()}
-                    </div>
-                  </div>
-                </div>
+        {viewMode === 'table' && (
+          <Card className="bg-slate-900/50 backdrop-blur-xl border-slate-700/50">
+            <CardContent className="p-6">
+              <div className="text-center py-12">
+                <Database className="w-12 h-12 mx-auto mb-4 text-slate-400 opacity-50" />
+                <p className="text-slate-400 mb-4">Table view coming soon</p>
+                <Button
+                  variant="outline"
+                  onClick={() => setViewMode('cards')}
+                  className="border-slate-600 text-slate-300"
+                >
+                  Switch to Cards View
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-                {expandedSource === source.id && (
-                  <div className="space-y-4 border-t border-slate-700 pt-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Globe className="w-4 h-4 text-slate-400" />
-                        <span className="text-slate-300">API Endpoint:</span>
-                      </div>
-                      <div className="bg-slate-800/50 p-2 rounded text-xs text-slate-300 font-mono">
-                        {source.apiEndpoint}
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Key className="w-4 h-4 text-slate-400" />
-                        <span className="text-slate-300">Credentials:</span>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        {Object.entries(source.credentials).map(([key, value]) => (
-                          <div key={key} className="flex items-center justify-between bg-slate-800/30 p-2 rounded">
-                            <span className="text-sm text-slate-400 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
-                            <span className="text-sm text-slate-300 font-mono">{value || 'Not set'}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between pt-2">
-                      <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">
-                        Test Connection
-                      </Button>
-                      <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit Credentials
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {filteredSources.length === 0 && (
+        {filteredSources.length === 0 && viewMode === 'cards' && (
           <div className="text-center py-12">
             <div className="text-slate-400 mb-4">
               <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p>No sources found</p>
             </div>
+            <Button onClick={handleAddSource} className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Your First Source
+            </Button>
           </div>
         )}
       </div>
