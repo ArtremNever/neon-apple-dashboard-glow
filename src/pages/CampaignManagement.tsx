@@ -1,9 +1,10 @@
+
 import { useState } from 'react';
 import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { KpiForecast } from '@/components/campaign/KpiForecast';
-import { AiChatButton } from '@/components/campaign/AiChatButton';
+import { AiChatPanel } from '@/components/campaign/AiChatPanel';
 
 export interface BuilderBlock {
   id: string;
@@ -110,15 +111,20 @@ const CampaignManagement = () => {
           />
         </div>
 
-        {/* Side Panel */}
-        <CampaignSidePanel
-          selectedBlock={selectedBlock}
-          onBlockUpdate={updateBlock}
-        />
-      </div>
+        {/* Side Panels Container */}
+        <div className="flex">
+          {/* Configuration Panel - conditionally rendered */}
+          {selectedBlock && (
+            <CampaignSidePanel
+              selectedBlock={selectedBlock}
+              onBlockUpdate={updateBlock}
+            />
+          )}
 
-      {/* AI Chat */}
-      <AiChatButton />
+          {/* AI Chat Panel */}
+          <AiChatPanel />
+        </div>
+      </div>
     </div>
   );
 };
