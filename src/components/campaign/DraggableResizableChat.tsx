@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Move, RotateCcw } from 'lucide-react';
+import { X, Move, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 import { AiChatPanel } from './AiChatPanel';
 
 interface DraggableResizableChatProps {
@@ -10,21 +10,24 @@ interface DraggableResizableChatProps {
 type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
 export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps) => {
-  const [position, setPosition] = useState({ x: window.innerWidth - 400, y: 100 });
-  const [size, setSize] = useState({ width: 380, height: 500 });
+  const [position, setPosition] = useState({ x: window.innerWidth - 420, y: 100 });
+  const [size, setSize] = useState({ width: 400, height: 600 });
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState<ResizeDirection | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [previousState, setPreviousState] = useState({ position, size });
   const chatRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  const minSize = { width: 300, height: 250 };
+  const minSize = { width: 350, height: 400 };
   const maxSize = { 
-    width: Math.min(800, window.innerWidth - 20), 
-    height: window.innerHeight - 76 
+    width: Math.min(900, window.innerWidth - 40), 
+    height: window.innerHeight - 100 
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (isMaximized) return;
     if (headerRef.current && headerRef.current.contains(e.target as Node)) {
       setIsDragging(true);
       const rect = chatRef.current?.getBoundingClientRect();
@@ -38,7 +41,7 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging && !isResizing) {
+    if (isDragging && !isResizing && !isMaximized) {
       const newX = Math.max(0, Math.min(window.innerWidth - size.width, e.clientX - dragOffset.x));
       const newY = Math.max(56, Math.min(window.innerHeight - size.height, e.clientY - dragOffset.y));
       
@@ -51,12 +54,27 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
     setIsResizing(null);
   };
 
+  const toggleMaximize = () => {
+    if (isMaximized) {
+      setPosition(previousState.position);
+      setSize(previousState.size);
+      setIsMaximized(false);
+    } else {
+      setPreviousState({ position, size });
+      setPosition({ x: 20, y: 80 });
+      setSize({ width: window.innerWidth - 40, height: window.innerHeight - 120 });
+      setIsMaximized(true);
+    }
+  };
+
   const resetPosition = () => {
-    setPosition({ x: window.innerWidth - 400, y: 100 });
-    setSize({ width: 380, height: 500 });
+    setPosition({ x: window.innerWidth - 420, y: 100 });
+    setSize({ width: 400, height: 600 });
+    setIsMaximized(false);
   };
 
   const startResize = (direction: ResizeDirection, e: React.MouseEvent) => {
+    if (isMaximized) return;
     e.preventDefault();
     e.stopPropagation();
     setIsResizing(direction);
@@ -130,33 +148,42 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
 
   useEffect(() => {
     const handleResize = () => {
-      setPosition(prev => ({
-        x: Math.max(0, Math.min(window.innerWidth - size.width, prev.x)),
-        y: Math.max(56, Math.min(window.innerHeight - size.height, prev.y)),
-      }));
+      if (isMaximized) {
+        setSize({ width: window.innerWidth - 40, height: window.innerHeight - 120 });
+        setPosition({ x: 20, y: 80 });
+      } else {
+        setPosition(prev => ({
+          x: Math.max(0, Math.min(window.innerWidth - size.width, prev.x)),
+          y: Math.max(56, Math.min(window.innerHeight - size.height, prev.y)),
+        }));
+      }
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [size]);
+  }, [size, isMaximized]);
 
-  const resizeHandles = [
+  const resizeHandles = !isMaximized ? [
     // Corners
-    { direction: 'nw' as ResizeDirection, className: 'top-0 left-0 w-3 h-3 cursor-nw-resize' },
-    { direction: 'ne' as ResizeDirection, className: 'top-0 right-0 w-3 h-3 cursor-ne-resize' },
-    { direction: 'sw' as ResizeDirection, className: 'bottom-0 left-0 w-3 h-3 cursor-sw-resize' },
-    { direction: 'se' as ResizeDirection, className: 'bottom-0 right-0 w-3 h-3 cursor-se-resize' },
+    { direction: 'nw' as ResizeDirection, className: 'top-0 left-0 w-4 h-4 cursor-nw-resize' },
+    { direction: 'ne' as ResizeDirection, className: 'top-0 right-0 w-4 h-4 cursor-ne-resize' },
+    { direction: 'sw' as ResizeDirection, className: 'bottom-0 left-0 w-4 h-4 cursor-sw-resize' },
+    { direction: 'se' as ResizeDirection, className: 'bottom-0 right-0 w-4 h-4 cursor-se-resize' },
     // Edges
-    { direction: 'n' as ResizeDirection, className: 'top-0 left-3 right-3 h-1 cursor-n-resize' },
-    { direction: 's' as ResizeDirection, className: 'bottom-0 left-3 right-3 h-1 cursor-s-resize' },
-    { direction: 'w' as ResizeDirection, className: 'left-0 top-3 bottom-3 w-1 cursor-w-resize' },
-    { direction: 'e' as ResizeDirection, className: 'right-0 top-3 bottom-3 w-1 cursor-e-resize' },
-  ];
+    { direction: 'n' as ResizeDirection, className: 'top-0 left-4 right-4 h-2 cursor-n-resize' },
+    { direction: 's' as ResizeDirection, className: 'bottom-0 left-4 right-4 h-2 cursor-s-resize' },
+    { direction: 'w' as ResizeDirection, className: 'left-0 top-4 bottom-4 w-2 cursor-w-resize' },
+    { direction: 'e' as ResizeDirection, className: 'right-0 top-4 bottom-4 w-2 cursor-e-resize' },
+  ] : [];
 
   return (
     <div
       ref={chatRef}
-      className="fixed z-30 bg-slate-900/95 backdrop-blur-sm border border-green-500/30 rounded-lg shadow-2xl shadow-green-500/10 overflow-hidden flex flex-col"
+      className={`
+        fixed z-30 bg-slate-900/95 backdrop-blur-xl border border-primary-500/30 
+        shadow-2xl shadow-primary-500/20 overflow-hidden flex flex-col
+        ${isMaximized ? 'rounded-lg' : 'rounded-2xl'}
+      `}
       style={{
         left: position.x,
         top: position.y,
@@ -168,31 +195,52 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
         maxHeight: maxSize.height,
       }}
     >
-      {/* Draggable Header */}
+      {/* Enhanced Header */}
       <div
         ref={headerRef}
-        className="flex items-center justify-between p-3 bg-slate-800/80 border-b border-green-500/30 cursor-move select-none flex-shrink-0"
+        className={`
+          flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/90 to-slate-700/90 
+          border-b border-primary-500/30 backdrop-blur-sm flex-shrink-0
+          ${!isMaximized ? 'cursor-move' : ''}
+        `}
         onMouseDown={handleMouseDown}
-        style={{ height: '52px' }}
+        style={{ height: '64px' }}
       >
-        <div className="flex items-center gap-2">
-          <Move className="w-4 h-4 text-green-400/70" />
-          <h3 className="text-sm font-medium text-green-400">AI Ассистент</h3>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg">
+            <Move className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-white">AI Ассистент</h3>
+            <p className="text-xs text-primary-400">Умный помощник</p>
+          </div>
         </div>
         
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleMaximize}
+            className="p-2 hover:bg-primary-500/20 rounded-xl transition-all duration-200 group"
+            title={isMaximized ? 'Восстановить' : 'Развернуть'}
+          >
+            {isMaximized ? (
+              <Minimize2 className="w-4 h-4 text-primary-400 group-hover:text-primary-300" />
+            ) : (
+              <Maximize2 className="w-4 h-4 text-primary-400 group-hover:text-primary-300" />
+            )}
+          </button>
           <button
             onClick={resetPosition}
-            className="p-1 hover:bg-green-500/20 rounded transition-colors"
+            className="p-2 hover:bg-primary-500/20 rounded-xl transition-all duration-200 group"
             title="Сбросить позицию"
           >
-            <RotateCcw className="w-4 h-4 text-green-400/70" />
+            <RotateCcw className="w-4 h-4 text-primary-400 group-hover:text-primary-300" />
           </button>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-red-500/20 rounded transition-colors"
+            className="p-2 hover:bg-red-500/20 rounded-xl transition-all duration-200 group"
+            title="Закрыть"
           >
-            <X className="w-4 h-4 text-green-400/70 hover:text-red-400" />
+            <X className="w-4 h-4 text-primary-400 group-hover:text-red-400" />
           </button>
         </div>
       </div>
@@ -206,13 +254,13 @@ export const DraggableResizableChat = ({ onClose }: DraggableResizableChatProps)
       {resizeHandles.map(({ direction, className }) => (
         <div
           key={direction}
-          className={`absolute ${className} hover:bg-green-500/20 transition-colors z-10`}
+          className={`absolute ${className} hover:bg-primary-500/20 transition-colors z-10 group`}
           onMouseDown={(e) => startResize(direction, e)}
         >
           {/* Visual indicator for corners */}
           {direction.length === 2 && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-1 h-1 bg-green-500/50 rounded-full"></div>
+            <div className="absolute inset-1 flex items-center justify-center">
+              <div className="w-2 h-2 bg-primary-500/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
           )}
         </div>

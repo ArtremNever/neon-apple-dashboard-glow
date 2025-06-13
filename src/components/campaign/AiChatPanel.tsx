@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -25,7 +25,6 @@ export const AiChatPanel = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const inputContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
@@ -97,29 +96,45 @@ export const AiChatPanel = () => {
   };
 
   return (
-    <div className="h-full flex flex-col min-h-0">
+    <div className="h-full flex flex-col min-h-0 bg-gradient-to-b from-slate-900/50 to-slate-950/80">
+      {/* Header */}
+      <div className="flex-shrink-0 p-4 border-b border-primary-500/20 bg-slate-800/40 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg">
+            <Bot className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-white">AI Ассистент</h3>
+            <p className="text-xs text-primary-400">Всегда готов помочь</p>
+          </div>
+          <div className="ml-auto">
+            <Sparkles className="w-4 h-4 text-primary-400 animate-pulse" />
+          </div>
+        </div>
+      </div>
+
       {/* Messages */}
-      <ScrollArea ref={scrollAreaRef} className="flex-1 min-h-0 p-2 sm:p-3">
-        <div className="space-y-2 sm:space-y-3">
+      <ScrollArea ref={scrollAreaRef} className="flex-1 min-h-0 p-4">
+        <div className="space-y-4">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-1 sm:gap-2 ${message.isBot ? 'justify-start' : 'justify-end'}`}
+              className={`flex gap-3 ${message.isBot ? 'justify-start' : 'justify-end'}`}
             >
               {message.isBot && (
-                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1 border border-green-500/50">
-                  <Bot className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-400" />
+                <div className="w-8 h-8 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 border border-primary-500/30 backdrop-blur-sm">
+                  <Bot className="w-4 h-4 text-primary-400" />
                 </div>
               )}
               
-              <Card className={`max-w-[80%] sm:max-w-[75%] p-1.5 sm:p-2 border-green-500/30 ${
+              <Card className={`max-w-[80%] p-3 shadow-lg backdrop-blur-sm ${
                 message.isBot 
-                  ? 'bg-slate-800/80 text-slate-200 shadow-green-500/10' 
-                  : 'bg-green-500/20 text-green-100 ml-auto border-green-500/50 shadow-green-500/20'
+                  ? 'bg-slate-800/80 text-slate-100 border-primary-500/20 shadow-primary-500/10' 
+                  : 'bg-gradient-to-br from-primary-500/20 to-primary-600/20 text-primary-100 ml-auto border-primary-500/40 shadow-primary-500/20'
               }`}>
-                <p className="text-xs leading-relaxed break-words">{message.text}</p>
-                <p className={`text-xs mt-1 ${
-                  message.isBot ? 'text-green-400/70' : 'text-green-200/70'
+                <p className="text-sm leading-relaxed break-words">{message.text}</p>
+                <p className={`text-xs mt-2 ${
+                  message.isBot ? 'text-primary-400/70' : 'text-primary-200/70'
                 }`}>
                   {message.timestamp.toLocaleTimeString('ru-RU', { 
                     hour: '2-digit', 
@@ -129,22 +144,22 @@ export const AiChatPanel = () => {
               </Card>
 
               {!message.isBot && (
-                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500/30 rounded-full flex items-center justify-center flex-shrink-0 mt-1 border border-green-500/50">
-                  <User className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-300" />
+                <div className="w-8 h-8 bg-gradient-to-br from-primary-500/30 to-primary-600/30 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 border border-primary-500/40 backdrop-blur-sm">
+                  <User className="w-4 h-4 text-primary-300" />
                 </div>
               )}
             </div>
           ))}
           
           {isLoading && (
-            <div className="flex gap-1 sm:gap-2 justify-start">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0 border border-green-500/50">
-                <Bot className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-400" />
+            <div className="flex gap-3 justify-start">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-xl flex items-center justify-center flex-shrink-0 border border-primary-500/30 backdrop-blur-sm">
+                <Bot className="w-4 h-4 text-primary-400" />
               </div>
-              <Card className="bg-slate-800/80 p-1.5 sm:p-2 border-green-500/30">
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <Loader2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 animate-spin text-green-400" />
-                  <span className="text-xs text-green-400/70">Печатаю...</span>
+              <Card className="bg-slate-800/80 p-3 border-primary-500/20 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <Loader2 className="w-4 h-4 animate-spin text-primary-400" />
+                  <span className="text-sm text-primary-400/70">Печатаю...</span>
                 </div>
               </Card>
             </div>
@@ -153,26 +168,22 @@ export const AiChatPanel = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div 
-        ref={inputContainerRef}
-        className="p-2 sm:p-3 border-t border-green-500/30 flex-shrink-0 bg-slate-900/80"
-      >
-        <div className="flex gap-1 sm:gap-2">
+      <div className="flex-shrink-0 p-4 border-t border-primary-500/20 bg-slate-800/40 backdrop-blur-sm">
+        <div className="flex gap-3">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Задайте вопрос..."
-            className="flex-1 bg-slate-800 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 text-xs h-7 sm:h-8 min-w-0"
+            className="flex-1 bg-slate-900/60 border-primary-500/30 text-slate-200 placeholder:text-slate-400 focus:border-primary-500/50 focus:ring-primary-500/20 min-w-0 backdrop-blur-sm"
             disabled={isLoading}
           />
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || isLoading}
-            size="sm"
-            className="px-2 h-7 sm:h-8 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 text-green-400 flex-shrink-0"
+            className="px-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 text-white shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border border-primary-400/20"
           >
-            <Send className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+            <Send className="w-4 h-4" />
           </Button>
         </div>
       </div>

@@ -93,11 +93,9 @@ export function AppSidebar() {
 
       <SidebarFooter className="p-4">
         <div className="flex flex-col gap-3">
-          {isCollapsed && (
-            <div className="flex justify-center">
-              <SidebarTrigger className="text-gray-400 hover:text-primary-400 w-10 h-10 rounded-xl hover:bg-white/[0.08] transition-all duration-250" />
-            </div>
-          )}
+          <div className="flex justify-center">
+            <SidebarTrigger className="text-gray-400 hover:text-primary-400 w-10 h-10 rounded-xl hover:bg-white/[0.08] transition-all duration-250 border border-transparent hover:border-primary-500/20" />
+          </div>
           <UserMenu />
         </div>
       </SidebarFooter>
