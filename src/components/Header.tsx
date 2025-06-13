@@ -1,7 +1,8 @@
 
-import { Search, Bell, User } from 'lucide-react';
+import { Search, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { UserMenu } from '@/components/UserMenu';
 
 export const Header = () => {
   return (
@@ -30,14 +31,8 @@ export const Header = () => {
           <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></div>
         </Button>
 
-        {/* Profile */}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <User className="w-4 h-4" />
-        </Button>
+        {/* User Menu */}
+        <UserMenu />
       </div>
     </header>
   );
