@@ -1,6 +1,6 @@
 
 import { Layout } from '@/components/Layout';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { ChatHistory } from '@/components/chat/ChatHistory';
 import { ReasoningChain, ReasoningStep } from '@/components/chat/ReasoningChain';
-import { useSidebar } from '@/components/ui/sidebar';
 
 interface Message {
   id: string;
@@ -29,12 +28,6 @@ interface Message {
 const AIChat = () => {
   const [message, setMessage] = useState('');
   const [currentChatId, setCurrentChatId] = useState('1');
-  const { setOpen } = useSidebar();
-  
-  // Сворачиваем сайдбар при загрузке страницы AI чата
-  useEffect(() => {
-    setOpen(false);
-  }, [setOpen]);
 
   const [messages, setMessages] = useState<Message[]>([
     {
