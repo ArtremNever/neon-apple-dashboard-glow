@@ -1,6 +1,7 @@
+
 import { Layout } from '@/components/Layout';
 import { useState, useCallback } from 'react';
-import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
+import CampaignCanvas from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { FloatingChatButton } from '@/components/campaign/FloatingChatButton';
@@ -11,6 +12,7 @@ import { Eye } from 'lucide-react';
 
 export interface BuilderBlock {
   id: string;
+  name?: string;
   type: 'client' | 'application' | 'platform' | 'campaign' | 'adset' | 'creative';
   props: Record<string, any>;
   layout: {
@@ -20,6 +22,7 @@ export interface BuilderBlock {
     h: number;
   };
   isValid: boolean;
+  parentId?: string;
 }
 
 const CampaignManagement = () => {
@@ -35,6 +38,7 @@ const CampaignManagement = () => {
   const addBlock = useCallback((type: BuilderBlock['type']) => {
     const newBlock: BuilderBlock = {
       id: generateId(),
+      name: `${type.charAt(0).toUpperCase() + type.slice(1)} Block`,
       type,
       props: {},
       layout: {
@@ -144,9 +148,7 @@ const CampaignManagement = () => {
             <CampaignCanvas
               blocks={blocksVisible ? blocks : []}
               onBlockSelect={selectBlock}
-              onBlockUpdate={updateBlock}
               onBlockDelete={deleteBlock}
-              onCanvasClick={clearSelection}
               selectedBlock={selectedBlock}
               zoom={zoom}
             />

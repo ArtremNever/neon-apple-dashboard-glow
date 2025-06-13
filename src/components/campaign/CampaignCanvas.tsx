@@ -42,7 +42,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 }: CampaignCanvasProps) => {
   const { zoomTo } = useReactFlow();
 
-  const initialNodes: Node<HierarchyNodeData>[] = useMemo(() => 
+  const initialNodes: Node[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
@@ -57,11 +57,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
 
-  const [nodes, setNodes, onNodesChange]: [
-    Node<HierarchyNodeData>[],
-    React.Dispatch<React.SetStateAction<Node<HierarchyNodeData>[]>>,
-    OnNodesChange<Node<HierarchyNodeData>>
-  ] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   // Apply zoom when it changes
@@ -105,7 +101,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 
   // Update nodes when blocks change
   useEffect(() => {
-    const newNodes: Node<HierarchyNodeData>[] = blocks.map((block) => ({
+    const newNodes: Node[] = blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
@@ -119,22 +115,12 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
     setNodes(newNodes);
   }, [blocks, selectedBlock, onBlockSelect, onBlockDelete, setNodes]);
 
-  // Create edges based on block relationships
+  // Create edges based on block relationships (simplified for now)
   useEffect(() => {
     const newEdges: Edge[] = [];
     
-    blocks.forEach((block) => {
-      if (block.parentId) {
-        newEdges.push({
-          id: `${block.parentId}-${block.id}`,
-          source: block.parentId,
-          target: block.id,
-          type: 'smoothstep',
-          animated: true,
-          style: { stroke: '#3b82f6', strokeWidth: 2 },
-        });
-      }
-    });
+    // For now, we'll skip the parentId relationships since they don't exist in BuilderBlock
+    // This can be added later when the BuilderBlock interface is updated
     
     setEdges(newEdges);
   }, [blocks, setEdges]);
