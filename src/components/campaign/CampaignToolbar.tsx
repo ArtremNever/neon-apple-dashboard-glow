@@ -67,27 +67,27 @@ export const CampaignToolbar = ({
   const canRedo = historyIndex < history.length - 1;
 
   return (
-    <div className="h-14 bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 flex items-center justify-between px-6 relative overflow-hidden">
+    <div className="h-14 bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 flex items-center justify-between px-4 relative overflow-hidden">
       {/* Left Side - Block Tools */}
-      <div className="flex items-center gap-3 relative z-10">
+      <div className="flex items-center gap-2 relative z-10 flex-1 min-w-0">
         {/* Block Type Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 overflow-x-auto">
           {blockTypes.map(({ type, label, icon }) => (
             <button
               key={type}
               onClick={() => onAddBlock(type)}
               className="
-                group relative px-3 py-2 rounded-lg text-xs font-bold text-white
+                group relative px-2 py-1.5 rounded-md text-xs font-bold text-white
                 bg-gradient-to-r from-slate-600/40 via-slate-500/40 to-slate-400/40
                 backdrop-blur-sm border border-slate-400/20
                 hover:from-slate-500/50 hover:via-slate-400/50 hover:to-slate-300/50
                 hover:border-slate-300/30 hover:shadow-lg hover:shadow-slate-500/20
                 transition-all duration-200 ease-out
-                flex items-center gap-2 min-w-0
+                flex items-center gap-1 min-w-0 flex-shrink-0
                 focus:outline-none focus:ring-2 focus:ring-green-500/30
               "
             >
-              <span className="text-sm flex-shrink-0 group-hover:scale-110 transition-transform duration-200">
+              <span className="text-xs flex-shrink-0 group-hover:scale-110 transition-transform duration-200">
                 {icon}
               </span>
               <span className="text-xs font-bold whitespace-nowrap uppercase tracking-wide">
@@ -98,15 +98,15 @@ export const CampaignToolbar = ({
         </div>
         
         {/* Separator */}
-        <div className="h-6 w-px bg-green-500/30 mx-2" />
+        <div className="h-6 w-px bg-green-500/30 mx-1 flex-shrink-0" />
         
         {/* Action Tools */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 flex-shrink-0">
           <button
             onClick={handleUndo}
             disabled={!canUndo}
             className={`
-              group relative w-8 h-8 rounded-lg transition-all duration-200 flex items-center justify-center
+              group relative w-7 h-7 rounded-lg transition-all duration-200 flex items-center justify-center
               ${canUndo 
                 ? 'bg-slate-600/40 backdrop-blur-sm border border-slate-400/20 hover:bg-slate-500/50 hover:border-slate-300/30 text-slate-300 hover:text-green-400' 
                 : 'bg-slate-700/20 border border-slate-700/20 text-slate-600 cursor-not-allowed'
@@ -114,14 +114,14 @@ export const CampaignToolbar = ({
             `}
             title="Отменить действие"
           >
-            <Undo className="w-4 h-4 transition-colors" />
+            <Undo className="w-3 h-3 transition-colors" />
           </button>
           
           <button
             onClick={handleRedo}
             disabled={!canRedo}
             className={`
-              group relative w-8 h-8 rounded-lg transition-all duration-200 flex items-center justify-center
+              group relative w-7 h-7 rounded-lg transition-all duration-200 flex items-center justify-center
               ${canRedo 
                 ? 'bg-slate-600/40 backdrop-blur-sm border border-slate-400/20 hover:bg-slate-500/50 hover:border-slate-300/30 text-slate-300 hover:text-green-400' 
                 : 'bg-slate-700/20 border border-slate-700/20 text-slate-600 cursor-not-allowed'
@@ -129,13 +129,13 @@ export const CampaignToolbar = ({
             `}
             title="Повторить действие"
           >
-            <Redo className="w-4 h-4 transition-colors" />
+            <Redo className="w-3 h-3 transition-colors" />
           </button>
           
           <button
             onClick={onToggleBlocksVisibility}
             className={`
-              group relative w-8 h-8 rounded-lg transition-all duration-200 flex items-center justify-center
+              group relative w-7 h-7 rounded-lg transition-all duration-200 flex items-center justify-center
               bg-slate-600/40 backdrop-blur-sm border border-slate-400/20 
               hover:bg-slate-500/50 hover:border-slate-300/30 
               ${blocksVisible ? 'text-green-400' : 'text-slate-400'}
@@ -144,49 +144,49 @@ export const CampaignToolbar = ({
             title={blocksVisible ? 'Скрыть блоки' : 'Показать блоки'}
           >
             {blocksVisible ? (
-              <Eye className="w-4 h-4 transition-colors" />
+              <Eye className="w-3 h-3 transition-colors" />
             ) : (
-              <EyeOff className="w-4 h-4 transition-colors" />
+              <EyeOff className="w-3 h-3 transition-colors" />
             )}
           </button>
         </div>
         
         {/* Separator */}
-        <div className="h-6 w-px bg-green-500/30 mx-2" />
+        <div className="h-6 w-px bg-green-500/30 mx-1 flex-shrink-0" />
         
         {/* Zoom Controls */}
-        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-600/40 backdrop-blur-sm border border-slate-400/20">
+        <div className="flex items-center gap-1 px-1.5 py-1 rounded-lg bg-slate-600/40 backdrop-blur-sm border border-slate-400/20 flex-shrink-0">
           <button 
             onClick={handleZoomOut}
-            className="w-7 h-7 rounded-md hover:bg-slate-500/40 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-6 h-6 rounded-md hover:bg-slate-500/40 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={zoom <= 25}
             title="Уменьшить масштаб"
           >
-            <ZoomOut className="w-4 h-4 text-slate-300 hover:text-green-400" />
+            <ZoomOut className="w-3 h-3 text-slate-300 hover:text-green-400" />
           </button>
           
-          <div className="px-3 py-1 text-sm text-green-400 font-medium min-w-[50px] text-center">
+          <div className="px-2 py-1 text-xs text-green-400 font-medium min-w-[40px] text-center">
             {zoom}%
           </div>
           
           <button 
             onClick={handleZoomIn}
-            className="w-7 h-7 rounded-md hover:bg-slate-500/40 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-6 h-6 rounded-md hover:bg-slate-500/40 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={zoom >= 200}
             title="Увеличить масштаб"
           >
-            <ZoomIn className="w-4 h-4 text-slate-300 hover:text-green-400" />
+            <ZoomIn className="w-3 h-3 text-slate-300 hover:text-green-400" />
           </button>
         </div>
       </div>
 
       {/* Right Side - Run Plan */}
-      <div className="relative z-10 flex-shrink-0">
+      <div className="relative z-10 flex-shrink-0 ml-2">
         <button
           onClick={onRunPlan}
           disabled={!isValid || isLoading}
           className={`
-            group relative px-8 py-3 rounded-xl font-semibold text-sm
+            group relative px-4 py-2 rounded-lg font-semibold text-xs
             transition-all duration-300 transform-gpu overflow-hidden
             ${isValid && !isLoading 
               ? 'bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 hover:from-green-500 hover:via-green-400 hover:to-emerald-400 border border-green-500/50 hover:border-green-400/70 text-white shadow-lg shadow-green-500/25 hover:shadow-green-500/40 hover:scale-105 active:scale-95' 
@@ -194,17 +194,17 @@ export const CampaignToolbar = ({
             }
           `}
         >
-          <div className="relative flex items-center gap-3">
+          <div className="relative flex items-center gap-2">
             {isLoading ? (
               <>
-                <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                <span className="tracking-wide">ВЫПОЛНЯЕТСЯ...</span>
+                <div className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                <span className="tracking-wide whitespace-nowrap">ВЫПОЛНЯЕТСЯ...</span>
               </>
             ) : (
               <>
-                <Play className="w-5 h-5 fill-current drop-shadow-sm" />
-                <span className="tracking-wide">ЗАПУСТИТЬ ПЛАН</span>
-                {isValid && <Sparkles className="w-4 h-4 opacity-80 animate-pulse" />}
+                <Play className="w-3 h-3 fill-current drop-shadow-sm" />
+                <span className="tracking-wide whitespace-nowrap">ЗАПУСТИТЬ ПЛАН</span>
+                {isValid && <Sparkles className="w-3 h-3 opacity-80 animate-pulse" />}
               </>
             )}
           </div>
@@ -212,7 +212,7 @@ export const CampaignToolbar = ({
           {isValid && !isLoading && (
             <>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300" />
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-400/0 via-green-300/20 to-green-400/0 opacity-0 group-active:opacity-100 transition-opacity duration-150" />
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-green-400/0 via-green-300/20 to-green-400/0 opacity-0 group-active:opacity-100 transition-opacity duration-150" />
             </>
           )}
         </button>
