@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Plus, Undo, Redo, ZoomIn, ZoomOut, Play, Sparkles } from 'lucide-react';
+import { Plus, Undo, Redo, ZoomIn, ZoomOut, Play, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { BuilderBlock } from '@/types/campaign';
 import { useState } from 'react';
 
@@ -11,6 +11,8 @@ interface CampaignToolbarProps {
   isLoading: boolean;
   zoom: number;
   onZoomChange: (zoom: number) => void;
+  blocksVisible: boolean;
+  onToggleBlocksVisibility: () => void;
 }
 
 export const CampaignToolbar = ({ 
@@ -19,7 +21,9 @@ export const CampaignToolbar = ({
   isValid, 
   isLoading,
   zoom,
-  onZoomChange
+  onZoomChange,
+  blocksVisible,
+  onToggleBlocksVisibility
 }: CampaignToolbarProps) => {
   const [history, setHistory] = useState<any[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -133,6 +137,28 @@ export const CampaignToolbar = ({
         {/* Separator */}
         <div className="h-4 w-px bg-green-500/30 mx-1" />
         
+        {/* Blocks Visibility Toggle */}
+        <button
+          onClick={onToggleBlocksVisibility}
+          className={`
+            group relative w-7 h-7 rounded-md transition-all duration-200 flex items-center justify-center
+            bg-slate-600/40 backdrop-blur-sm border border-slate-400/20 
+            hover:bg-slate-500/50 hover:border-slate-300/30 
+            ${blocksVisible ? 'text-green-400' : 'text-slate-400'}
+            hover:text-green-400
+          `}
+          title={blocksVisible ? 'Скрыть блоки' : 'Показать блоки'}
+        >
+          {blocksVisible ? (
+            <Eye className="w-3 h-3 transition-colors" />
+          ) : (
+            <EyeOff className="w-3 h-3 transition-colors" />
+          )}
+        </button>
+        
+        {/* Separator */}
+        <div className="h-4 w-px bg-green-500/30 mx-1" />
+        
         {/* Zoom Controls */}
         <div className="flex items-center gap-0 px-1.5 py-1 rounded-md bg-slate-600/40 backdrop-blur-sm border border-slate-400/20">
           <button 
@@ -165,28 +191,32 @@ export const CampaignToolbar = ({
           onClick={onRunPlan}
           disabled={!isValid || isLoading}
           className={`
-            group relative px-4 py-1.5 rounded-md font-bold text-xs
-            transition-all duration-200 transform-gpu overflow-hidden
+            group relative px-6 py-2 rounded-lg font-bold text-sm
+            transition-all duration-300 transform-gpu overflow-hidden
             ${isValid && !isLoading 
-              ? 'bg-gradient-to-r from-green-600/80 to-green-500/80 backdrop-blur-sm border border-green-400/30 hover:from-green-500/90 hover:to-green-400/90 hover:border-green-300/40 text-white hover:shadow-md' 
-              : 'bg-slate-600/40 backdrop-blur-sm border border-slate-500/30 text-slate-500 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 border-2 border-green-500/50 hover:border-green-400/60 text-white shadow-xl hover:shadow-green-500/30 hover:scale-105' 
+              : 'bg-slate-700/50 border-2 border-slate-600/30 text-slate-500 cursor-not-allowed'
             }
           `}
         >
-          <div className="relative flex items-center gap-1.5">
+          <div className="relative flex items-center gap-2">
             {isLoading ? (
               <>
-                <div className="w-3 h-3 border border-slate-400 border-t-transparent rounded-full animate-spin" />
-                <span>RUNNING...</span>
+                <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                <span>ВЫПОЛНЯЕТСЯ...</span>
               </>
             ) : (
               <>
-                <Play className="w-3 h-3 fill-current" />
-                <span>RUN PLAN</span>
-                {isValid && <Sparkles className="w-2.5 h-2.5 opacity-70" />}
+                <Play className="w-4 h-4 fill-current" />
+                <span>ЗАПУСТИТЬ ПЛАН</span>
+                {isValid && <Sparkles className="w-3 h-3 opacity-80" />}
               </>
             )}
           </div>
+          {/* Animated background for active state */}
+          {isValid && !isLoading && (
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-400/20 to-green-500/0 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          )}
         </button>
       </div>
     </div>

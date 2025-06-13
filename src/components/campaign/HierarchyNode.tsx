@@ -1,220 +1,181 @@
 
-import { Handle, Position, NodeResizer } from '@xyflow/react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { X, Github, CheckCircle, XCircle } from 'lucide-react';
+import { memo } from 'react';
+import { Handle, Position, NodeProps } from '@xyflow/react';
 import { BuilderBlock } from '@/types/campaign';
-import { cn } from '@/lib/utils';
+import { X, Settings } from 'lucide-react';
 
-interface HierarchyNodeProps {
-  data: {
-    block: BuilderBlock;
-    onSelect: (block: BuilderBlock) => void;
-    onDelete: (blockId: string) => void;
-    isSelected: boolean;
-  };
+interface HierarchyNodeData {
+  block: BuilderBlock;
+  onSelect: (block: BuilderBlock) => void;
+  onDelete: (blockId: string) => void;
+  isSelected: boolean;
 }
 
-export const HierarchyNode = ({ data }: HierarchyNodeProps) => {
+export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
   const { block, onSelect, onDelete, isSelected } = data;
 
-  const getBlockConfig = (type: BuilderBlock['type']) => {
-    const configs = {
-      client: { 
-        icon: '👤', 
-        title: 'Client', 
-        color: 'from-blue-500 to-blue-600',
-        bgColor: 'bg-slate-800',
-        borderColor: 'border-blue-500/50'
-      },
-      application: { 
-        icon: '📱', 
-        title: 'Application', 
-        color: 'from-purple-500 to-purple-600',
-        bgColor: 'bg-slate-800',
-        borderColor: 'border-purple-500/50'
-      },
-      platform: { 
-        icon: '🌐', 
-        title: 'Source', 
-        color: 'from-green-500 to-green-600',
-        bgColor: 'bg-slate-800',
-        borderColor: 'border-green-500/50'
-      },
-      campaign: { 
-        icon: '🎯', 
-        title: 'Campaign', 
-        color: 'from-orange-500 to-orange-600',
-        bgColor: 'bg-slate-800',
-        borderColor: 'border-orange-500/50'
-      },
-      adset: { 
-        icon: '📊', 
-        title: 'Adset', 
-        color: 'from-pink-500 to-pink-600',
-        bgColor: 'bg-slate-800',
-        borderColor: 'border-pink-500/50'
-      },
-      creative: { 
-        icon: '🎨', 
-        title: 'Creative', 
-        color: 'from-cyan-500 to-cyan-600',
-        bgColor: 'bg-slate-800',
-        borderColor: 'border-cyan-500/50'
-      },
+  const getBlockIcon = (type: BuilderBlock['type']) => {
+    const icons = {
+      client: '👤',
+      application: '📱',
+      platform: '🌐',
+      campaign: '🎯',
+      adset: '📊',
+      creative: '🎨',
     };
-    return configs[type];
+    return icons[type] || '📦';
   };
 
-  const config = getBlockConfig(block.type);
+  const getBlockTypeLabel = (type: BuilderBlock['type']) => {
+    const labels = {
+      client: 'Client',
+      application: 'Application',
+      platform: 'Platform',
+      campaign: 'Campaign',
+      adset: 'Ad Set',
+      creative: 'Creative',
+    };
+    return labels[type] || type;
+  };
 
-  const getStatusInfo = () => {
-    if (block.isValid) {
-      return {
-        icon: <CheckCircle className="w-4 h-4 text-green-400" />,
-        text: "Ready",
-        textColor: "text-green-400"
-      };
+  // Get required fields for validation indicators
+  const getRequiredFields = (type: BuilderBlock['type']) => {
+    switch (type) {
+      case 'client':
+        return ['name', 'company'];
+      case 'application':
+        return ['name', 'platform'];
+      case 'platform':
+        return ['platform', 'account'];
+      case 'campaign':
+        return ['name', 'objective'];
+      case 'adset':
+        return ['name', 'budget'];
+      case 'creative':
+        return ['name', 'format'];
+      default:
+        return [];
     }
-    return {
-      icon: <XCircle className="w-4 h-4 text-red-400" />,
-      text: "Configure",
-      textColor: "text-red-400"
-    };
   };
 
-  const status = getStatusInfo();
+  const requiredFields = getRequiredFields(block.type);
+
+  const getFieldValidationStatus = (field: string) => {
+    const value = block.props[field];
+    return !!(value && value.toString().trim());
+  };
+
+  const handleSelect = () => {
+    onSelect(block);
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(block.id);
+  };
 
   return (
-    <>
-      {isSelected && (
-        <NodeResizer 
-          minWidth={200} 
-          minHeight={100}
-          maxWidth={500}
-          maxHeight={300}
-          keepAspectRatio={false}
-        />
-      )}
-      
-      {/* All Handles for connections in all directions */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="top"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-      />
-      
-      <Handle
-        type="source"
-        position={Position.Top}
-        id="top-source"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-        style={{ left: '60%' }}
-      />
-      
-      <Handle
-        type="target"
-        position={Position.Left}
-        id="left"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-      />
-      
-      <Handle
-        type="source"
-        position={Position.Left}
-        id="left-source"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-        style={{ top: '60%' }}
-      />
-      
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="right"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-      />
-      
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right-source"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-        style={{ top: '60%' }}
-      />
-      
-      <Handle
-        type="target"
-        position={Position.Bottom}
-        id="bottom"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-      />
-      
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="bottom-source"
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-        style={{ left: '60%' }}
-      />
-      
-      <Card 
-        className={cn(
-          "relative p-4 cursor-pointer transition-all hover:shadow-lg",
-          "w-full h-full min-w-64 min-h-32 border-2",
-          config.bgColor,
-          config.borderColor,
-          isSelected && "ring-2 ring-primary shadow-lg shadow-primary/20",
-          "text-white border-slate-600 hover:border-slate-500"
-        )}
-        onClick={() => onSelect(block)}
-      >
-        {/* Delete Button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute top-2 right-2 w-6 h-6 p-0 hover:bg-red-500/20 hover:text-red-400 text-slate-400"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(block.id);
-          }}
-        >
-          <X className="w-3 h-3" />
-        </Button>
-
+    <div
+      className={`
+        relative bg-slate-800/90 backdrop-blur-sm border-2 rounded-xl shadow-lg transition-all duration-200 cursor-pointer
+        ${isSelected 
+          ? 'border-green-500 shadow-green-500/25' 
+          : 'border-green-500/30 hover:border-green-500/50 hover:shadow-green-500/15'
+        }
+      `}
+      onClick={handleSelect}
+    >
+      {/* Main Content */}
+      <div className="p-3">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center">
-            <Github className="w-4 h-4 text-white" />
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/40">
+              <span className="text-lg">{getBlockIcon(block.type)}</span>
+            </div>
+            <div>
+              <h3 className="text-green-400 font-medium text-sm">
+                {getBlockTypeLabel(block.type)}
+              </h3>
+              <p className="text-green-400/60 text-xs">
+                {block.id.slice(-4)}
+              </p>
+            </div>
           </div>
-          <div className="flex-1">
-            <h4 className="font-medium text-white text-sm">
-              {block.props.name || config.title}
-            </h4>
-            <p className="text-xs text-slate-400 truncate">
-              {block.props.description || `${config.title.toLowerCase()}-${block.id.slice(-4)}`}
-            </p>
+
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleSelect}
+              className="p-1 hover:bg-green-500/20 rounded transition-colors"
+              title="Настроить"
+            >
+              <Settings className="w-3 h-3 text-green-400/70" />
+            </button>
+            <button
+              onClick={handleDelete}
+              className="p-1 hover:bg-red-500/20 rounded transition-colors"
+              title="Удалить"
+            >
+              <X className="w-3 h-3 text-green-400/70 hover:text-red-400" />
+            </button>
           </div>
         </div>
 
-        {/* Status */}
-        <div className="flex items-center gap-2 mt-2">
-          {status.icon}
-          <span className={cn("text-xs", status.textColor)}>
-            {status.text}
+        {/* Status and Date */}
+        <div className="flex items-center justify-between text-xs text-green-400/60 mb-3">
+          <span className={block.isValid ? 'text-green-400' : 'text-red-400'}>
+            {block.isValid ? 'Настроено' : 'Требует настройки'}
           </span>
-          <span className="text-xs text-slate-500 ml-auto">
-            {new Date().toLocaleDateString()}
-          </span>
+          <span>{new Date().toLocaleDateString('ru-RU')}</span>
         </div>
 
-        {/* Type indicator */}
-        <div className="absolute bottom-2 left-4">
-          <span className="text-xs text-slate-500 bg-slate-700 px-2 py-1 rounded">
-            {config.title}
-          </span>
-        </div>
-      </Card>
-    </>
+        {/* Validation Indicators */}
+        {requiredFields.length > 0 && (
+          <div className="space-y-1">
+            {requiredFields.map((field) => {
+              const isValid = getFieldValidationStatus(field);
+              const fieldLabel = {
+                name: 'Название',
+                company: 'Компания',
+                platform: 'Платформа',
+                account: 'Аккаунт',
+                objective: 'Цель',
+                budget: 'Бюджет',
+                format: 'Формат',
+              }[field] || field;
+
+              return (
+                <div
+                  key={field}
+                  className={`
+                    px-2 py-1 rounded text-xs font-medium border transition-all duration-200
+                    ${isValid
+                      ? 'bg-green-500/20 border-green-500/50 text-green-300'
+                      : 'bg-red-500/20 border-red-500/50 text-red-300'
+                    }
+                  `}
+                >
+                  {fieldLabel}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Connection Handles */}
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+      />
+    </div>
   );
-};
+});
+
+HierarchyNode.displayName = 'HierarchyNode';

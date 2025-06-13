@@ -5,6 +5,7 @@ import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { AiChatPanel } from '@/components/campaign/AiChatPanel';
+import { FloatingChatButton } from '@/components/campaign/FloatingChatButton';
 import { ReactFlowProvider } from '@xyflow/react';
 
 export interface BuilderBlock {
@@ -25,6 +26,7 @@ const CampaignManagement = () => {
   const [selectedBlock, setSelectedBlock] = useState<BuilderBlock | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [zoom, setZoom] = useState(100);
+  const [blocksVisible, setBlocksVisible] = useState(true);
 
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -87,6 +89,11 @@ const CampaignManagement = () => {
     console.log('Campaign plan execution completed');
   }, [blocks]);
 
+  const toggleBlocksVisibility = useCallback(() => {
+    setBlocksVisible(prev => !prev);
+    console.log('Toggled blocks visibility:', !blocksVisible);
+  }, [blocksVisible]);
+
   const isValidPlan = blocks.length > 0 && blocks.every(block => block.isValid);
 
   return (
@@ -99,12 +106,14 @@ const CampaignManagement = () => {
           isLoading={isLoading}
           zoom={zoom}
           onZoomChange={setZoom}
+          blocksVisible={blocksVisible}
+          onToggleBlocksVisibility={toggleBlocksVisibility}
         />
         
         <div className="flex-1 flex overflow-hidden min-h-0">
           <ReactFlowProvider>
             <CampaignCanvas
-              blocks={blocks}
+              blocks={blocksVisible ? blocks : []}
               onBlockSelect={selectBlock}
               onBlockUpdate={updateBlock}
               onBlockDelete={deleteBlock}
@@ -127,6 +136,9 @@ const CampaignManagement = () => {
             )}
           </div>
         </div>
+
+        {/* Floating Chat Button */}
+        <FloatingChatButton />
       </div>
     </Layout>
   );
