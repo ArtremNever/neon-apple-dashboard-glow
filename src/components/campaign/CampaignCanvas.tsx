@@ -12,8 +12,6 @@ import {
   NodeTypes,
   addEdge,
   Connection,
-  OnNodesChange,
-  OnEdgesChange,
   OnConnect
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -42,7 +40,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 }: CampaignCanvasProps) => {
   const { zoomTo } = useReactFlow();
 
-  const initialNodes: Node[] = useMemo(() => 
+  const initialNodes: Node<HierarchyNodeData>[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
@@ -101,7 +99,7 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 
   // Update nodes when blocks change
   useEffect(() => {
-    const newNodes: Node[] = blocks.map((block) => ({
+    const newNodes: Node<HierarchyNodeData>[] = blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
