@@ -4,7 +4,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { BuilderBlock } from '@/types/campaign';
 import { X, Settings } from 'lucide-react';
 
-export interface HierarchyNodeData extends Record<string, unknown> {
+export interface HierarchyNodeData {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;
@@ -88,21 +88,21 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
       <div className="p-3">
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/40">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/40 flex-shrink-0">
               <span className="text-lg">{getBlockIcon(block.type)}</span>
             </div>
-            <div>
-              <h3 className="text-slate-200 font-medium text-sm">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-slate-200 font-medium text-sm truncate">
                 {getBlockTypeLabel(block.type)}
               </h3>
-              <p className="text-slate-400 text-xs">
+              <p className="text-slate-400 text-xs truncate">
                 {block.id.slice(-4)}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-shrink-0">
             <button
               onClick={handleSelect}
               className="p-1 hover:bg-blue-500/20 rounded transition-colors"
@@ -162,63 +162,30 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
         )}
       </div>
 
-      {/* Connection Handles - All 4 sides */}
+      {/* Connection Handles - One per side */}
       <Handle
         type="target"
         position={Position.Top}
-        id="target-top"
         className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
         style={{ top: -6 }}
       />
       <Handle
         type="target"
         position={Position.Left}
-        id="target-left"
         className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
         style={{ left: -6 }}
       />
       <Handle
-        type="target"
+        type="source"
         position={Position.Right}
-        id="target-right"
-        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
         style={{ right: -6 }}
       />
       <Handle
-        type="target"
+        type="source"
         position={Position.Bottom}
-        id="target-bottom"
-        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
         style={{ bottom: -6 }}
-      />
-      
-      <Handle
-        type="source"
-        position={Position.Top}
-        id="source-top"
-        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
-        style={{ top: -6, left: '75%' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Left}
-        id="source-left"
-        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
-        style={{ left: -6, top: '75%' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="source-right"
-        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
-        style={{ right: -6, top: '75%' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="source-bottom"
-        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
-        style={{ bottom: -6, left: '75%' }}
       />
     </div>
   );

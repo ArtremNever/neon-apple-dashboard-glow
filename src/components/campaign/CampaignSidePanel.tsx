@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -111,6 +110,28 @@ export const CampaignSidePanel = ({
     };
     return labels[type] || type;
   };
+
+  // If hidden, show only the collapsed state
+  if (isHidden) {
+    return (
+      <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-slate-700/50 flex items-center justify-center p-6">
+        <Button
+          onClick={toggleVisibility}
+          variant="outline"
+          className="
+            h-12 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-105
+            border-slate-600/50 hover:border-slate-500/70 bg-slate-800/30 hover:bg-slate-800/50
+            text-slate-300 hover:text-slate-200
+          "
+        >
+          <div className="flex items-center gap-2">
+            <Eye className="w-4 h-4" />
+            <span>Show Configure</span>
+          </div>
+        </Button>
+      </div>
+    );
+  }
 
   const FormField = ({ 
     label, 
@@ -390,44 +411,23 @@ export const CampaignSidePanel = ({
     }
   };
 
-  if (isHidden) {
-    return (
-      <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-slate-700/50 flex items-center justify-center p-6">
-        <Button
-          onClick={toggleVisibility}
-          variant="outline"
-          className="
-            h-12 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-105
-            border-slate-600/50 hover:border-slate-500/70 bg-slate-800/30 hover:bg-slate-800/50
-            text-slate-300 hover:text-slate-200
-          "
-        >
-          <div className="flex items-center gap-2">
-            <Eye className="w-4 h-4" />
-            <span>Show Configure</span>
-          </div>
-        </Button>
-      </div>
-    );
-  }
-
   return (
     <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-slate-700/50 flex flex-col">
       <Card className="border-0 rounded-none flex-1 bg-transparent shadow-none flex flex-col">
         <CardHeader className="pb-4 border-b border-slate-700/50 flex-shrink-0">
           <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-lg flex items-center justify-center border border-blue-500/30 flex-shrink-0">
                 <span className="text-lg">
                   {getBlockIcon(selectedBlock.type)}
                 </span>
               </div>
-              <div>
-                <h3 className="text-lg font-semibold text-slate-200">Configure {getBlockTypeLabel(selectedBlock.type)}</h3>
-                <p className="text-xs text-slate-500 font-normal mt-1">Block ID: {selectedBlock.id}</p>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-lg font-semibold text-slate-200 truncate">Configure {getBlockTypeLabel(selectedBlock.type)}</h3>
+                <p className="text-xs text-slate-500 font-normal mt-1 truncate">Block ID: {selectedBlock.id}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               {selectedBlock.isValid && (
                 <div className="flex items-center gap-2 px-2 py-1 bg-blue-500/20 rounded-md border border-blue-500/40">
                   <Check className="w-3 h-3 text-blue-400" />

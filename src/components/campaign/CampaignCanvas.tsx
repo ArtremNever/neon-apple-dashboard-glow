@@ -13,10 +13,11 @@ import {
   BackgroundVariant,
   useReactFlow,
   NodeTypes,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/types/campaign';
-import { HierarchyNode, HierarchyNodeData } from './HierarchyNode';
+import { HierarchyNode } from './HierarchyNode';
 
 interface CampaignCanvasProps {
   blocks: BuilderBlock[];
@@ -26,6 +27,13 @@ interface CampaignCanvasProps {
   onCanvasClick: () => void;
   selectedBlock: BuilderBlock | null;
   zoom: number;
+}
+
+export interface HierarchyNodeData {
+  block: BuilderBlock;
+  onSelect: (block: BuilderBlock) => void;
+  onDelete: (blockId: string) => void;
+  isSelected: boolean;
 }
 
 const nodeTypes: NodeTypes = {
@@ -62,7 +70,7 @@ export const CampaignCanvas = ({
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<HierarchyNodeData>(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   // Apply zoom when it changes
@@ -81,7 +89,7 @@ export const CampaignCanvas = ({
         animated: true,
         style: { stroke: '#3b82f6', strokeWidth: 2 },
         markerEnd: {
-          type: 'arrowclosed' as const,
+          type: MarkerType.ArrowClosed,
           width: 20,
           height: 20,
           color: '#3b82f6',
