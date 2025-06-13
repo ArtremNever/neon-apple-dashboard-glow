@@ -1,9 +1,9 @@
-
 import { useState } from 'react';
 import { CampaignCanvas } from '@/components/campaign/CampaignCanvas';
 import { CampaignToolbar } from '@/components/campaign/CampaignToolbar';
 import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { KpiForecast } from '@/components/campaign/KpiForecast';
+import { AiChatButton } from '@/components/campaign/AiChatButton';
 
 export interface BuilderBlock {
   id: string;
@@ -116,6 +116,9 @@ const CampaignManagement = () => {
           onBlockUpdate={updateBlock}
         />
       </div>
+
+      {/* AI Chat */}
+      <AiChatButton />
     </div>
   );
 };
