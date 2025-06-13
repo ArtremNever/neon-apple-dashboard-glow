@@ -39,16 +39,13 @@ export function AppSidebar() {
       collapsible="icon"
     >
       <SidebarHeader className="p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-green-500/20 border border-green-500/50 flex items-center justify-center shadow-lg shadow-green-500/20 flex-shrink-0">
-              <Zap className="w-4 h-4 text-green-400" />
-            </div>
-            {!isCollapsed && (
-              <span className="text-white font-semibold truncate">Dashboard</span>
-            )}
+        <div className="flex items-center space-x-2 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-green-500/20 border border-green-500/50 flex items-center justify-center shadow-lg shadow-green-500/20 flex-shrink-0">
+            <Zap className="w-4 h-4 text-green-400" />
           </div>
-          <SidebarTrigger className="text-green-400 hover:text-green-300 w-6 h-6 flex-shrink-0" />
+          {!isCollapsed && (
+            <span className="text-white font-semibold truncate">Dashboard</span>
+          )}
         </div>
       </SidebarHeader>
 
@@ -86,7 +83,14 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <UserMenu />
+        <div className="flex flex-col gap-2">
+          {isCollapsed && (
+            <div className="flex justify-center">
+              <SidebarTrigger className="text-green-400 hover:text-green-300 w-8 h-8" />
+            </div>
+          )}
+          <UserMenu />
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
