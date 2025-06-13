@@ -29,7 +29,7 @@ export const CampaignSidePanel = ({
   }
 
   const updateProps = (newProps: Record<string, any>) => {
-    const isValid = validateBlock(selectedBlock.type, newProps);
+    const isValid = validateBlock(selectedBlock.type, { ...selectedBlock.props, ...newProps });
     onBlockUpdate(selectedBlock.id, { 
       props: { ...selectedBlock.props, ...newProps },
       isValid 
@@ -38,19 +38,106 @@ export const CampaignSidePanel = ({
 
   const validateBlock = (type: string, props: Record<string, any>): boolean => {
     switch (type) {
+      case 'client':
+        return !!props.name && !!props.company;
+      case 'application':
+        return !!props.name && !!props.platform;
       case 'platform':
         return !!props.platform && !!props.account;
-      case 'budget':
-        return !!props.daily && props.daily > 0;
-      case 'audience':
-        return !!props.countries && props.countries.length > 0;
+      case 'campaign':
+        return !!props.name && !!props.objective;
+      case 'adset':
+        return !!props.name && !!props.budget;
+      case 'creative':
+        return !!props.name && !!props.format;
       default:
         return true;
     }
   };
 
+  const getBlockIcon = (type: BuilderBlock['type']) => {
+    const icons = {
+      client: '👤',
+      application: '📱',
+      platform: '🌐',
+      campaign: '🎯',
+      adset: '📊',
+      creative: '🎨',
+    };
+    return icons[type] || '📦';
+  };
+
   const renderBlockConfig = () => {
     switch (selectedBlock.type) {
+      case 'client':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">Client Name</Label>
+              <Input
+                value={selectedBlock.props.name || ''}
+                onChange={(e) => updateProps({ name: e.target.value })}
+                placeholder="Enter client name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="company">Company</Label>
+              <Input
+                value={selectedBlock.props.company || ''}
+                onChange={(e) => updateProps({ company: e.target.value })}
+                placeholder="Enter company name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                value={selectedBlock.props.email || ''}
+                onChange={(e) => updateProps({ email: e.target.value })}
+                placeholder="client@company.com"
+              />
+            </div>
+          </div>
+        );
+
+      case 'application':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">App Name</Label>
+              <Input
+                value={selectedBlock.props.name || ''}
+                onChange={(e) => updateProps({ name: e.target.value })}
+                placeholder="Enter app name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="platform">Platform</Label>
+              <Select
+                value={selectedBlock.props.platform || ''}
+                onValueChange={(value) => updateProps({ platform: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select platform" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ios">iOS</SelectItem>
+                  <SelectItem value="android">Android</SelectItem>
+                  <SelectItem value="web">Web</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="bundleId">Bundle ID</Label>
+              <Input
+                value={selectedBlock.props.bundleId || ''}
+                onChange={(e) => updateProps({ bundleId: e.target.value })}
+                placeholder="com.company.app"
+              />
+            </div>
+          </div>
+        );
+
       case 'platform':
         return (
           <div className="space-y-4">
@@ -71,7 +158,6 @@ export const CampaignSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-
             <div>
               <Label htmlFor="account">Account</Label>
               <Select
@@ -88,56 +174,76 @@ export const CampaignSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+        );
 
+      case 'campaign':
+        return (
+          <div className="space-y-4">
             <div>
-              <Label htmlFor="application">Application</Label>
+              <Label htmlFor="name">Campaign Name</Label>
+              <Input
+                value={selectedBlock.props.name || ''}
+                onChange={(e) => updateProps({ name: e.target.value })}
+                placeholder="Enter campaign name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="objective">Objective</Label>
               <Select
-                value={selectedBlock.props.application || ''}
-                onValueChange={(value) => updateProps({ application: value })}
+                value={selectedBlock.props.objective || ''}
+                onValueChange={(value) => updateProps({ objective: value })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select application" />
+                  <SelectValue placeholder="Select objective" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="app1">My Game App</SelectItem>
-                  <SelectItem value="app2">Shopping App</SelectItem>
+                  <SelectItem value="awareness">Brand Awareness</SelectItem>
+                  <SelectItem value="traffic">Traffic</SelectItem>
+                  <SelectItem value="conversions">Conversions</SelectItem>
+                  <SelectItem value="app_installs">App Installs</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
             <Button
               variant="outline"
               className="w-full gap-2"
               onClick={() => {
-                const suggestedName = `${selectedBlock.props.platform?.toUpperCase()}_USCA_APP`;
-                updateProps({ campaignName: suggestedName });
+                const suggestedName = `CAMPAIGN_${selectedBlock.props.objective?.toUpperCase()}_${Date.now().toString().slice(-4)}`;
+                updateProps({ name: suggestedName });
               }}
             >
               <Sparkles className="w-4 h-4" />
-              AI-Suggest Name
+              AI-Generate Name
             </Button>
-
-            {selectedBlock.props.campaignName && (
-              <div>
-                <Label htmlFor="campaignName">Campaign Name</Label>
-                <Input
-                  value={selectedBlock.props.campaignName}
-                  onChange={(e) => updateProps({ campaignName: e.target.value })}
-                />
-              </div>
-            )}
           </div>
         );
 
-      case 'audience':
+      case 'adset':
         return (
           <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">Adset Name</Label>
+              <Input
+                value={selectedBlock.props.name || ''}
+                onChange={(e) => updateProps({ name: e.target.value })}
+                placeholder="Enter adset name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="budget">Daily Budget ($)</Label>
+              <Input
+                type="number"
+                value={selectedBlock.props.budget || ''}
+                onChange={(e) => updateProps({ budget: Number(e.target.value) })}
+                placeholder="Enter daily budget"
+              />
+            </div>
             <div>
               <Label>Geographic Targeting</Label>
               <div className="text-sm text-muted-foreground mb-2">
                 Countries: {selectedBlock.props.countries?.join(', ') || 'None'}
               </div>
-              
               <Button
                 variant="outline"
                 className="w-full gap-2"
@@ -150,65 +256,52 @@ export const CampaignSidePanel = ({
                 🔥 AI-Pick Tier-1 GEOs
               </Button>
             </div>
-
-            <div>
-              <Label htmlFor="ageMin">Age Range</Label>
-              <div className="flex gap-2">
-                <Input
-                  type="number"
-                  placeholder="Min"
-                  value={selectedBlock.props.ageMin || ''}
-                  onChange={(e) => updateProps({ ageMin: e.target.value })}
-                />
-                <Input
-                  type="number"
-                  placeholder="Max"
-                  value={selectedBlock.props.ageMax || ''}
-                  onChange={(e) => updateProps({ ageMax: e.target.value })}
-                />
-              </div>
-            </div>
           </div>
         );
 
-      case 'budget':
+      case 'creative':
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="daily">Daily Budget ($)</Label>
+              <Label htmlFor="name">Creative Name</Label>
               <Input
-                type="number"
-                value={selectedBlock.props.daily || ''}
-                onChange={(e) => updateProps({ daily: Number(e.target.value) })}
-                placeholder="Enter daily budget"
+                value={selectedBlock.props.name || ''}
+                onChange={(e) => updateProps({ name: e.target.value })}
+                placeholder="Enter creative name"
               />
             </div>
-
             <div>
-              <Label htmlFor="total">Total Budget ($)</Label>
-              <Input
-                type="number"
-                value={selectedBlock.props.total || ''}
-                onChange={(e) => updateProps({ total: Number(e.target.value) })}
-                placeholder="Optional"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="bidStrategy">Bid Strategy</Label>
+              <Label htmlFor="format">Format</Label>
               <Select
-                value={selectedBlock.props.bidStrategy || ''}
-                onValueChange={(value) => updateProps({ bidStrategy: value })}
+                value={selectedBlock.props.format || ''}
+                onValueChange={(value) => updateProps({ format: value })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select strategy" />
+                  <SelectValue placeholder="Select format" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="lowest_cost">Lowest Cost</SelectItem>
-                  <SelectItem value="cost_cap">Cost Cap</SelectItem>
-                  <SelectItem value="bid_cap">Bid Cap</SelectItem>
+                  <SelectItem value="image">Single Image</SelectItem>
+                  <SelectItem value="video">Video</SelectItem>
+                  <SelectItem value="carousel">Carousel</SelectItem>
+                  <SelectItem value="collection">Collection</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <Label htmlFor="headline">Headline</Label>
+              <Input
+                value={selectedBlock.props.headline || ''}
+                onChange={(e) => updateProps({ headline: e.target.value })}
+                placeholder="Enter headline"
+              />
+            </div>
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Input
+                value={selectedBlock.props.description || ''}
+                onChange={(e) => updateProps({ description: e.target.value })}
+                placeholder="Enter description"
+              />
             </div>
           </div>
         );
@@ -228,12 +321,7 @@ export const CampaignSidePanel = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span className="text-2xl">
-              {selectedBlock.type === 'platform' && '🌐'}
-              {selectedBlock.type === 'budget' && '💰'}
-              {selectedBlock.type === 'audience' && '👥'}
-              {selectedBlock.type === 'creative' && '🎨'}
-              {selectedBlock.type === 'adset' && '📊'}
-              {selectedBlock.type === 'client' && '👤'}
+              {getBlockIcon(selectedBlock.type)}
             </span>
             Configure {selectedBlock.type.charAt(0).toUpperCase() + selectedBlock.type.slice(1)}
           </CardTitle>

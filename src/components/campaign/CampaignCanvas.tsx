@@ -1,9 +1,20 @@
 
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { X, Grip } from 'lucide-react';
+import { useCallback, useMemo } from 'react';
+import {
+  ReactFlow,
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  Connection,
+  Edge,
+  Node,
+  BackgroundVariant,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/pages/CampaignManagement';
-import { cn } from '@/lib/utils';
+import { HierarchyNode } from './HierarchyNode';
 
 interface CampaignCanvasProps {
   blocks: BuilderBlock[];
@@ -13,92 +24,113 @@ interface CampaignCanvasProps {
   selectedBlock: BuilderBlock | null;
 }
 
+const nodeTypes = {
+  hierarchy: HierarchyNode,
+};
+
 export const CampaignCanvas = ({
   blocks,
   onBlockSelect,
+  onBlockUpdate,
   onBlockDelete,
   selectedBlock,
 }: CampaignCanvasProps) => {
-  const getBlockIcon = (type: BuilderBlock['type']) => {
-    const icons = {
-      platform: '🌐',
-      budget: '💰',
-      audience: '👥',
-      creative: '🎨',
-      adset: '📊',
-      client: '👤',
-    };
-    return icons[type] || '📦';
-  };
+  const initialNodes: Node[] = useMemo(() => 
+    blocks.map((block) => ({
+      id: block.id,
+      type: 'hierarchy',
+      position: { x: block.layout.x, y: block.layout.y },
+      data: {
+        block,
+        onSelect: onBlockSelect,
+        onDelete: onBlockDelete,
+        isSelected: selectedBlock?.id === block.id,
+      },
+    })),
+    [blocks, selectedBlock, onBlockSelect, onBlockDelete]
+  );
 
-  const getBlockTitle = (type: BuilderBlock['type']) => {
-    const titles = {
-      platform: 'Platform',
-      budget: 'Budget',
-      audience: 'Audience',
-      creative: 'Creative',
-      adset: 'Adset',
-      client: 'Client',
-    };
-    return titles[type] || 'Block';
-  };
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  return (
-    <div className="flex-1 p-6 bg-background overflow-auto">
-      {blocks.length === 0 ? (
+  const onConnect = useCallback(
+    (params: Connection) => {
+      const newEdge: Edge = {
+        ...params,
+        id: `${params.source}-${params.target}`,
+        type: 'smoothstep',
+        animated: true,
+        style: { stroke: '#10b981', strokeWidth: 2 },
+      };
+      setEdges((eds) => addEdge(newEdge, eds));
+    },
+    [setEdges]
+  );
+
+  const onNodeDragStop = useCallback(
+    (event: any, node: Node) => {
+      onBlockUpdate(node.id, {
+        layout: {
+          ...blocks.find(b => b.id === node.id)?.layout || { w: 3, h: 2 },
+          x: node.position.x,
+          y: node.position.y,
+        },
+      });
+    },
+    [blocks, onBlockUpdate]
+  );
+
+  // Update nodes when blocks change
+  useMemo(() => {
+    setNodes(blocks.map((block) => ({
+      id: block.id,
+      type: 'hierarchy',
+      position: { x: block.layout.x, y: block.layout.y },
+      data: {
+        block,
+        onSelect: onBlockSelect,
+        onDelete: onBlockDelete,
+        isSelected: selectedBlock?.id === block.id,
+      },
+    })));
+  }, [blocks, selectedBlock, onBlockSelect, onBlockDelete, setNodes]);
+
+  if (blocks.length === 0) {
+    return (
+      <div className="flex-1 p-6 bg-slate-900 overflow-auto">
         <div className="flex items-center justify-center h-full">
           <div className="text-center text-muted-foreground">
             <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-lg font-medium mb-2">Start Building Your Campaign</h3>
-            <p className="text-sm">Add blocks from the toolbar to create your campaign</p>
+            <h3 className="text-lg font-medium mb-2 text-white">Start Building Your Campaign</h3>
+            <p className="text-sm text-slate-400">Add blocks from the toolbar to create your campaign hierarchy</p>
           </div>
         </div>
-      ) : (
-        <div className="grid grid-cols-12 gap-4 min-h-full">
-          {blocks.map((block) => (
-            <Card
-              key={block.id}
-              className={cn(
-                "relative p-4 cursor-pointer transition-all hover:shadow-md",
-                "col-span-3 h-32", // Default size
-                selectedBlock?.id === block.id && "ring-2 ring-primary",
-                !block.isValid && "ring-2 ring-destructive",
-                block.isValid && "ring-2 ring-green-500"
-              )}
-              onClick={() => onBlockSelect(block)}
-            >
-              {/* Delete Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute top-2 right-2 w-6 h-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onBlockDelete(block.id);
-                }}
-              >
-                <X className="w-3 h-3" />
-              </Button>
+      </div>
+    );
+  }
 
-              {/* Drag Handle */}
-              <div className="absolute top-2 left-2 cursor-move text-muted-foreground">
-                <Grip className="w-4 h-4" />
-              </div>
-
-              {/* Block Content */}
-              <div className="flex flex-col items-center justify-center h-full pt-4">
-                <div className="text-2xl mb-2">{getBlockIcon(block.type)}</div>
-                <h4 className="font-medium text-sm text-center">
-                  {getBlockTitle(block.type)}
-                </h4>
-                <div className="text-xs text-muted-foreground mt-1">
-                  {block.isValid ? '✓ Valid' : '⚠ Configure'}
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
+  return (
+    <div className="flex-1 bg-slate-900">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onNodeDragStop={onNodeDragStop}
+        nodeTypes={nodeTypes}
+        fitView
+        className="bg-slate-900"
+        style={{ backgroundColor: '#0f172a' }}
+      >
+        <Controls className="bg-slate-800 border-slate-700 text-white" />
+        <Background 
+          variant={BackgroundVariant.Dots} 
+          gap={20} 
+          size={1}
+          color="#334155"
+        />
+      </ReactFlow>
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { KpiForecast } from '@/components/campaign/KpiForecast';
 
 export interface BuilderBlock {
   id: string;
-  type: 'platform' | 'budget' | 'audience' | 'creative' | 'adset' | 'client';
+  type: 'client' | 'application' | 'platform' | 'campaign' | 'adset' | 'creative';
   props: Record<string, any>;
   layout: {
     x: number;
@@ -30,8 +30,8 @@ const CampaignManagement = () => {
       type,
       props: {},
       layout: {
-        x: 0,
-        y: 0,
+        x: Math.random() * 400,
+        y: Math.random() * 200,
         w: 3,
         h: 2,
       },
@@ -70,9 +70,8 @@ const CampaignManagement = () => {
     
     setIsLoading(true);
     try {
-      // Здесь будет интеграция с API
       console.log('Running plan with blocks:', blocks);
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Mock delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
     } finally {
       setIsLoading(false);
     }

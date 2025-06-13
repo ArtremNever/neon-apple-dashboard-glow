@@ -16,28 +16,28 @@ export const CampaignToolbar = ({
   isValid, 
   isLoading 
 }: CampaignToolbarProps) => {
-  const blockTypes: Array<{ type: BuilderBlock['type']; label: string }> = [
-    { type: 'platform', label: 'Platform' },
-    { type: 'audience', label: 'Audience' },
-    { type: 'budget', label: 'Budget' },
-    { type: 'creative', label: 'Creative' },
-    { type: 'adset', label: 'Adset' },
-    { type: 'client', label: 'Client' },
+  const blockTypes: Array<{ type: BuilderBlock['type']; label: string; icon: string }> = [
+    { type: 'client', label: 'Client', icon: '👤' },
+    { type: 'application', label: 'App', icon: '📱' },
+    { type: 'platform', label: 'Source', icon: '🌐' },
+    { type: 'campaign', label: 'Campaign', icon: '🎯' },
+    { type: 'adset', label: 'Adset', icon: '📊' },
+    { type: 'creative', label: 'Creative', icon: '🎨' },
   ];
 
   return (
     <div className="h-14 bg-card border-b border-border flex items-center justify-between px-6">
       {/* Left Side - Block Tools */}
       <div className="flex items-center gap-2">
-        {blockTypes.map(({ type, label }) => (
+        {blockTypes.map(({ type, label, icon }) => (
           <Button
             key={type}
             variant="outline"
             size="sm"
             onClick={() => onAddBlock(type)}
-            className="gap-1"
+            className="gap-1 hover:bg-accent"
           >
-            <Plus className="w-3 h-3" />
+            <span className="text-sm">{icon}</span>
             {label}
           </Button>
         ))}
