@@ -1,10 +1,11 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BuilderBlock } from '@/pages/CampaignManagement';
-import { Sparkles, Zap } from 'lucide-react';
+import { Sparkles, Zap, Settings2, Check } from 'lucide-react';
 
 interface CampaignSidePanelProps {
   selectedBlock: BuilderBlock | null;
@@ -17,11 +18,13 @@ export const CampaignSidePanel = ({
 }: CampaignSidePanelProps) => {
   if (!selectedBlock) {
     return (
-      <div className="h-full bg-slate-950 flex items-center justify-center p-4">
-        <div className="text-center text-green-400/70">
-          <div className="text-2xl mb-2">👆</div>
-          <h3 className="font-medium mb-1 text-sm">Выберите блок</h3>
-          <p className="text-xs text-green-400/50">Кликните на блок для настройки</p>
+      <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm flex items-center justify-center p-6">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full flex items-center justify-center border border-green-500/30">
+            <Settings2 className="w-8 h-8 text-green-400" />
+          </div>
+          <h3 className="font-semibold mb-2 text-green-400">Select a Block</h3>
+          <p className="text-sm text-green-400/60 max-w-48">Click on any block in the canvas to configure its properties</p>
         </div>
       </div>
     );
@@ -66,37 +69,49 @@ export const CampaignSidePanel = ({
     return icons[type] || '📦';
   };
 
+  const getBlockTypeLabel = (type: BuilderBlock['type']) => {
+    const labels = {
+      client: 'Client',
+      application: 'Application',
+      platform: 'Platform',
+      campaign: 'Campaign',
+      adset: 'Ad Set',
+      creative: 'Creative',
+    };
+    return labels[type] || type;
+  };
+
   const renderBlockConfig = () => {
     switch (selectedBlock.type) {
       case 'client':
         return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="name" className="text-xs">Client Name</Label>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium text-green-300">Client Name</Label>
               <Input
                 value={selectedBlock.props.name || ''}
                 onChange={(e) => updateProps({ name: e.target.value })}
                 placeholder="Enter client name"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label htmlFor="company" className="text-xs">Company</Label>
+            <div className="space-y-2">
+              <Label htmlFor="company" className="text-sm font-medium text-green-300">Company</Label>
               <Input
                 value={selectedBlock.props.company || ''}
                 onChange={(e) => updateProps({ company: e.target.value })}
                 placeholder="Enter company name"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label htmlFor="email" className="text-xs">Email</Label>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium text-green-300">Email</Label>
               <Input
                 type="email"
                 value={selectedBlock.props.email || ''}
                 onChange={(e) => updateProps({ email: e.target.value })}
                 placeholder="client@company.com"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
           </div>
@@ -104,39 +119,39 @@ export const CampaignSidePanel = ({
 
       case 'application':
         return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="name" className="text-xs">App Name</Label>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium text-green-300">App Name</Label>
               <Input
                 value={selectedBlock.props.name || ''}
                 onChange={(e) => updateProps({ name: e.target.value })}
                 placeholder="Enter app name"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label htmlFor="platform" className="text-xs">Platform</Label>
+            <div className="space-y-2">
+              <Label htmlFor="platform" className="text-sm font-medium text-green-300">Platform</Label>
               <Select
                 value={selectedBlock.props.platform || ''}
                 onValueChange={(value) => updateProps({ platform: value })}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="bg-slate-800/50 border-green-500/30 text-slate-200 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200">
                   <SelectValue placeholder="Select platform" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-green-500/30">
                   <SelectItem value="ios">iOS</SelectItem>
                   <SelectItem value="android">Android</SelectItem>
                   <SelectItem value="web">Web</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="bundleId" className="text-xs">Bundle ID</Label>
+            <div className="space-y-2">
+              <Label htmlFor="bundleId" className="text-sm font-medium text-green-300">Bundle ID</Label>
               <Input
                 value={selectedBlock.props.bundleId || ''}
                 onChange={(e) => updateProps({ bundleId: e.target.value })}
                 placeholder="com.company.app"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
           </div>
@@ -144,17 +159,17 @@ export const CampaignSidePanel = ({
 
       case 'platform':
         return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="platform" className="text-xs">Platform</Label>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="platform" className="text-sm font-medium text-green-300">Platform</Label>
               <Select
                 value={selectedBlock.props.platform || ''}
                 onValueChange={(value) => updateProps({ platform: value })}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="bg-slate-800/50 border-green-500/30 text-slate-200 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200">
                   <SelectValue placeholder="Select platform" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-green-500/30">
                   <SelectItem value="facebook">Facebook</SelectItem>
                   <SelectItem value="google">Google Ads</SelectItem>
                   <SelectItem value="tiktok">TikTok</SelectItem>
@@ -162,17 +177,17 @@ export const CampaignSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="account" className="text-xs">Account</Label>
+            <div className="space-y-2">
+              <Label htmlFor="account" className="text-sm font-medium text-green-300">Account</Label>
               <Select
                 value={selectedBlock.props.account || ''}
                 onValueChange={(value) => updateProps({ account: value })}
                 disabled={!selectedBlock.props.platform}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="bg-slate-800/50 border-green-500/30 text-slate-200 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200 disabled:opacity-50">
                   <SelectValue placeholder="Select account" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-green-500/30">
                   <SelectItem value="account1">Account 1</SelectItem>
                   <SelectItem value="account2">Account 2</SelectItem>
                 </SelectContent>
@@ -183,26 +198,26 @@ export const CampaignSidePanel = ({
 
       case 'campaign':
         return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="name" className="text-xs">Campaign Name</Label>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium text-green-300">Campaign Name</Label>
               <Input
                 value={selectedBlock.props.name || ''}
                 onChange={(e) => updateProps({ name: e.target.value })}
                 placeholder="Enter campaign name"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label htmlFor="objective" className="text-xs">Objective</Label>
+            <div className="space-y-2">
+              <Label htmlFor="objective" className="text-sm font-medium text-green-300">Objective</Label>
               <Select
                 value={selectedBlock.props.objective || ''}
                 onValueChange={(value) => updateProps({ objective: value })}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="bg-slate-800/50 border-green-500/30 text-slate-200 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200">
                   <SelectValue placeholder="Select objective" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-green-500/30">
                   <SelectItem value="awareness">Brand Awareness</SelectItem>
                   <SelectItem value="traffic">Traffic</SelectItem>
                   <SelectItem value="conversions">Conversions</SelectItem>
@@ -212,13 +227,13 @@ export const CampaignSidePanel = ({
             </div>
             <Button
               variant="outline"
-              className="w-full gap-1 h-8 text-xs"
+              className="w-full gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/50 text-green-300 hover:from-green-500/30 hover:to-emerald-500/30 hover:border-green-400/70 transition-all duration-200"
               onClick={() => {
                 const suggestedName = `CAMPAIGN_${selectedBlock.props.objective?.toUpperCase()}_${Date.now().toString().slice(-4)}`;
                 updateProps({ name: suggestedName });
               }}
             >
-              <Sparkles className="w-3 h-3" />
+              <Sparkles className="w-4 h-4" />
               AI-Generate Name
             </Button>
           </div>
@@ -226,68 +241,70 @@ export const CampaignSidePanel = ({
 
       case 'adset':
         return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="name" className="text-xs">Adset Name</Label>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium text-green-300">Adset Name</Label>
               <Input
                 value={selectedBlock.props.name || ''}
                 onChange={(e) => updateProps({ name: e.target.value })}
                 placeholder="Enter adset name"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label htmlFor="budget" className="text-xs">Daily Budget ($)</Label>
+            <div className="space-y-2">
+              <Label htmlFor="budget" className="text-sm font-medium text-green-300">Daily Budget ($)</Label>
               <Input
                 type="number"
                 value={selectedBlock.props.budget || ''}
                 onChange={(e) => updateProps({ budget: Number(e.target.value) })}
                 placeholder="Enter daily budget"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label className="text-xs">Geographic Targeting</Label>
-              <div className="text-xs text-green-400/60 mb-2">
-                Countries: {selectedBlock.props.countries?.join(', ') || 'None'}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-green-300">Geographic Targeting</Label>
+              <div className="p-3 bg-slate-800/30 rounded-lg border border-green-500/20">
+                <div className="text-sm text-green-400/80 mb-2">
+                  Countries: {selectedBlock.props.countries?.join(', ') || 'None selected'}
+                </div>
+                <Button
+                  variant="outline"
+                  className="w-full gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 border-orange-500/50 text-orange-300 hover:from-orange-500/30 hover:to-red-500/30 hover:border-orange-400/70 transition-all duration-200"
+                  onClick={() => {
+                    const tier1Countries = ['US', 'CA', 'AU', 'GB'];
+                    updateProps({ countries: tier1Countries });
+                  }}
+                >
+                  <Zap className="w-4 h-4" />
+                  🔥 AI-Pick Tier-1 GEOs
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                className="w-full gap-1 h-8 text-xs"
-                onClick={() => {
-                  const tier1Countries = ['US', 'CA', 'AU', 'GB'];
-                  updateProps({ countries: tier1Countries });
-                }}
-              >
-                <Zap className="w-3 h-3" />
-                🔥 AI-Pick Tier-1 GEOs
-              </Button>
             </div>
           </div>
         );
 
       case 'creative':
         return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="name" className="text-xs">Creative Name</Label>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium text-green-300">Creative Name</Label>
               <Input
                 value={selectedBlock.props.name || ''}
                 onChange={(e) => updateProps({ name: e.target.value })}
                 placeholder="Enter creative name"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label htmlFor="format" className="text-xs">Format</Label>
+            <div className="space-y-2">
+              <Label htmlFor="format" className="text-sm font-medium text-green-300">Format</Label>
               <Select
                 value={selectedBlock.props.format || ''}
                 onValueChange={(value) => updateProps({ format: value })}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="bg-slate-800/50 border-green-500/30 text-slate-200 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200">
                   <SelectValue placeholder="Select format" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-green-500/30">
                   <SelectItem value="image">Single Image</SelectItem>
                   <SelectItem value="video">Video</SelectItem>
                   <SelectItem value="carousel">Carousel</SelectItem>
@@ -295,22 +312,22 @@ export const CampaignSidePanel = ({
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="headline" className="text-xs">Headline</Label>
+            <div className="space-y-2">
+              <Label htmlFor="headline" className="text-sm font-medium text-green-300">Headline</Label>
               <Input
                 value={selectedBlock.props.headline || ''}
                 onChange={(e) => updateProps({ headline: e.target.value })}
                 placeholder="Enter headline"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
-            <div>
-              <Label htmlFor="description" className="text-xs">Description</Label>
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-sm font-medium text-green-300">Description</Label>
               <Input
                 value={selectedBlock.props.description || ''}
                 onChange={(e) => updateProps({ description: e.target.value })}
                 placeholder="Enter description"
-                className="h-8 text-xs"
+                className="bg-slate-800/50 border-green-500/30 text-slate-200 placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20 transition-all duration-200"
               />
             </div>
           </div>
@@ -318,25 +335,38 @@ export const CampaignSidePanel = ({
 
       default:
         return (
-          <div className="text-center text-green-400/60">
-            <p className="text-xs">Configuration for {selectedBlock.type} coming soon...</p>
+          <div className="text-center text-green-400/60 py-8">
+            <p className="text-sm">Configuration for {selectedBlock.type} coming soon...</p>
           </div>
         );
     }
   };
 
   return (
-    <div className="h-full bg-slate-950">
-      <Card className="border-0 rounded-none h-full border-green-500/30">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <span className="text-lg">
-              {getBlockIcon(selectedBlock.type)}
-            </span>
-            Configure {selectedBlock.type.charAt(0).toUpperCase() + selectedBlock.type.slice(1)}
+    <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-green-500/30">
+      <Card className="border-0 rounded-none h-full bg-transparent shadow-none">
+        <CardHeader className="pb-4 border-b border-green-500/20">
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg flex items-center justify-center border border-green-500/30">
+                <span className="text-lg">
+                  {getBlockIcon(selectedBlock.type)}
+                </span>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-green-400">Configure {getBlockTypeLabel(selectedBlock.type)}</h3>
+                <p className="text-xs text-green-400/60 font-normal">Block ID: {selectedBlock.id}</p>
+              </div>
+            </div>
+            {selectedBlock.isValid && (
+              <div className="flex items-center gap-1 px-2 py-1 bg-green-500/20 rounded-md border border-green-500/40">
+                <Check className="w-3 h-3 text-green-400" />
+                <span className="text-xs text-green-400 font-medium">Valid</span>
+              </div>
+            )}
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-xs">
+        <CardContent className="p-6 overflow-auto">
           {renderBlockConfig()}
         </CardContent>
       </Card>
