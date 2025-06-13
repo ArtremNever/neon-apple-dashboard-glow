@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Plus, Undo, Redo, ZoomIn, ZoomOut, Play, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { BuilderBlock } from '@/types/campaign';
@@ -68,21 +69,21 @@ export const CampaignToolbar = ({
   return (
     <div className="h-14 bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 flex items-center justify-between px-4 relative overflow-hidden">
       {/* Left Side - Block Tools */}
-      <div className="flex items-center gap-2 relative z-10 flex-1 min-w-0">
-        {/* Block Type Buttons */}
-        <div className="flex items-center gap-1 overflow-x-auto">
+      <div className="flex items-center gap-2 relative z-10 flex-1 min-w-0 pr-4">
+        {/* Block Type Buttons - Made wider to extend across more space */}
+        <div className="flex items-center gap-1 overflow-hidden flex-1">
           {blockTypes.map(({ type, label, icon }) => (
             <button
               key={type}
               onClick={() => onAddBlock(type)}
               className="
-                group relative px-2 py-1.5 rounded-md text-xs font-bold text-white
+                group relative px-4 py-1.5 rounded-md text-xs font-bold text-white
                 bg-gradient-to-r from-slate-600/40 via-slate-500/40 to-slate-400/40
                 backdrop-blur-sm border border-slate-400/20
                 hover:from-slate-500/50 hover:via-slate-400/50 hover:to-slate-300/50
                 hover:border-slate-300/30 hover:shadow-lg hover:shadow-slate-500/20
                 transition-all duration-200 ease-out
-                flex items-center gap-1 min-w-0 flex-shrink-0
+                flex items-center gap-1.5 flex-1 justify-center
                 focus:outline-none focus:ring-2 focus:ring-green-500/30
               "
             >

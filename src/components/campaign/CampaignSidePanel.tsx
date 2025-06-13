@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { BuilderBlock } from '@/types/campaign';
-import { Sparkles, Zap, Settings2, Check } from 'lucide-react';
+import { Sparkles, Zap, Settings2, Check, Save, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface CampaignSidePanelProps {
   selectedBlock: BuilderBlock | null;
@@ -17,6 +18,17 @@ export const CampaignSidePanel = ({
   selectedBlock, 
   onBlockUpdate 
 }: CampaignSidePanelProps) => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Initialize form data when selected block changes
+  useEffect(() => {
+    if (selectedBlock) {
+      setFormData(selectedBlock.props);
+      setHasChanges(false);
+    }
+  }, [selectedBlock]);
+
   if (!selectedBlock) {
     return (
       <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm flex items-center justify-center p-6">
@@ -31,12 +43,24 @@ export const CampaignSidePanel = ({
     );
   }
 
-  const updateProps = (newProps: Record<string, any>) => {
-    const isValid = validateBlock(selectedBlock.type, { ...selectedBlock.props, ...newProps });
+  const updateFormData = (newData: Record<string, any>) => {
+    setFormData(prev => ({ ...prev, ...newData }));
+    setHasChanges(true);
+  };
+
+  const handleSave = () => {
+    const isValid = validateBlock(selectedBlock.type, formData);
     onBlockUpdate(selectedBlock.id, { 
-      props: { ...selectedBlock.props, ...newProps },
+      props: formData,
       isValid 
     });
+    setHasChanges(false);
+    console.log('Saved block configuration:', formData);
+  };
+
+  const handleCancel = () => {
+    setFormData(selectedBlock.props);
+    setHasChanges(false);
   };
 
   const validateBlock = (type: string, props: Record<string, any>): boolean => {
@@ -125,7 +149,7 @@ export const CampaignSidePanel = ({
       </SelectTrigger>
       <SelectContent className="
         bg-slate-800/95 backdrop-blur-xl border-2 border-slate-700/50 
-        rounded-xl shadow-2xl
+        rounded-xl shadow-2xl z-50
       ">
         {children}
       </SelectContent>
@@ -169,16 +193,16 @@ export const CampaignSidePanel = ({
           <div className="space-y-6">
             <FormField label="Client Name">
               <StyledInput
-                value={selectedBlock.props.name || ''}
-                onChange={(e) => updateProps({ name: e.target.value })}
+                value={formData.name || ''}
+                onChange={(e) => updateFormData({ name: e.target.value })}
                 placeholder="Enter client name"
               />
             </FormField>
 
             <FormField label="Company">
               <StyledInput
-                value={selectedBlock.props.company || ''}
-                onChange={(e) => updateProps({ company: e.target.value })}
+                value={formData.company || ''}
+                onChange={(e) => updateFormData({ company: e.target.value })}
                 placeholder="Enter company name"
               />
             </FormField>
@@ -186,8 +210,8 @@ export const CampaignSidePanel = ({
             <FormField label="Email">
               <StyledInput
                 type="email"
-                value={selectedBlock.props.email || ''}
-                onChange={(e) => updateProps({ email: e.target.value })}
+                value={formData.email || ''}
+                onChange={(e) => updateFormData({ email: e.target.value })}
                 placeholder="client@company.com"
               />
             </FormField>
@@ -199,16 +223,16 @@ export const CampaignSidePanel = ({
           <div className="space-y-6">
             <FormField label="App Name">
               <StyledInput
-                value={selectedBlock.props.name || ''}
-                onChange={(e) => updateProps({ name: e.target.value })}
+                value={formData.name || ''}
+                onChange={(e) => updateFormData({ name: e.target.value })}
                 placeholder="Enter app name"
               />
             </FormField>
 
             <FormField label="Platform">
               <StyledSelect
-                value={selectedBlock.props.platform || ''}
-                onValueChange={(value) => updateProps({ platform: value })}
+                value={formData.platform || ''}
+                onValueChange={(value) => updateFormData({ platform: value })}
               >
                 <SelectItem value="ios">iOS</SelectItem>
                 <SelectItem value="android">Android</SelectItem>
@@ -218,8 +242,8 @@ export const CampaignSidePanel = ({
 
             <FormField label="Bundle ID">
               <StyledInput
-                value={selectedBlock.props.bundleId || ''}
-                onChange={(e) => updateProps({ bundleId: e.target.value })}
+                value={formData.bundleId || ''}
+                onChange={(e) => updateFormData({ bundleId: e.target.value })}
                 placeholder="com.company.app"
               />
             </FormField>
@@ -231,8 +255,8 @@ export const CampaignSidePanel = ({
           <div className="space-y-6">
             <FormField label="Platform">
               <StyledSelect
-                value={selectedBlock.props.platform || ''}
-                onValueChange={(value) => updateProps({ platform: value })}
+                value={formData.platform || ''}
+                onValueChange={(value) => updateFormData({ platform: value })}
               >
                 <SelectItem value="facebook">Facebook</SelectItem>
                 <SelectItem value="google">Google Ads</SelectItem>
@@ -243,9 +267,9 @@ export const CampaignSidePanel = ({
 
             <FormField label="Account">
               <StyledSelect
-                value={selectedBlock.props.account || ''}
-                onValueChange={(value) => updateProps({ account: value })}
-                disabled={!selectedBlock.props.platform}
+                value={formData.account || ''}
+                onValueChange={(value) => updateFormData({ account: value })}
+                disabled={!formData.platform}
               >
                 <SelectItem value="account1">Account 1</SelectItem>
                 <SelectItem value="account2">Account 2</SelectItem>
@@ -259,16 +283,16 @@ export const CampaignSidePanel = ({
           <div className="space-y-6">
             <FormField label="Campaign Name">
               <StyledInput
-                value={selectedBlock.props.name || ''}
-                onChange={(e) => updateProps({ name: e.target.value })}
+                value={formData.name || ''}
+                onChange={(e) => updateFormData({ name: e.target.value })}
                 placeholder="Enter campaign name"
               />
             </FormField>
 
             <FormField label="Objective">
               <StyledSelect
-                value={selectedBlock.props.objective || ''}
-                onValueChange={(value) => updateProps({ objective: value })}
+                value={formData.objective || ''}
+                onValueChange={(value) => updateFormData({ objective: value })}
               >
                 <SelectItem value="awareness">Brand Awareness</SelectItem>
                 <SelectItem value="traffic">Traffic</SelectItem>
@@ -279,8 +303,8 @@ export const CampaignSidePanel = ({
 
             <AIButton
               onClick={() => {
-                const suggestedName = `CAMPAIGN_${selectedBlock.props.objective?.toUpperCase()}_${Date.now().toString().slice(-4)}`;
-                updateProps({ name: suggestedName });
+                const suggestedName = `CAMPAIGN_${formData.objective?.toUpperCase()}_${Date.now().toString().slice(-4)}`;
+                updateFormData({ name: suggestedName });
               }}
             >
               <div className="flex items-center gap-2">
@@ -296,8 +320,8 @@ export const CampaignSidePanel = ({
           <div className="space-y-6">
             <FormField label="Adset Name">
               <StyledInput
-                value={selectedBlock.props.name || ''}
-                onChange={(e) => updateProps({ name: e.target.value })}
+                value={formData.name || ''}
+                onChange={(e) => updateFormData({ name: e.target.value })}
                 placeholder="Enter adset name"
               />
             </FormField>
@@ -305,8 +329,8 @@ export const CampaignSidePanel = ({
             <FormField label="Daily Budget ($)">
               <StyledInput
                 type="number"
-                value={selectedBlock.props.budget || ''}
-                onChange={(e) => updateProps({ budget: Number(e.target.value) })}
+                value={formData.budget || ''}
+                onChange={(e) => updateFormData({ budget: Number(e.target.value) })}
                 placeholder="Enter daily budget"
               />
             </FormField>
@@ -314,13 +338,13 @@ export const CampaignSidePanel = ({
             <FormField label="Geographic Targeting">
               <div className="p-4 bg-slate-800/20 backdrop-blur-sm rounded-xl border-2 border-slate-700/30">
                 <div className="text-sm text-green-300/80 mb-4 font-medium">
-                  Countries: {selectedBlock.props.countries?.join(', ') || 'None selected'}
+                  Countries: {formData.countries?.join(', ') || 'None selected'}
                 </div>
                 <AIButton
                   variant="secondary"
                   onClick={() => {
                     const tier1Countries = ['US', 'CA', 'AU', 'GB'];
-                    updateProps({ countries: tier1Countries });
+                    updateFormData({ countries: tier1Countries });
                   }}
                 >
                   <div className="flex items-center gap-2">
@@ -338,16 +362,16 @@ export const CampaignSidePanel = ({
           <div className="space-y-6">
             <FormField label="Creative Name">
               <StyledInput
-                value={selectedBlock.props.name || ''}
-                onChange={(e) => updateProps({ name: e.target.value })}
+                value={formData.name || ''}
+                onChange={(e) => updateFormData({ name: e.target.value })}
                 placeholder="Enter creative name"
               />
             </FormField>
 
             <FormField label="Format">
               <StyledSelect
-                value={selectedBlock.props.format || ''}
-                onValueChange={(value) => updateProps({ format: value })}
+                value={formData.format || ''}
+                onValueChange={(value) => updateFormData({ format: value })}
               >
                 <SelectItem value="image">Single Image</SelectItem>
                 <SelectItem value="video">Video</SelectItem>
@@ -358,16 +382,16 @@ export const CampaignSidePanel = ({
 
             <FormField label="Headline">
               <StyledInput
-                value={selectedBlock.props.headline || ''}
-                onChange={(e) => updateProps({ headline: e.target.value })}
+                value={formData.headline || ''}
+                onChange={(e) => updateFormData({ headline: e.target.value })}
                 placeholder="Enter headline"
               />
             </FormField>
 
             <FormField label="Description">
               <StyledTextarea
-                value={selectedBlock.props.description || ''}
-                onChange={(e) => updateProps({ description: e.target.value })}
+                value={formData.description || ''}
+                onChange={(e) => updateFormData({ description: e.target.value })}
                 placeholder="Enter description"
               />
             </FormField>
@@ -384,9 +408,9 @@ export const CampaignSidePanel = ({
   };
 
   return (
-    <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-green-500/30">
-      <Card className="border-0 rounded-none h-full bg-transparent shadow-none">
-        <CardHeader className="pb-6 border-b border-green-500/20">
+    <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-green-500/30 flex flex-col">
+      <Card className="border-0 rounded-none flex-1 bg-transparent shadow-none flex flex-col">
+        <CardHeader className="pb-6 border-b border-green-500/20 flex-shrink-0">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center border-2 border-green-500/30">
@@ -407,9 +431,41 @@ export const CampaignSidePanel = ({
             )}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6 overflow-auto">
+        <CardContent className="p-6 overflow-auto flex-1">
           {renderBlockConfig()}
         </CardContent>
+        
+        {/* Save/Cancel Buttons */}
+        {hasChanges && (
+          <div className="p-6 border-t border-green-500/20 bg-slate-900/50 backdrop-blur-sm flex-shrink-0">
+            <div className="flex gap-3">
+              <Button
+                onClick={handleSave}
+                className="
+                  flex-1 h-12 rounded-xl font-medium transition-all duration-300 transform hover:scale-[1.02]
+                  bg-gradient-to-r from-green-600/80 to-emerald-600/80 hover:from-green-500/90 hover:to-emerald-500/90 
+                  border-2 border-green-500/40 hover:border-green-400/60 text-white shadow-lg hover:shadow-green-500/25
+                "
+              >
+                <div className="flex items-center gap-2">
+                  <Save className="w-4 h-4" />
+                  <span>Save Changes</span>
+                </div>
+              </Button>
+              <Button
+                onClick={handleCancel}
+                variant="outline"
+                className="
+                  w-12 h-12 rounded-xl transition-all duration-300 transform hover:scale-[1.02]
+                  border-2 border-slate-600/50 hover:border-slate-500/70 bg-slate-800/30 hover:bg-slate-800/50
+                  text-slate-300 hover:text-slate-200
+                "
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );
