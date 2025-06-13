@@ -1,5 +1,5 @@
 
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, NodeResizer } from '@xyflow/react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Github, CheckCircle, XCircle } from 'lucide-react';
@@ -87,6 +87,16 @@ export const HierarchyNode = ({ data }: HierarchyNodeProps) => {
 
   return (
     <>
+      {isSelected && (
+        <NodeResizer 
+          minWidth={200} 
+          minHeight={100}
+          maxWidth={500}
+          maxHeight={300}
+          keepAspectRatio={false}
+        />
+      )}
+      
       <Handle
         type="target"
         position={Position.Top}
@@ -96,7 +106,7 @@ export const HierarchyNode = ({ data }: HierarchyNodeProps) => {
       <Card 
         className={cn(
           "relative p-4 cursor-pointer transition-all hover:shadow-lg",
-          "w-64 h-32 border-2",
+          "w-full h-full min-w-64 min-h-32 border-2",
           config.bgColor,
           config.borderColor,
           isSelected && "ring-2 ring-primary shadow-lg shadow-primary/20",

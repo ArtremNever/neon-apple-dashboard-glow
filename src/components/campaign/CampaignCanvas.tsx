@@ -11,6 +11,7 @@ import {
   Edge,
   Node,
   BackgroundVariant,
+  NodeResizeParams,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/pages/CampaignManagement';
@@ -40,6 +41,10 @@ export const CampaignCanvas = ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
+      style: {
+        width: block.layout.w * 80 + 64, // Convert grid units to pixels
+        height: block.layout.h * 60 + 32, // Convert grid units to pixels
+      },
       data: {
         block,
         onSelect: onBlockSelect,
@@ -80,12 +85,32 @@ export const CampaignCanvas = ({
     [blocks, onBlockUpdate]
   );
 
+  const onNodeResize = useCallback(
+    (event: any, params: NodeResizeParams) => {
+      const { id, x, y, width, height } = params;
+      
+      onBlockUpdate(id, {
+        layout: {
+          x,
+          y,
+          w: Math.max(1, Math.round((width - 64) / 80)), // Convert pixels back to grid units
+          h: Math.max(1, Math.round((height - 32) / 60)), // Convert pixels back to grid units
+        },
+      });
+    },
+    [onBlockUpdate]
+  );
+
   // Update nodes when blocks change
   useMemo(() => {
     setNodes(blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
+      style: {
+        width: block.layout.w * 80 + 64,
+        height: block.layout.h * 60 + 32,
+      },
       data: {
         block,
         onSelect: onBlockSelect,
@@ -118,6 +143,7 @@ export const CampaignCanvas = ({
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDragStop={onNodeDragStop}
+        onNodeResize={onNodeResize}
         nodeTypes={nodeTypes}
         fitView
         className="bg-slate-900"

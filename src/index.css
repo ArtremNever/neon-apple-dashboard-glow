@@ -124,3 +124,22 @@
     stroke-dashoffset: -10;
   }
 }
+
+/* Node Resizer Styles */
+.react-flow__resize-control {
+  background: #10b981 !important;
+  border: 2px solid #059669 !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 2px !important;
+}
+
+.react-flow__resize-control:hover {
+  background: #059669 !important;
+  border-color: #047857 !important;
+}
+
+.react-flow__resize-control.handle {
+  background: #10b981 !important;
+  border-color: #059669 !important;
+}
