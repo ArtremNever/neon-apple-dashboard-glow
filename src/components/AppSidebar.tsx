@@ -1,5 +1,5 @@
 
-import { Home, BarChart3, Users, Settings, Zap, TrendingUp, Activity, Target } from 'lucide-react';
+import { Home, BarChart3, Users, Settings, Zap, TrendingUp, Activity, Target, Building2, Database, Monitor, MessageSquare } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Sidebar,
@@ -17,14 +17,21 @@ import {
 } from '@/components/ui/sidebar';
 import { UserMenu } from '@/components/UserMenu';
 
+// TODO: Replace with actual user role from auth context
+const userRole = 'admin'; // This should come from your auth context
+
 const navItems = [
-  { icon: Home, label: 'Dashboard', path: '/' },
-  { icon: BarChart3, label: 'Campaigns List', path: '/campaigns-list' },
-  { icon: Target, label: 'Campaign Builder', path: '/campaigns' },
-  { icon: TrendingUp, label: 'Analytics', path: '/analytics' },
-  { icon: Activity, label: 'Revenue', path: '/revenue' },
-  { icon: Users, label: 'Users', path: '/users' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+  { icon: Home, label: 'Dashboard', path: '/', roles: ['admin', 'manager', 'analyst', 'viewer'] },
+  { icon: BarChart3, label: 'Campaigns List', path: '/campaigns-list', roles: ['admin', 'manager', 'analyst'] },
+  { icon: Target, label: 'Campaign Builder', path: '/campaigns', roles: ['admin', 'manager'] },
+  { icon: TrendingUp, label: 'Analytics', path: '/analytics', roles: ['admin', 'manager', 'analyst'] },
+  { icon: Activity, label: 'Revenue', path: '/revenue', roles: ['admin', 'manager'] },
+  { icon: Building2, label: 'Clients', path: '/clients', roles: ['admin', 'manager'] },
+  { icon: Database, label: 'Sources', path: '/sources', roles: ['admin', 'manager'] },
+  { icon: Users, label: 'Users', path: '/users', roles: ['admin'] },
+  { icon: Monitor, label: 'Monitoring', path: '/monitoring', roles: ['admin'] },
+  { icon: MessageSquare, label: 'AI Chat', path: '/ai-chat', roles: ['admin', 'manager', 'analyst'] },
+  { icon: Settings, label: 'Settings', path: '/settings', roles: ['admin', 'manager', 'analyst', 'viewer'] },
 ];
 
 export function AppSidebar() {
@@ -32,6 +39,9 @@ export function AppSidebar() {
   const location = useLocation();
   const { state } = useSidebar();
   const isCollapsed = state === 'collapsed';
+
+  // Filter navigation items based on user role
+  const filteredNavItems = navItems.filter(item => item.roles.includes(userRole));
 
   return (
     <Sidebar 
@@ -66,7 +76,7 @@ export function AppSidebar() {
           )}
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {navItems.map((item) => {
+              {filteredNavItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
                   <SidebarMenuItem key={item.label}>

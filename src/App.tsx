@@ -15,6 +15,10 @@ import Analytics from "./pages/Analytics";
 import Revenue from "./pages/Revenue";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
+import Clients from "./pages/Clients";
+import Sources from "./pages/Sources";
+import Monitoring from "./pages/Monitoring";
+import AIChat from "./pages/AIChat";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -58,6 +62,26 @@ function App() {
               <Route path="/users" element={
                 <ProtectedRoute>
                   <Users />
+                </ProtectedRoute>
+              } />
+              <Route path="/clients" element={
+                <ProtectedRoute>
+                  <Clients />
+                </ProtectedRoute>
+              } />
+              <Route path="/sources" element={
+                <ProtectedRoute>
+                  <Sources />
+                </ProtectedRoute>
+              } />
+              <Route path="/monitoring" element={
+                <ProtectedRoute>
+                  <Monitoring />
+                </ProtectedRoute>
+              } />
+              <Route path="/ai-chat" element={
+                <ProtectedRoute>
+                  <AIChat />
                 </ProtectedRoute>
               } />
               <Route path="/settings" element={
