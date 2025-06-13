@@ -97,9 +97,24 @@ export const HierarchyNode = ({ data }: HierarchyNodeProps) => {
         />
       )}
       
+      {/* Top Handle */}
       <Handle
         type="target"
         position={Position.Top}
+        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+      />
+      
+      {/* Left Handle */}
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+      />
+      
+      {/* Right Handle */}
+      <Handle
+        type="source"
+        position={Position.Right}
         className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
       />
       
@@ -161,6 +176,7 @@ export const HierarchyNode = ({ data }: HierarchyNodeProps) => {
         </div>
       </Card>
 
+      {/* Bottom Handle */}
       <Handle
         type="source"
         position={Position.Bottom}
