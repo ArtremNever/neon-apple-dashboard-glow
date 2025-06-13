@@ -14,6 +14,7 @@ import {
   useReactFlow,
   NodeTypes,
   MarkerType,
+  MiniMap,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/types/campaign';
@@ -80,11 +81,15 @@ export const CampaignCanvas = ({
         id: `${params.source}-${params.target}-${params.sourceHandle}-${params.targetHandle}`,
         type: 'smoothstep',
         animated: true,
-        style: { stroke: '#3b82f6', strokeWidth: 2 },
+        style: { 
+          stroke: 'url(#gradient)', 
+          strokeWidth: 3,
+          filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.6))'
+        },
         markerEnd: {
           type: MarkerType.ArrowClosed,
-          width: 20,
-          height: 20,
+          width: 24,
+          height: 24,
           color: '#3b82f6',
         },
       };
@@ -138,12 +143,29 @@ export const CampaignCanvas = ({
 
   if (blocks.length === 0) {
     return (
-      <div className="flex-1 p-6 bg-slate-950 overflow-auto" onClick={onPaneClick}>
-        <div className="flex items-center justify-center h-full">
-          <div className="text-center text-slate-400">
-            <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-lg font-medium mb-2 text-slate-300">Start Building Your Campaign</h3>
-            <p className="text-sm text-slate-500">Add blocks from the toolbar to create your campaign hierarchy</p>
+      <div className="flex-1 p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-auto relative" onClick={onPaneClick}>
+        {/* Animated background elements */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-3/4 left-1/4 w-80 h-80 bg-purple-500/3 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="flex items-center justify-center h-full relative z-10">
+          <div className="text-center glass-medium p-12 rounded-3xl border border-primary-500/20 backdrop-blur-xl">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 flex items-center justify-center border border-primary-500/30 animate-pulse-glow">
+              <span className="text-4xl animate-float">🎯</span>
+            </div>
+            <h3 className="text-2xl font-semibold mb-4 text-white bg-gradient-to-r from-white to-primary-200 bg-clip-text text-transparent">
+              Start Building Your Campaign
+            </h3>
+            <p className="text-primary-300/80 max-w-md mx-auto leading-relaxed">
+              Add blocks from the toolbar to create your campaign hierarchy and watch the magic happen
+            </p>
+            <div className="mt-8 flex justify-center gap-2">
+              <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+            </div>
           </div>
         </div>
       </div>
@@ -151,7 +173,14 @@ export const CampaignCanvas = ({
   }
 
   return (
-    <div className="flex-1 bg-slate-950">
+    <div className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden relative">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary-500/3 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-3/4 left-1/4 w-80 h-80 bg-purple-500/2 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 right-3/4 w-64 h-64 bg-emerald-500/2 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
+      </div>
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -163,16 +192,49 @@ export const CampaignCanvas = ({
         onEdgeClick={onEdgeClick}
         nodeTypes={nodeTypes}
         fitView
-        className="bg-slate-950"
-        style={{ backgroundColor: '#020617' }}
+        className="bg-transparent"
+        style={{ backgroundColor: 'transparent' }}
       >
-        <Controls className="bg-slate-800 border-slate-600 text-slate-300" />
+        {/* Enhanced Controls */}
+        <Controls 
+          className="!bg-slate-800/40 !backdrop-blur-xl !border-slate-600/30 !rounded-2xl !shadow-2xl !shadow-primary-500/10 !p-2 !gap-2" 
+          buttonClassName="!bg-slate-700/50 !backdrop-blur-sm !border-slate-600/40 !text-primary-300 hover:!bg-primary-500/20 hover:!text-primary-200 hover:!border-primary-500/50 !rounded-xl !transition-all !duration-200 hover:!scale-110 hover:!shadow-lg hover:!shadow-primary-500/20"
+        />
+        
+        {/* Enhanced MiniMap */}
+        <MiniMap 
+          className="!bg-slate-800/40 !backdrop-blur-xl !border-slate-600/30 !rounded-2xl !shadow-2xl !shadow-primary-500/10 !overflow-hidden"
+          nodeClassName={(node) => {
+            switch (node.type) {
+              case 'client': return '!fill-blue-400/60';
+              case 'application': return '!fill-green-400/60';
+              case 'platform': return '!fill-purple-400/60';
+              case 'campaign': return '!fill-orange-400/60';
+              case 'adset': return '!fill-pink-400/60';
+              case 'creative': return '!fill-cyan-400/60';
+              default: return '!fill-slate-400/60';
+            }
+          }}
+          maskColor="rgba(15, 23, 42, 0.8)"
+        />
+        
+        {/* Enhanced Background with gradient */}
         <Background 
           variant={BackgroundVariant.Dots} 
-          gap={20} 
-          size={1}
-          color="#475569"
+          gap={24} 
+          size={2}
+          color="rgba(59, 130, 246, 0.15)"
+          className="opacity-40"
         />
+        
+        {/* Custom SVG definitions for gradients */}
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
+            <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.6} />
+            <stop offset="100%" stopColor="#06b6d4" stopOpacity={0.8} />
+          </linearGradient>
+        </defs>
       </ReactFlow>
     </div>
   );
