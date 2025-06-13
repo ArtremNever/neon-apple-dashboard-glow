@@ -24,13 +24,13 @@ export const CampaignToolbar = ({
   const [history, setHistory] = useState<any[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
-  const blockTypes: Array<{ type: BuilderBlock['type']; label: string; icon: string; gradient: string }> = [
-    { type: 'client', label: 'Client', icon: '👤', gradient: 'bg-gradient-to-r from-slate-600 via-slate-500 to-slate-400' },
-    { type: 'application', label: 'App', icon: '📱', gradient: 'bg-gradient-to-r from-gray-600 via-gray-500 to-slate-500' },
-    { type: 'platform', label: 'Source', icon: '🌐', gradient: 'bg-gradient-to-r from-blue-600 via-slate-600 to-gray-500' },
-    { type: 'campaign', label: 'Campaign', icon: '🎯', gradient: 'bg-gradient-to-r from-slate-700 via-slate-600 to-blue-600' },
-    { type: 'adset', label: 'Adset', icon: '📊', gradient: 'bg-gradient-to-r from-gray-700 via-slate-600 to-slate-500' },
-    { type: 'creative', label: 'Creative', icon: '🎨', gradient: 'bg-gradient-to-r from-slate-600 via-gray-600 to-slate-700' },
+  const blockTypes: Array<{ type: BuilderBlock['type']; label: string; icon: string }> = [
+    { type: 'client', label: 'CLIENT', icon: '👤' },
+    { type: 'application', label: 'APP', icon: '📱' },
+    { type: 'platform', label: 'SOURCE', icon: '🌐' },
+    { type: 'campaign', label: 'CAMPAIGN', icon: '🎯' },
+    { type: 'adset', label: 'ADSET', icon: '📊' },
+    { type: 'creative', label: 'CREATIVE', icon: '🎨' },
   ];
 
   const handleZoomIn = () => {
@@ -63,98 +63,98 @@ export const CampaignToolbar = ({
   const canRedo = historyIndex < history.length - 1;
 
   return (
-    <div className="h-16 bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 flex items-center justify-between px-6 relative overflow-hidden">
+    <div className="h-12 bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 flex items-center justify-between px-4 relative overflow-hidden">
       {/* Left Side - Block Tools */}
-      <div className="flex items-center gap-3 relative z-10">
-        {/* Neutral Gradient Block Type Buttons */}
-        <div className="flex items-center gap-3">
-          {blockTypes.map(({ type, label, icon, gradient }) => (
+      <div className="flex items-center gap-2 relative z-10">
+        {/* Glass Effect Block Type Buttons */}
+        <div className="flex items-center gap-2">
+          {blockTypes.map(({ type, label, icon }) => (
             <button
               key={type}
               onClick={() => onAddBlock(type)}
-              className={`
-                group relative px-4 py-2.5 rounded-full text-sm font-bold text-white
-                transition-all duration-300 ease-out
-                ${gradient}
-                hover:scale-105 hover:shadow-lg hover:shadow-current/25
-                active:scale-95
-                flex items-center gap-2.5 min-w-0
-                focus:outline-none focus:ring-2 focus:ring-white/30
-                shadow-lg
-              `}
+              className="
+                group relative px-3 py-1.5 rounded-full text-xs font-bold text-white
+                bg-gradient-to-r from-slate-600/40 via-slate-500/40 to-slate-400/40
+                backdrop-blur-sm border border-slate-400/20
+                hover:from-slate-500/50 hover:via-slate-400/50 hover:to-slate-300/50
+                hover:border-slate-300/30 hover:shadow-md
+                transition-all duration-200 ease-out
+                flex items-center gap-1.5 min-w-0
+                focus:outline-none focus:ring-1 focus:ring-white/20
+              "
             >
-              <span className="text-base flex-shrink-0 group-hover:scale-110 transition-transform duration-200 drop-shadow-sm">
+              <span className="text-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-200">
                 {icon}
               </span>
-              <span className="text-xs font-bold whitespace-nowrap uppercase tracking-wide drop-shadow-sm">
+              <span className="text-xs font-bold whitespace-nowrap uppercase tracking-wide">
                 {label}
               </span>
-              <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
             </button>
           ))}
         </div>
         
         {/* Separator */}
-        <div className="h-6 w-px bg-green-500/30 mx-2" />
+        <div className="h-4 w-px bg-green-500/30 mx-1" />
         
         {/* Action Tools - Undo/Redo */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <button
             onClick={handleUndo}
             disabled={!canUndo}
             className={`
-              group relative w-9 h-9 rounded-lg transition-all duration-200 flex items-center justify-center
+              group relative w-7 h-7 rounded-md transition-all duration-200 flex items-center justify-center
               ${canUndo 
-                ? 'bg-slate-800/80 border border-slate-600/50 hover:border-green-500/60 hover:bg-slate-700/80 text-slate-300 hover:text-green-400' 
-                : 'bg-slate-800/40 border border-slate-700/30 text-slate-600 cursor-not-allowed'
+                ? 'bg-slate-600/40 backdrop-blur-sm border border-slate-400/20 hover:bg-slate-500/50 hover:border-slate-300/30 text-slate-300 hover:text-green-400' 
+                : 'bg-slate-700/20 border border-slate-700/20 text-slate-600 cursor-not-allowed'
               }
             `}
             title="Отменить действие"
           >
-            <Undo className="w-4 h-4 transition-colors" />
+            <Undo className="w-3 h-3 transition-colors" />
           </button>
           
           <button
             onClick={handleRedo}
             disabled={!canRedo}
             className={`
-              group relative w-9 h-9 rounded-lg transition-all duration-200 flex items-center justify-center
+              group relative w-7 h-7 rounded-md transition-all duration-200 flex items-center justify-center
               ${canRedo 
-                ? 'bg-slate-800/80 border border-slate-600/50 hover:border-green-500/60 hover:bg-slate-700/80 text-slate-300 hover:text-green-400' 
-                : 'bg-slate-800/40 border border-slate-700/30 text-slate-600 cursor-not-allowed'
+                ? 'bg-slate-600/40 backdrop-blur-sm border border-slate-400/20 hover:bg-slate-500/50 hover:border-slate-300/30 text-slate-300 hover:text-green-400' 
+                : 'bg-slate-700/20 border border-slate-700/20 text-slate-600 cursor-not-allowed'
               }
             `}
             title="Повторить действие"
           >
-            <Redo className="w-4 h-4 transition-colors" />
+            <Redo className="w-3 h-3 transition-colors" />
           </button>
         </div>
         
         {/* Separator */}
-        <div className="h-6 w-px bg-green-500/30 mx-2" />
+        <div className="h-4 w-px bg-green-500/30 mx-1" />
         
         {/* Zoom Controls */}
-        <div className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-slate-800/60 border border-slate-600/40">
+        <div className="flex items-center gap-0 px-1.5 py-1 rounded-md bg-slate-600/40 backdrop-blur-sm border border-slate-400/20">
           <button 
             onClick={handleZoomOut}
-            className="w-7 h-7 rounded-md hover:bg-slate-700/60 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-6 h-6 rounded-sm hover:bg-slate-500/40 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={zoom <= 25}
             title="Уменьшить масштаб"
           >
-            <ZoomOut className="w-3 h-3 text-slate-400 hover:text-green-400" />
+            <ZoomOut className="w-3 h-3 text-slate-300 hover:text-green-400" />
           </button>
           
-          <div className="px-2 py-1 text-xs text-green-400 font-medium min-w-[45px] text-center">
+          <div className="px-2 py-0.5 text-xs text-green-400 font-medium min-w-[40px] text-center">
             {zoom}%
           </div>
           
           <button 
             onClick={handleZoomIn}
-            className="w-7 h-7 rounded-md hover:bg-slate-700/60 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-6 h-6 rounded-sm hover:bg-slate-500/40 transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={zoom >= 200}
             title="Увеличить масштаб"
           >
-            <ZoomIn className="w-3 h-3 text-slate-400 hover:text-green-400" />
+            <ZoomIn className="w-3 h-3 text-slate-300 hover:text-green-400" />
           </button>
         </div>
       </div>
@@ -165,25 +165,25 @@ export const CampaignToolbar = ({
           onClick={onRunPlan}
           disabled={!isValid || isLoading}
           className={`
-            group relative px-6 py-2.5 rounded-lg font-bold text-sm
-            transition-all duration-300 transform-gpu overflow-hidden
+            group relative px-4 py-1.5 rounded-md font-bold text-xs
+            transition-all duration-200 transform-gpu overflow-hidden
             ${isValid && !isLoading 
-              ? 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 hover:scale-105 hover:shadow-lg text-white' 
-              : 'bg-slate-800/60 border border-slate-600/60 text-slate-500 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-green-600/80 to-green-500/80 backdrop-blur-sm border border-green-400/30 hover:from-green-500/90 hover:to-green-400/90 hover:border-green-300/40 text-white hover:shadow-md' 
+              : 'bg-slate-600/40 backdrop-blur-sm border border-slate-500/30 text-slate-500 cursor-not-allowed'
             }
           `}
         >
-          <div className="relative flex items-center gap-2">
+          <div className="relative flex items-center gap-1.5">
             {isLoading ? (
               <>
-                <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                <span>Running...</span>
+                <div className="w-3 h-3 border border-slate-400 border-t-transparent rounded-full animate-spin" />
+                <span>RUNNING...</span>
               </>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-current" />
+                <Play className="w-3 h-3 fill-current" />
                 <span>RUN PLAN</span>
-                {isValid && <Sparkles className="w-3 h-3 opacity-70" />}
+                {isValid && <Sparkles className="w-2.5 h-2.5 opacity-70" />}
               </>
             )}
           </div>
