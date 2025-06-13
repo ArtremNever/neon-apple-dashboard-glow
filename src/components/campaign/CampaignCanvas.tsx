@@ -28,6 +28,13 @@ interface CampaignCanvasProps {
   zoom: number;
 }
 
+interface HierarchyNodeData {
+  block: BuilderBlock;
+  onSelect: (block: BuilderBlock) => void;
+  onDelete: (blockId: string) => void;
+  isSelected: boolean;
+}
+
 const nodeTypes: NodeTypes = {
   hierarchy: HierarchyNode,
 };
@@ -43,7 +50,7 @@ export const CampaignCanvas = ({
 }: CampaignCanvasProps) => {
   const { zoomTo } = useReactFlow();
 
-  const initialNodes: Node[] = useMemo(() => 
+  const initialNodes: Node<HierarchyNodeData>[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
