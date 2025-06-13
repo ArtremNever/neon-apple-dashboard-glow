@@ -196,10 +196,7 @@ export const CampaignCanvas = ({
         style={{ backgroundColor: 'transparent' }}
       >
         {/* Enhanced Controls */}
-        <Controls 
-          className="!bg-slate-800/40 !backdrop-blur-xl !border-slate-600/30 !rounded-2xl !shadow-2xl !shadow-primary-500/10 !p-2 !gap-2" 
-          buttonClassName="!bg-slate-700/50 !backdrop-blur-sm !border-slate-600/40 !text-primary-300 hover:!bg-primary-500/20 hover:!text-primary-200 hover:!border-primary-500/50 !rounded-xl !transition-all !duration-200 hover:!scale-110 hover:!shadow-lg hover:!shadow-primary-500/20"
-        />
+        <Controls className="!bg-slate-800/40 !backdrop-blur-xl !border !border-slate-600/30 !rounded-2xl !shadow-2xl !shadow-primary-500/10 !p-2 !gap-2 [&>button]:!bg-slate-700/50 [&>button]:!backdrop-blur-sm [&>button]:!border [&>button]:!border-slate-600/40 [&>button]:!text-primary-300 [&>button:hover]:!bg-primary-500/20 [&>button:hover]:!text-primary-200 [&>button:hover]:!border-primary-500/50 [&>button]:!rounded-xl [&>button]:!transition-all [&>button]:!duration-200 [&>button:hover]:!scale-110 [&>button:hover]:!shadow-lg [&>button:hover]:!shadow-primary-500/20" />
         
         {/* Enhanced MiniMap */}
         <MiniMap 
