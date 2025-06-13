@@ -6,6 +6,7 @@ import { CampaignSidePanel } from '@/components/campaign/CampaignSidePanel';
 import { KpiForecast } from '@/components/campaign/KpiForecast';
 import { DraggableResizableChat } from '@/components/campaign/DraggableResizableChat';
 import { Sidebar } from '@/components/Sidebar';
+import { ReactFlowProvider } from '@xyflow/react';
 
 export interface BuilderBlock {
   id: string;
@@ -26,6 +27,7 @@ const CampaignManagement = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [forecast, setForecast] = useState({ cpi: 0 });
   const [showAiChat, setShowAiChat] = useState(false);
+  const [zoom, setZoom] = useState(100);
 
   const addBlock = (type: BuilderBlock['type']) => {
     const newBlock: BuilderBlock = {
@@ -117,16 +119,21 @@ const CampaignManagement = () => {
               onRunPlan={runPlan}
               isValid={isValidPlan}
               isLoading={isLoading}
+              zoom={zoom}
+              onZoomChange={setZoom}
             />
             
-            <CampaignCanvas
-              blocks={blocks}
-              onBlockSelect={setSelectedBlock}
-              onBlockUpdate={updateBlock}
-              onBlockDelete={deleteBlock}
-              onCanvasClick={handleCanvasClick}
-              selectedBlock={selectedBlock}
-            />
+            <ReactFlowProvider>
+              <CampaignCanvas
+                blocks={blocks}
+                onBlockSelect={setSelectedBlock}
+                onBlockUpdate={updateBlock}
+                onBlockDelete={deleteBlock}
+                onCanvasClick={handleCanvasClick}
+                selectedBlock={selectedBlock}
+                zoom={zoom}
+              />
+            </ReactFlowProvider>
           </div>
 
           {/* Sliding Configuration Panel - now positioned relative to adjusted canvas */}

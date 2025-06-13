@@ -1,5 +1,5 @@
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -11,6 +11,7 @@ import {
   Edge,
   Node,
   BackgroundVariant,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/pages/CampaignManagement';
@@ -23,6 +24,7 @@ interface CampaignCanvasProps {
   onBlockDelete: (blockId: string) => void;
   onCanvasClick: () => void;
   selectedBlock: BuilderBlock | null;
+  zoom: number;
 }
 
 const nodeTypes = {
@@ -36,7 +38,10 @@ export const CampaignCanvas = ({
   onBlockDelete,
   onCanvasClick,
   selectedBlock,
+  zoom,
 }: CampaignCanvasProps) => {
+  const { zoomTo } = useReactFlow();
+
   const initialNodes: Node[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
@@ -58,6 +63,13 @@ export const CampaignCanvas = ({
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  // Apply zoom when it changes
+  useEffect(() => {
+    if (zoomTo) {
+      zoomTo(zoom / 100);
+    }
+  }, [zoom, zoomTo]);
 
   const onConnect = useCallback(
     (params: Connection) => {

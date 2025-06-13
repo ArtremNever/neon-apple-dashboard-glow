@@ -9,36 +9,39 @@ interface CampaignToolbarProps {
   onRunPlan: () => void;
   isValid: boolean;
   isLoading: boolean;
+  zoom: number;
+  onZoomChange: (zoom: number) => void;
 }
 
 export const CampaignToolbar = ({ 
   onAddBlock, 
   onRunPlan, 
   isValid, 
-  isLoading 
+  isLoading,
+  zoom,
+  onZoomChange
 }: CampaignToolbarProps) => {
-  const [zoom, setZoom] = useState(100);
   const [history, setHistory] = useState<any[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
   const blockTypes: Array<{ type: BuilderBlock['type']; label: string; icon: string; gradient: string }> = [
-    { type: 'client', label: 'Client', icon: '👤', gradient: 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500' },
-    { type: 'application', label: 'App', icon: '📱', gradient: 'bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500' },
-    { type: 'platform', label: 'Source', icon: '🌐', gradient: 'bg-gradient-to-r from-cyan-500 via-blue-500 to-green-500' },
-    { type: 'campaign', label: 'Campaign', icon: '🎯', gradient: 'bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400' },
-    { type: 'adset', label: 'Adset', icon: '📊', gradient: 'bg-gradient-to-r from-orange-500 via-yellow-500 to-yellow-400' },
-    { type: 'creative', label: 'Creative', icon: '🎨', gradient: 'bg-gradient-to-r from-pink-600 via-purple-500 to-red-500' },
+    { type: 'client', label: 'Client', icon: '👤', gradient: 'bg-gradient-to-r from-slate-600 via-slate-500 to-slate-400' },
+    { type: 'application', label: 'App', icon: '📱', gradient: 'bg-gradient-to-r from-gray-600 via-gray-500 to-slate-500' },
+    { type: 'platform', label: 'Source', icon: '🌐', gradient: 'bg-gradient-to-r from-blue-600 via-slate-600 to-gray-500' },
+    { type: 'campaign', label: 'Campaign', icon: '🎯', gradient: 'bg-gradient-to-r from-slate-700 via-slate-600 to-blue-600' },
+    { type: 'adset', label: 'Adset', icon: '📊', gradient: 'bg-gradient-to-r from-gray-700 via-slate-600 to-slate-500' },
+    { type: 'creative', label: 'Creative', icon: '🎨', gradient: 'bg-gradient-to-r from-slate-600 via-gray-600 to-slate-700' },
   ];
 
   const handleZoomIn = () => {
     const newZoom = Math.min(zoom + 25, 200);
-    setZoom(newZoom);
+    onZoomChange(newZoom);
     console.log('Zoom in to:', newZoom + '%');
   };
 
   const handleZoomOut = () => {
     const newZoom = Math.max(zoom - 25, 25);
-    setZoom(newZoom);
+    onZoomChange(newZoom);
     console.log('Zoom out to:', newZoom + '%');
   };
 
@@ -63,7 +66,7 @@ export const CampaignToolbar = ({
     <div className="h-16 bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 flex items-center justify-between px-6 relative overflow-hidden">
       {/* Left Side - Block Tools */}
       <div className="flex items-center gap-3 relative z-10">
-        {/* Beautiful Gradient Block Type Buttons */}
+        {/* Neutral Gradient Block Type Buttons */}
         <div className="flex items-center gap-3">
           {blockTypes.map(({ type, label, icon, gradient }) => (
             <button
