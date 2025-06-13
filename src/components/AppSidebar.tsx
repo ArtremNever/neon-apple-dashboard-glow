@@ -38,23 +38,23 @@ export function AppSidebar() {
       className="border-r border-slate-700/50 bg-slate-900/95 backdrop-blur-xl"
       collapsible="icon"
     >
-      <SidebarHeader className="p-6">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center space-x-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10 flex-shrink-0">
-              <Zap className="w-5 h-5 text-blue-400" />
-            </div>
-            {!isCollapsed && (
-              <div className="flex flex-col">
-                <span className="text-slate-200 font-semibold text-lg truncate">Analytics</span>
-                <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
-              </div>
-            )}
+      <SidebarHeader className="p-4">
+        <div className="flex items-center gap-3 w-full">
+          <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/10 flex-shrink-0">
+            <Zap className="w-5 h-5 text-blue-400" />
           </div>
           {!isCollapsed && (
-            <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20 flex-shrink-0" />
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-slate-200 font-semibold text-lg truncate">Analytics</span>
+              <span className="text-xs text-slate-400 uppercase tracking-wide">Hub</span>
+            </div>
           )}
         </div>
+        {!isCollapsed && (
+          <div className="mt-3 flex justify-end">
+            <SidebarTrigger className="text-slate-400 hover:text-blue-400 w-8 h-8 rounded-lg hover:bg-slate-800/50 transition-all duration-250 border border-transparent hover:border-blue-500/20" />
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent>
