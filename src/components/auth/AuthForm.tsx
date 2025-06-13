@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +13,7 @@ interface AuthFormProps {
   onToggleMode: () => void;
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
+export const AuthForm = ({ mode, onToggleMode }: AuthFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
