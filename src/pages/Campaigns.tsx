@@ -5,8 +5,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Settings, Play, Pause, Edit, BarChart, Target, Sparkles, Filter, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { Search, Plus, Settings, Play, Pause, Edit, BarChart, Target, Sparkles, Filter, ArrowUpRight, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { CampaignCard } from '@/components/campaigns/CampaignCard';
+import { ModernMetricCard } from '@/components/ModernMetricCard';
 
 interface Campaign {
   id: string;
@@ -127,6 +128,52 @@ const Campaigns = () => {
   const totalConversions = mockCampaigns.reduce((sum, campaign) => sum + campaign.conversions, 0);
   const activeCampaigns = mockCampaigns.filter(c => c.status === 'active').length;
 
+  // Enhanced sparkline data generator
+  const generateSparklineData = (trend: 'up' | 'down', volatility: number = 5) => {
+    const baseValues = Array.from({ length: 12 }, (_, i) => {
+      const base = trend === 'up' ? 45 + i * 2 : 70 - i * 1.5;
+      const noise = (Math.random() - 0.5) * volatility;
+      return { value: Math.max(0, base + noise) };
+    });
+    return baseValues;
+  };
+
+  // Enhanced metrics with sparkline data
+  const metrics = [
+    { 
+      title: 'Активные кампании', 
+      value: activeCampaigns, 
+      change: '+12%', 
+      icon: Target, 
+      trend: 'up' as const,
+      sparklineData: generateSparklineData('up', 3)
+    },
+    { 
+      title: 'Общий бюджет', 
+      value: `$${totalBudget.toLocaleString()}`, 
+      change: '+8%', 
+      icon: BarChart, 
+      trend: 'up' as const,
+      sparklineData: generateSparklineData('up', 4)
+    },
+    { 
+      title: 'Потрачено', 
+      value: `$${totalSpend.toLocaleString()}`, 
+      change: '+15%', 
+      icon: DollarSign, 
+      trend: 'up' as const,
+      sparklineData: generateSparklineData('up', 6)
+    },
+    { 
+      title: 'Конверсии', 
+      value: totalConversions.toLocaleString(), 
+      change: '+22%', 
+      icon: TrendingUp, 
+      trend: 'up' as const,
+      sparklineData: generateSparklineData('up', 8)
+    }
+  ];
+
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900/95 to-slate-950 overflow-auto">
@@ -168,67 +215,20 @@ const Campaigns = () => {
             </div>
           </div>
 
-          {/* Enhanced summary metrics */}
+          {/* Enhanced metrics grid with ModernMetricCard */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            <Card className="group relative overflow-hidden border-0 bg-white/[0.08] backdrop-blur-md hover:bg-white/[0.12] transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <CardContent className="relative z-10 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-slate-400 uppercase tracking-wide">Активные кампании</p>
-                    <p className="text-3xl font-semibold text-white mt-2">{activeCampaigns}</p>
-                  </div>
-                  <div className="p-3 bg-green-500/10 rounded-xl border border-green-500/20">
-                    <Play className="w-6 h-6 text-green-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="group relative overflow-hidden border-0 bg-white/[0.08] backdrop-blur-md hover:bg-white/[0.12] transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <CardContent className="relative z-10 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-slate-400 uppercase tracking-wide">Общий бюджет</p>
-                    <p className="text-3xl font-semibold text-white mt-2">${totalBudget.toLocaleString()}</p>
-                  </div>
-                  <div className="p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">
-                    <BarChart className="w-6 h-6 text-blue-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="group relative overflow-hidden border-0 bg-white/[0.08] backdrop-blur-md hover:bg-white/[0.12] transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <CardContent className="relative z-10 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-slate-400 uppercase tracking-wide">Потрачено</p>
-                    <p className="text-3xl font-semibold text-white mt-2">${totalSpend.toLocaleString()}</p>
-                  </div>
-                  <div className="p-3 bg-orange-500/10 rounded-xl border border-orange-500/20">
-                    <TrendingUp className="w-6 h-6 text-orange-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="group relative overflow-hidden border-0 bg-white/[0.08] backdrop-blur-md hover:bg-white/[0.12] transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <CardContent className="relative z-10 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-slate-400 uppercase tracking-wide">Конверсии</p>
-                    <p className="text-3xl font-semibold text-white mt-2">{totalConversions.toLocaleString()}</p>
-                  </div>
-                  <div className="p-3 bg-purple-500/10 rounded-xl border border-purple-500/20">
-                    <Target className="w-6 h-6 text-purple-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {metrics.map((metric, index) => (
+              <ModernMetricCard
+                key={metric.title}
+                title={metric.title}
+                value={metric.value}
+                change={metric.change}
+                icon={metric.icon}
+                trend={metric.trend}
+                sparklineData={metric.sparklineData}
+                delay={index * 100}
+              />
+            ))}
           </div>
 
           {/* Enhanced search and filters */}
