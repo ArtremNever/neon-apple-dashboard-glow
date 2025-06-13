@@ -6,12 +6,12 @@ import { AnalyticsHeader } from '@/components/analytics/AnalyticsHeader';
 import { AnalyticsTabs } from '@/components/analytics/AnalyticsTabs';
 import { PerformanceChart } from '@/components/analytics/PerformanceChart';
 import { AnalyticsTable } from '@/components/analytics/AnalyticsTable';
+import { InsightsPanel } from '@/components/analytics/InsightsPanel';
 import { 
   Eye, 
   MousePointer, 
   Target, 
-  DollarSign,
-  TrendingUp
+  DollarSign
 } from 'lucide-react';
 
 const Analytics = () => {
@@ -71,7 +71,7 @@ const Analytics = () => {
     }
   ];
 
-  // KPI metrics data
+  // KPI metrics data with enhanced styling
   const metrics = [
     { 
       title: 'Total Impressions', 
@@ -140,50 +140,68 @@ const Analytics = () => {
 
   return (
     <Layout>
-      <div className="p-6 space-y-8 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen">
-        {/* Header */}
-        <AnalyticsHeader
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
-          activeFiltersCount={activeFilters}
-          onFiltersClick={handleFiltersClick}
-          onExportClick={handleExportClick}
-        />
-
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {metrics.map((metric, index) => (
-            <EnhancedSourceMetricCard
-              key={metric.title}
-              title={metric.title}
-              value={metric.value}
-              icon={metric.icon}
-              status={metric.status}
-              subText={metric.subText}
-              trend={metric.trend}
-              miniChartData={metric.miniChartData}
-              delay={index * 100}
-            />
-          ))}
-        </div>
-
-        {/* Navigation Tabs */}
-        <AnalyticsTabs 
-          activeTab={activeTab} 
-          onTabChange={setActiveTab} 
-        />
-
-        {/* Main Content Area */}
-        <div className="space-y-8">
-          {/* Performance Chart */}
-          <PerformanceChart data={performanceData} />
-          
-          {/* Analytics Table */}
-          <AnalyticsTable 
-            data={tableData} 
-            onSettingsClick={handleTableSettingsClick}
+      <div className="p-6 space-y-8 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen relative">
+        {/* Enhanced background effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
+        
+        <div className="relative z-10 space-y-8">
+          {/* Header */}
+          <AnalyticsHeader
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            activeFiltersCount={activeFilters}
+            onFiltersClick={handleFiltersClick}
+            onExportClick={handleExportClick}
           />
+
+          {/* KPI Cards with enhanced styling */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {metrics.map((metric, index) => (
+              <div 
+                key={metric.title}
+                className="animate-fade-in hover-lift"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <EnhancedSourceMetricCard
+                  title={metric.title}
+                  value={metric.value}
+                  icon={metric.icon}
+                  status={metric.status}
+                  subText={metric.subText}
+                  trend={metric.trend}
+                  miniChartData={metric.miniChartData}
+                  delay={index * 100}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation Tabs */}
+          <AnalyticsTabs 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+          />
+
+          {/* Main Content Area */}
+          <div className="space-y-8">
+            {/* Performance Chart */}
+            <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+              <PerformanceChart data={performanceData} />
+            </div>
+            
+            {/* Analytics Table */}
+            <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
+              <AnalyticsTable 
+                data={tableData} 
+                onSettingsClick={handleTableSettingsClick}
+              />
+            </div>
+          </div>
         </div>
+
+        {/* Floating Insights Panel */}
+        <InsightsPanel />
       </div>
     </Layout>
   );

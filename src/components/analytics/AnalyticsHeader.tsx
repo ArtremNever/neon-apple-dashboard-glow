@@ -2,11 +2,10 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DateRangePicker } from '@/components/DateRangePicker';
+import { FilterPanel } from './FilterPanel';
+import { ExportDropdown } from './ExportDropdown';
 import { 
-  BarChart3, 
-  Filter, 
-  Download,
-  Calendar
+  BarChart3
 } from 'lucide-react';
 
 interface AnalyticsHeaderProps {
@@ -24,15 +23,27 @@ export const AnalyticsHeader = ({
   onFiltersClick,
   onExportClick
 }: AnalyticsHeaderProps) => {
+  const handleFiltersChange = (filters: any) => {
+    console.log('Filters changed:', filters);
+    onFiltersClick();
+  };
+
+  const handleExport = (type: string) => {
+    console.log('Export type:', type);
+    onExportClick();
+  };
+
   return (
     <div className="flex items-center justify-between mb-8">
       {/* Title Section */}
       <div className="flex items-center gap-4">
-        <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/20">
+        <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/20 backdrop-blur-sm">
           <BarChart3 className="w-6 h-6 text-blue-400" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-white mb-1">Analytics</h1>
+          <h1 className="text-3xl font-bold text-white mb-1 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            Analytics
+          </h1>
           <p className="text-slate-400 text-sm">Comprehensive campaign performance insights and metrics</p>
         </div>
       </div>
@@ -44,28 +55,14 @@ export const AnalyticsHeader = ({
           onDateRangeChange={onDateRangeChange} 
         />
         
-        <Button 
-          variant="outline" 
-          onClick={onFiltersClick}
-          className="border-slate-600 text-slate-300 hover:bg-slate-800 relative"
-        >
-          <Filter className="w-4 h-4 mr-2" />
-          Filters
-          {activeFiltersCount > 0 && (
-            <Badge className="ml-2 bg-blue-600 text-white text-xs px-1.5 py-0.5 h-5">
-              {activeFiltersCount}
-            </Badge>
-          )}
-        </Button>
+        <FilterPanel
+          activeFiltersCount={activeFiltersCount}
+          onFiltersChange={handleFiltersChange}
+        />
         
-        <Button 
-          variant="outline" 
-          onClick={onExportClick}
-          className="border-slate-600 text-slate-300 hover:bg-slate-800"
-        >
-          <Download className="w-4 h-4 mr-2" />
-          Export
-        </Button>
+        <ExportDropdown
+          onExport={handleExport}
+        />
       </div>
     </div>
   );
