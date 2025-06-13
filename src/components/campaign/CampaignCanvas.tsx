@@ -16,7 +16,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BuilderBlock } from '@/types/campaign';
-import { HierarchyNode } from './HierarchyNode';
+import { HierarchyNode, HierarchyNodeData } from './HierarchyNode';
 
 interface CampaignCanvasProps {
   blocks: BuilderBlock[];
@@ -26,13 +26,6 @@ interface CampaignCanvasProps {
   onCanvasClick: () => void;
   selectedBlock: BuilderBlock | null;
   zoom: number;
-}
-
-export interface HierarchyNodeData {
-  block: BuilderBlock;
-  onSelect: (block: BuilderBlock) => void;
-  onDelete: (blockId: string) => void;
-  isSelected: boolean;
 }
 
 const nodeTypes: NodeTypes = {
@@ -50,7 +43,7 @@ export const CampaignCanvas = ({
 }: CampaignCanvasProps) => {
   const { zoomTo } = useReactFlow();
 
-  const initialNodes: Node[] = useMemo(() => 
+  const initialNodes: Node<HierarchyNodeData>[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
@@ -64,7 +57,7 @@ export const CampaignCanvas = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      } as HierarchyNodeData,
+      },
     })),
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
@@ -86,7 +79,7 @@ export const CampaignCanvas = ({
         id: `${params.source}-${params.target}`,
         type: 'smoothstep',
         animated: true,
-        style: { stroke: '#10b981', strokeWidth: 2 },
+        style: { stroke: '#3b82f6', strokeWidth: 2 },
       };
       setEdges((eds) => addEdge(newEdge, eds));
     },
@@ -112,7 +105,7 @@ export const CampaignCanvas = ({
 
   // Update nodes when blocks change
   useEffect(() => {
-    const newNodes: Node[] = blocks.map((block) => ({
+    const newNodes: Node<HierarchyNodeData>[] = blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
@@ -125,7 +118,7 @@ export const CampaignCanvas = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      } as HierarchyNodeData,
+      },
     }));
     setNodes(newNodes);
   }, [blocks, selectedBlock, onBlockSelect, onBlockDelete, setNodes]);
@@ -134,10 +127,10 @@ export const CampaignCanvas = ({
     return (
       <div className="flex-1 p-6 bg-slate-950 overflow-auto" onClick={onPaneClick}>
         <div className="flex items-center justify-center h-full">
-          <div className="text-center text-green-400/70">
+          <div className="text-center text-slate-400">
             <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-lg font-medium mb-2 text-green-400">Start Building Your Campaign</h3>
-            <p className="text-sm text-green-400/60">Add blocks from the toolbar to create your campaign hierarchy</p>
+            <h3 className="text-lg font-medium mb-2 text-slate-300">Start Building Your Campaign</h3>
+            <p className="text-sm text-slate-500">Add blocks from the toolbar to create your campaign hierarchy</p>
           </div>
         </div>
       </div>
@@ -159,12 +152,12 @@ export const CampaignCanvas = ({
         className="bg-slate-950"
         style={{ backgroundColor: '#020617' }}
       >
-        <Controls className="bg-slate-800 border-green-500/30 text-green-400" />
+        <Controls className="bg-slate-800 border-slate-600 text-slate-300" />
         <Background 
           variant={BackgroundVariant.Dots} 
           gap={20} 
           size={1}
-          color="#10b981"
+          color="#475569"
         />
       </ReactFlow>
     </div>

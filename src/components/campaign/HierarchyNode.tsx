@@ -3,7 +3,13 @@ import { memo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { BuilderBlock } from '@/types/campaign';
 import { X, Settings } from 'lucide-react';
-import { HierarchyNodeData } from './CampaignCanvas';
+
+export interface HierarchyNodeData {
+  block: BuilderBlock;
+  onSelect: (block: BuilderBlock) => void;
+  onDelete: (blockId: string) => void;
+  isSelected: boolean;
+}
 
 export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
   const { block, onSelect, onDelete, isSelected } = data;
@@ -72,8 +78,8 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
       className={`
         relative bg-slate-800/90 backdrop-blur-sm border-2 rounded-xl shadow-lg transition-all duration-200 cursor-pointer
         ${isSelected 
-          ? 'border-green-500 shadow-green-500/25' 
-          : 'border-green-500/30 hover:border-green-500/50 hover:shadow-green-500/15'
+          ? 'border-blue-400 shadow-blue-400/25' 
+          : 'border-slate-600/50 hover:border-slate-500/70 hover:shadow-slate-500/15'
         }
       `}
       onClick={handleSelect}
@@ -83,14 +89,14 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/40">
+            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/40">
               <span className="text-lg">{getBlockIcon(block.type)}</span>
             </div>
             <div>
-              <h3 className="text-green-400 font-medium text-sm">
+              <h3 className="text-slate-200 font-medium text-sm">
                 {getBlockTypeLabel(block.type)}
               </h3>
-              <p className="text-green-400/60 text-xs">
+              <p className="text-slate-400 text-xs">
                 {block.id.slice(-4)}
               </p>
             </div>
@@ -99,24 +105,24 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
           <div className="flex items-center gap-1">
             <button
               onClick={handleSelect}
-              className="p-1 hover:bg-green-500/20 rounded transition-colors"
+              className="p-1 hover:bg-blue-500/20 rounded transition-colors"
               title="Настроить"
             >
-              <Settings className="w-3 h-3 text-green-400/70" />
+              <Settings className="w-3 h-3 text-slate-400" />
             </button>
             <button
               onClick={handleDelete}
               className="p-1 hover:bg-red-500/20 rounded transition-colors"
               title="Удалить"
             >
-              <X className="w-3 h-3 text-green-400/70 hover:text-red-400" />
+              <X className="w-3 h-3 text-slate-400 hover:text-red-400" />
             </button>
           </div>
         </div>
 
         {/* Status and Date */}
-        <div className="flex items-center justify-between text-xs text-green-400/60 mb-3">
-          <span className={block.isValid ? 'text-green-400' : 'text-red-400'}>
+        <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
+          <span className={block.isValid ? 'text-blue-400' : 'text-orange-400'}>
             {block.isValid ? 'Настроено' : 'Требует настройки'}
           </span>
           <span>{new Date().toLocaleDateString('ru-RU')}</span>
@@ -143,8 +149,8 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
                   className={`
                     px-2 py-1 rounded text-xs font-medium border transition-all duration-200
                     ${isValid
-                      ? 'bg-green-500/20 border-green-500/50 text-green-300'
-                      : 'bg-red-500/20 border-red-500/50 text-red-300'
+                      ? 'bg-blue-500/20 border-blue-500/50 text-blue-300'
+                      : 'bg-orange-500/20 border-orange-500/50 text-orange-300'
                     }
                   `}
                 >
@@ -160,12 +166,12 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
       <Handle
         type="target"
         position={Position.Left}
-        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
       />
       <Handle
         type="source"
         position={Position.Right}
-        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
       />
     </div>
   );

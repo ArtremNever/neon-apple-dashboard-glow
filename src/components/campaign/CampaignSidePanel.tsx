@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { BuilderBlock } from '@/types/campaign';
-import { Sparkles, Zap, Settings2, Check, Save, X } from 'lucide-react';
+import { Sparkles, Zap, Settings2, Check, Save, X, EyeOff, Eye } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface CampaignSidePanelProps {
@@ -20,12 +20,14 @@ export const CampaignSidePanel = ({
 }: CampaignSidePanelProps) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [hasChanges, setHasChanges] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   // Initialize form data when selected block changes
   useEffect(() => {
     if (selectedBlock) {
       setFormData(selectedBlock.props);
       setHasChanges(false);
+      setIsHidden(false);
     }
   }, [selectedBlock]);
 
@@ -33,18 +35,18 @@ export const CampaignSidePanel = ({
     return (
       <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm flex items-center justify-center p-6">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full flex items-center justify-center border border-green-500/30">
-            <Settings2 className="w-8 h-8 text-green-400" />
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
+            <Settings2 className="w-8 h-8 text-blue-400" />
           </div>
-          <h3 className="font-semibold mb-2 text-green-400">Select a Block</h3>
-          <p className="text-sm text-green-400/60 max-w-48">Click on any block in the canvas to configure its properties</p>
+          <h3 className="font-semibold mb-2 text-blue-400">Select a Block</h3>
+          <p className="text-sm text-slate-500 max-w-48">Click on any block in the canvas to configure its properties</p>
         </div>
       </div>
     );
   }
 
-  const updateFormData = (newData: Record<string, any>) => {
-    setFormData(prev => ({ ...prev, ...newData }));
+  const updateFormData = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
     setHasChanges(true);
   };
 
@@ -61,6 +63,10 @@ export const CampaignSidePanel = ({
   const handleCancel = () => {
     setFormData(selectedBlock.props);
     setHasChanges(false);
+  };
+
+  const toggleVisibility = () => {
+    setIsHidden(!isHidden);
   };
 
   const validateBlock = (type: string, props: Record<string, any>): boolean => {
@@ -115,57 +121,61 @@ export const CampaignSidePanel = ({
     children: React.ReactNode; 
     className?: string;
   }) => (
-    <div className={`space-y-3 ${className}`}>
-      <Label className="text-base font-medium text-green-300 block">{label}</Label>
+    <div className={`space-y-2 ${className}`}>
+      <Label className="text-sm font-medium text-slate-300 block">{label}</Label>
       {children}
     </div>
   );
 
-  const StyledInput = ({ ...props }) => (
+  const StyledInput = ({ field, ...props }) => (
     <Input
       {...props}
+      value={formData[field] || ''}
+      onChange={(e) => updateFormData(field, e.target.value)}
       className="
-        h-12 px-4 rounded-xl border-2 border-slate-700/50 
+        h-10 px-3 rounded-lg border border-slate-600/50 
         bg-slate-800/30 backdrop-blur-sm
-        text-slate-200 placeholder:text-slate-400
-        focus:border-green-500/60 focus:ring-2 focus:ring-green-500/20 focus:bg-slate-800/50
-        transition-all duration-300
-        hover:border-slate-600/60 hover:bg-slate-800/40
+        text-slate-200 placeholder:text-slate-500
+        focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 focus:bg-slate-800/50
+        transition-all duration-200
+        hover:border-slate-500/60 hover:bg-slate-800/40
       "
     />
   );
 
-  const StyledSelect = ({ children, ...props }) => (
-    <Select {...props}>
+  const StyledSelect = ({ field, children, ...props }) => (
+    <Select value={formData[field] || ''} onValueChange={(value) => updateFormData(field, value)} {...props}>
       <SelectTrigger className="
-        h-12 px-4 rounded-xl border-2 border-slate-700/50 
+        h-10 px-3 rounded-lg border border-slate-600/50 
         bg-slate-800/30 backdrop-blur-sm
         text-slate-200 
-        focus:border-green-500/60 focus:ring-2 focus:ring-green-500/20 focus:bg-slate-800/50
-        transition-all duration-300
-        hover:border-slate-600/60 hover:bg-slate-800/40
+        focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 focus:bg-slate-800/50
+        transition-all duration-200
+        hover:border-slate-500/60 hover:bg-slate-800/40
       ">
         <SelectValue />
       </SelectTrigger>
       <SelectContent className="
-        bg-slate-800/95 backdrop-blur-xl border-2 border-slate-700/50 
-        rounded-xl shadow-2xl z-50
+        bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 
+        rounded-lg shadow-2xl
       ">
         {children}
       </SelectContent>
     </Select>
   );
 
-  const StyledTextarea = ({ ...props }) => (
+  const StyledTextarea = ({ field, ...props }) => (
     <Textarea
       {...props}
+      value={formData[field] || ''}
+      onChange={(e) => updateFormData(field, e.target.value)}
       className="
-        min-h-[100px] p-4 rounded-xl border-2 border-slate-700/50 
+        min-h-[80px] p-3 rounded-lg border border-slate-600/50 
         bg-slate-800/30 backdrop-blur-sm
-        text-slate-200 placeholder:text-slate-400
-        focus:border-green-500/60 focus:ring-2 focus:ring-green-500/20 focus:bg-slate-800/50
-        transition-all duration-300
-        hover:border-slate-600/60 hover:bg-slate-800/40
+        text-slate-200 placeholder:text-slate-500
+        focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 focus:bg-slate-800/50
+        transition-all duration-200
+        hover:border-slate-500/60 hover:bg-slate-800/40
         resize-none
       "
     />
@@ -175,10 +185,10 @@ export const CampaignSidePanel = ({
     <Button
       onClick={onClick}
       className={`
-        w-full h-12 rounded-xl font-medium transition-all duration-300 transform hover:scale-[1.02]
+        w-full h-10 rounded-lg font-medium transition-all duration-200 transform hover:scale-[1.02]
         ${variant === "primary" 
-          ? "bg-gradient-to-r from-green-600/80 to-emerald-600/80 hover:from-green-500/90 hover:to-emerald-500/90 border-2 border-green-500/40 hover:border-green-400/60 text-white shadow-lg hover:shadow-green-500/25"
-          : "bg-gradient-to-r from-orange-600/70 to-red-600/70 hover:from-orange-500/80 hover:to-red-500/80 border-2 border-orange-500/40 hover:border-orange-400/60 text-white shadow-lg hover:shadow-orange-500/25"
+          ? "bg-gradient-to-r from-blue-600/80 to-indigo-600/80 hover:from-blue-500/90 hover:to-indigo-500/90 border border-blue-500/40 hover:border-blue-400/60 text-white shadow-lg hover:shadow-blue-500/25"
+          : "bg-gradient-to-r from-amber-600/70 to-orange-600/70 hover:from-amber-500/80 hover:to-orange-500/80 border border-amber-500/40 hover:border-amber-400/60 text-white shadow-lg hover:shadow-amber-500/25"
         }
       `}
     >
@@ -190,28 +200,25 @@ export const CampaignSidePanel = ({
     switch (selectedBlock.type) {
       case 'client':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <FormField label="Client Name">
               <StyledInput
-                value={formData.name || ''}
-                onChange={(e) => updateFormData({ name: e.target.value })}
+                field="name"
                 placeholder="Enter client name"
               />
             </FormField>
 
             <FormField label="Company">
               <StyledInput
-                value={formData.company || ''}
-                onChange={(e) => updateFormData({ company: e.target.value })}
+                field="company"
                 placeholder="Enter company name"
               />
             </FormField>
 
             <FormField label="Email">
               <StyledInput
+                field="email"
                 type="email"
-                value={formData.email || ''}
-                onChange={(e) => updateFormData({ email: e.target.value })}
                 placeholder="client@company.com"
               />
             </FormField>
@@ -220,20 +227,16 @@ export const CampaignSidePanel = ({
 
       case 'application':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <FormField label="App Name">
               <StyledInput
-                value={formData.name || ''}
-                onChange={(e) => updateFormData({ name: e.target.value })}
+                field="name"
                 placeholder="Enter app name"
               />
             </FormField>
 
             <FormField label="Platform">
-              <StyledSelect
-                value={formData.platform || ''}
-                onValueChange={(value) => updateFormData({ platform: value })}
-              >
+              <StyledSelect field="platform">
                 <SelectItem value="ios">iOS</SelectItem>
                 <SelectItem value="android">Android</SelectItem>
                 <SelectItem value="web">Web</SelectItem>
@@ -242,8 +245,7 @@ export const CampaignSidePanel = ({
 
             <FormField label="Bundle ID">
               <StyledInput
-                value={formData.bundleId || ''}
-                onChange={(e) => updateFormData({ bundleId: e.target.value })}
+                field="bundleId"
                 placeholder="com.company.app"
               />
             </FormField>
@@ -252,12 +254,9 @@ export const CampaignSidePanel = ({
 
       case 'platform':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <FormField label="Platform">
-              <StyledSelect
-                value={formData.platform || ''}
-                onValueChange={(value) => updateFormData({ platform: value })}
-              >
+              <StyledSelect field="platform">
                 <SelectItem value="facebook">Facebook</SelectItem>
                 <SelectItem value="google">Google Ads</SelectItem>
                 <SelectItem value="tiktok">TikTok</SelectItem>
@@ -266,11 +265,7 @@ export const CampaignSidePanel = ({
             </FormField>
 
             <FormField label="Account">
-              <StyledSelect
-                value={formData.account || ''}
-                onValueChange={(value) => updateFormData({ account: value })}
-                disabled={!formData.platform}
-              >
+              <StyledSelect field="account" disabled={!formData.platform}>
                 <SelectItem value="account1">Account 1</SelectItem>
                 <SelectItem value="account2">Account 2</SelectItem>
               </StyledSelect>
@@ -280,20 +275,16 @@ export const CampaignSidePanel = ({
 
       case 'campaign':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <FormField label="Campaign Name">
               <StyledInput
-                value={formData.name || ''}
-                onChange={(e) => updateFormData({ name: e.target.value })}
+                field="name"
                 placeholder="Enter campaign name"
               />
             </FormField>
 
             <FormField label="Objective">
-              <StyledSelect
-                value={formData.objective || ''}
-                onValueChange={(value) => updateFormData({ objective: value })}
-              >
+              <StyledSelect field="objective">
                 <SelectItem value="awareness">Brand Awareness</SelectItem>
                 <SelectItem value="traffic">Traffic</SelectItem>
                 <SelectItem value="conversions">Conversions</SelectItem>
@@ -304,7 +295,7 @@ export const CampaignSidePanel = ({
             <AIButton
               onClick={() => {
                 const suggestedName = `CAMPAIGN_${formData.objective?.toUpperCase()}_${Date.now().toString().slice(-4)}`;
-                updateFormData({ name: suggestedName });
+                updateFormData('name', suggestedName);
               }}
             >
               <div className="flex items-center gap-2">
@@ -317,34 +308,32 @@ export const CampaignSidePanel = ({
 
       case 'adset':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <FormField label="Adset Name">
               <StyledInput
-                value={formData.name || ''}
-                onChange={(e) => updateFormData({ name: e.target.value })}
+                field="name"
                 placeholder="Enter adset name"
               />
             </FormField>
 
             <FormField label="Daily Budget ($)">
               <StyledInput
+                field="budget"
                 type="number"
-                value={formData.budget || ''}
-                onChange={(e) => updateFormData({ budget: Number(e.target.value) })}
                 placeholder="Enter daily budget"
               />
             </FormField>
 
             <FormField label="Geographic Targeting">
-              <div className="p-4 bg-slate-800/20 backdrop-blur-sm rounded-xl border-2 border-slate-700/30">
-                <div className="text-sm text-green-300/80 mb-4 font-medium">
+              <div className="p-3 bg-slate-800/20 backdrop-blur-sm rounded-lg border border-slate-600/30">
+                <div className="text-sm text-slate-400 mb-3 font-medium">
                   Countries: {formData.countries?.join(', ') || 'None selected'}
                 </div>
                 <AIButton
                   variant="secondary"
                   onClick={() => {
                     const tier1Countries = ['US', 'CA', 'AU', 'GB'];
-                    updateFormData({ countries: tier1Countries });
+                    updateFormData('countries', tier1Countries);
                   }}
                 >
                   <div className="flex items-center gap-2">
@@ -359,20 +348,16 @@ export const CampaignSidePanel = ({
 
       case 'creative':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <FormField label="Creative Name">
               <StyledInput
-                value={formData.name || ''}
-                onChange={(e) => updateFormData({ name: e.target.value })}
+                field="name"
                 placeholder="Enter creative name"
               />
             </FormField>
 
             <FormField label="Format">
-              <StyledSelect
-                value={formData.format || ''}
-                onValueChange={(value) => updateFormData({ format: value })}
-              >
+              <StyledSelect field="format">
                 <SelectItem value="image">Single Image</SelectItem>
                 <SelectItem value="video">Video</SelectItem>
                 <SelectItem value="carousel">Carousel</SelectItem>
@@ -382,16 +367,14 @@ export const CampaignSidePanel = ({
 
             <FormField label="Headline">
               <StyledInput
-                value={formData.headline || ''}
-                onChange={(e) => updateFormData({ headline: e.target.value })}
+                field="headline"
                 placeholder="Enter headline"
               />
             </FormField>
 
             <FormField label="Description">
               <StyledTextarea
-                value={formData.description || ''}
-                onChange={(e) => updateFormData({ description: e.target.value })}
+                field="description"
                 placeholder="Enter description"
               />
             </FormField>
@@ -400,51 +383,85 @@ export const CampaignSidePanel = ({
 
       default:
         return (
-          <div className="text-center text-green-400/60 py-8">
+          <div className="text-center text-slate-500 py-8">
             <p className="text-sm">Configuration for {selectedBlock.type} coming soon...</p>
           </div>
         );
     }
   };
 
+  if (isHidden) {
+    return (
+      <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-slate-700/50 flex items-center justify-center p-6">
+        <Button
+          onClick={toggleVisibility}
+          variant="outline"
+          className="
+            h-12 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-105
+            border-slate-600/50 hover:border-slate-500/70 bg-slate-800/30 hover:bg-slate-800/50
+            text-slate-300 hover:text-slate-200
+          "
+        >
+          <div className="flex items-center gap-2">
+            <Eye className="w-4 h-4" />
+            <span>Show Configure</span>
+          </div>
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-green-500/30 flex flex-col">
+    <div className="h-full bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-l border-slate-700/50 flex flex-col">
       <Card className="border-0 rounded-none flex-1 bg-transparent shadow-none flex flex-col">
-        <CardHeader className="pb-6 border-b border-green-500/20 flex-shrink-0">
+        <CardHeader className="pb-4 border-b border-slate-700/50 flex-shrink-0">
           <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center border-2 border-green-500/30">
-                <span className="text-xl">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
+                <span className="text-lg">
                   {getBlockIcon(selectedBlock.type)}
                 </span>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-green-400">Configure {getBlockTypeLabel(selectedBlock.type)}</h3>
-                <p className="text-xs text-green-400/60 font-normal mt-1">Block ID: {selectedBlock.id}</p>
+                <h3 className="text-lg font-semibold text-slate-200">Configure {getBlockTypeLabel(selectedBlock.type)}</h3>
+                <p className="text-xs text-slate-500 font-normal mt-1">Block ID: {selectedBlock.id}</p>
               </div>
             </div>
-            {selectedBlock.isValid && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/20 rounded-lg border-2 border-green-500/40">
-                <Check className="w-4 h-4 text-green-400" />
-                <span className="text-sm text-green-400 font-medium">Valid</span>
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              {selectedBlock.isValid && (
+                <div className="flex items-center gap-2 px-2 py-1 bg-blue-500/20 rounded-md border border-blue-500/40">
+                  <Check className="w-3 h-3 text-blue-400" />
+                  <span className="text-xs text-blue-400 font-medium">Valid</span>
+                </div>
+              )}
+              <Button
+                onClick={toggleVisibility}
+                variant="ghost"
+                size="sm"
+                className="
+                  h-8 w-8 p-0 rounded-lg transition-all duration-200 transform hover:scale-105
+                  text-slate-400 hover:text-slate-200 hover:bg-slate-700/50
+                "
+              >
+                <EyeOff className="w-4 h-4" />
+              </Button>
+            </div>
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6 overflow-auto flex-1">
+        <CardContent className="p-4 overflow-auto flex-1">
           {renderBlockConfig()}
         </CardContent>
         
         {/* Save/Cancel Buttons */}
         {hasChanges && (
-          <div className="p-6 border-t border-green-500/20 bg-slate-900/50 backdrop-blur-sm flex-shrink-0">
+          <div className="p-4 border-t border-slate-700/50 bg-slate-900/50 backdrop-blur-sm flex-shrink-0">
             <div className="flex gap-3">
               <Button
                 onClick={handleSave}
                 className="
-                  flex-1 h-12 rounded-xl font-medium transition-all duration-300 transform hover:scale-[1.02]
-                  bg-gradient-to-r from-green-600/80 to-emerald-600/80 hover:from-green-500/90 hover:to-emerald-500/90 
-                  border-2 border-green-500/40 hover:border-green-400/60 text-white shadow-lg hover:shadow-green-500/25
+                  flex-1 h-10 rounded-lg font-medium transition-all duration-200 transform hover:scale-[1.02]
+                  bg-gradient-to-r from-blue-600/80 to-indigo-600/80 hover:from-blue-500/90 hover:to-indigo-500/90 
+                  border border-blue-500/40 hover:border-blue-400/60 text-white shadow-lg hover:shadow-blue-500/25
                 "
               >
                 <div className="flex items-center gap-2">
@@ -456,8 +473,8 @@ export const CampaignSidePanel = ({
                 onClick={handleCancel}
                 variant="outline"
                 className="
-                  w-12 h-12 rounded-xl transition-all duration-300 transform hover:scale-[1.02]
-                  border-2 border-slate-600/50 hover:border-slate-500/70 bg-slate-800/30 hover:bg-slate-800/50
+                  w-10 h-10 rounded-lg transition-all duration-200 transform hover:scale-[1.02]
+                  border border-slate-600/50 hover:border-slate-500/70 bg-slate-800/30 hover:bg-slate-800/50
                   text-slate-300 hover:text-slate-200
                 "
               >
