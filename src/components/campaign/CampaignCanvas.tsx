@@ -137,7 +137,8 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
   return (
     <div className="w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative">
       {/* Custom styles for React Flow */}
-      <style jsx global>{`
+      <style>
+        {`
         .react-flow__handle {
           opacity: 1 !important;
           visibility: visible !important;
@@ -168,7 +169,8 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
           stroke-width: 3 !important;
           stroke-dasharray: 10,5 !important;
         }
-      `}</style>
+        `}
+      </style>
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
