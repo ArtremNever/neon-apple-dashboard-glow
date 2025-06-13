@@ -67,30 +67,66 @@ const HierarchyNode = memo<NodeProps>(({ data }) => {
 
   return (
     <div className="relative">
-      {/* 4-sided handles for connections */}
+      {/* Connection handles positioned at the center of each side */}
       <Handle 
         type="target" 
         position={Position.Top} 
         id="top"
-        className="w-3 h-3 !bg-slate-300 !border-2 !border-slate-500 hover:!bg-blue-400 hover:!border-blue-500 transition-colors"
+        className="
+          !w-4 !h-4 !bg-slate-400 !border-2 !border-slate-600 
+          hover:!bg-blue-500 hover:!border-blue-400 hover:!scale-125
+          !rounded-full !shadow-lg transition-all duration-200
+          !top-[-8px] !left-1/2 !transform !-translate-x-1/2
+        "
+        style={{
+          background: '#64748b',
+          border: '2px solid #475569',
+        }}
       />
       <Handle 
         type="target" 
         position={Position.Left} 
         id="left"
-        className="w-3 h-3 !bg-slate-300 !border-2 !border-slate-500 hover:!bg-blue-400 hover:!border-blue-500 transition-colors"
+        className="
+          !w-4 !h-4 !bg-slate-400 !border-2 !border-slate-600 
+          hover:!bg-blue-500 hover:!border-blue-400 hover:!scale-125
+          !rounded-full !shadow-lg transition-all duration-200
+          !left-[-8px] !top-1/2 !transform !-translate-y-1/2
+        "
+        style={{
+          background: '#64748b',
+          border: '2px solid #475569',
+        }}
       />
       <Handle 
         type="source" 
         position={Position.Right} 
         id="right"
-        className="w-3 h-3 !bg-slate-300 !border-2 !border-slate-500 hover:!bg-blue-400 hover:!border-blue-500 transition-colors"
+        className="
+          !w-4 !h-4 !bg-slate-400 !border-2 !border-slate-600 
+          hover:!bg-blue-500 hover:!border-blue-400 hover:!scale-125
+          !rounded-full !shadow-lg transition-all duration-200
+          !right-[-8px] !top-1/2 !transform !-translate-y-1/2
+        "
+        style={{
+          background: '#64748b',
+          border: '2px solid #475569',
+        }}
       />
       <Handle 
         type="source" 
         position={Position.Bottom} 
         id="bottom"
-        className="w-3 h-3 !bg-slate-300 !border-2 !border-slate-500 hover:!bg-blue-400 hover:!border-blue-500 transition-colors"
+        className="
+          !w-4 !h-4 !bg-slate-400 !border-2 !border-slate-600 
+          hover:!bg-blue-500 hover:!border-blue-400 hover:!scale-125
+          !rounded-full !shadow-lg transition-all duration-200
+          !bottom-[-8px] !left-1/2 !transform !-translate-x-1/2
+        "
+        style={{
+          background: '#64748b',
+          border: '2px solid #475569',
+        }}
       />
 
       <Card 

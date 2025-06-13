@@ -75,13 +75,20 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
         ...params,
         id: `edge-${params.source}-${params.target}`,
         animated: true,
+        type: 'smoothstep',
         style: { 
-          stroke: 'url(#gradient)', 
-          strokeWidth: 2,
-          filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.6))'
+          stroke: '#3b82f6',
+          strokeWidth: 3,
+          strokeDasharray: '10,5',
+          filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.4))'
+        },
+        markerEnd: {
+          type: 'arrowclosed',
+          color: '#3b82f6',
         },
       };
       setEdges((eds) => addEdge(newEdge, eds));
+      console.log('Connected:', params.source, 'to', params.target);
     },
     [setEdges]
   );
@@ -129,6 +136,40 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 
   return (
     <div className="w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative">
+      {/* Custom styles for React Flow */}
+      <style jsx global>{`
+        .react-flow__handle {
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        
+        .react-flow__handle:hover {
+          transform: scale(1.25) !important;
+        }
+        
+        .react-flow__edge-path {
+          stroke-dasharray: 10,5;
+          animation: dash 20s linear infinite;
+        }
+        
+        @keyframes dash {
+          to {
+            stroke-dashoffset: -1000;
+          }
+        }
+        
+        .react-flow__edge.animated .react-flow__edge-path {
+          stroke-dasharray: 10,5;
+          animation: dash 20s linear infinite;
+        }
+        
+        .react-flow__connection-line {
+          stroke: #3b82f6 !important;
+          stroke-width: 3 !important;
+          stroke-dasharray: 10,5 !important;
+        }
+      `}</style>
+
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
@@ -146,16 +187,12 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
         fitView
         attributionPosition="top-right"
         className="bg-transparent"
+        connectionLineStyle={{
+          stroke: '#3b82f6',
+          strokeWidth: 3,
+          strokeDasharray: '10,5',
+        }}
       >
-        {/* Gradient definitions for edges */}
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.8" />
-          </linearGradient>
-        </defs>
-        
         <Controls className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-xl [&>button]:bg-slate-700/80 [&>button]:border-slate-600/50 [&>button]:text-slate-200 [&>button:hover]:bg-slate-600/80" />
         <Background 
           color="#334155" 
