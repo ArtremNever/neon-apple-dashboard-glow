@@ -4,7 +4,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { Trash2, Target, Smartphone, Globe, Megaphone, Users, Palette } from 'lucide-react';
 import { BuilderBlock } from '@/types/campaign';
 
-export interface HierarchyNodeData {
+export interface HierarchyNodeData extends Record<string, unknown> {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;

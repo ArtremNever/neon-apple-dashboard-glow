@@ -45,7 +45,7 @@ export const CampaignCanvas = ({
 }: CampaignCanvasProps) => {
   const { zoomTo } = useReactFlow();
 
-  const initialNodes: Node[] = useMemo(() => 
+  const initialNodes: Node<HierarchyNodeData>[] = useMemo(() => 
     blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
@@ -59,12 +59,12 @@ export const CampaignCanvas = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      } as HierarchyNodeData,
+      },
     })),
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState<HierarchyNodeData>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   // Apply zoom when it changes
@@ -123,7 +123,7 @@ export const CampaignCanvas = ({
 
   // Update nodes when blocks change
   useEffect(() => {
-    const newNodes: Node[] = blocks.map((block) => ({
+    const newNodes: Node<HierarchyNodeData>[] = blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
       position: { x: block.layout.x, y: block.layout.y },
@@ -136,7 +136,7 @@ export const CampaignCanvas = ({
         onSelect: onBlockSelect,
         onDelete: onBlockDelete,
         isSelected: selectedBlock?.id === block.id,
-      } as HierarchyNodeData,
+      },
     }));
     setNodes(newNodes);
   }, [blocks, selectedBlock, onBlockSelect, onBlockDelete, setNodes]);
