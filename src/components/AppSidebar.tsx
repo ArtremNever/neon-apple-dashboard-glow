@@ -19,11 +19,11 @@ import { UserMenu } from '@/components/UserMenu';
 
 const navItems = [
   { icon: Home, label: 'Dashboard', path: '/' },
-  { icon: Target, label: 'Campaigns', path: '/campaigns' },
-  { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-  { icon: TrendingUp, label: 'Revenue', path: '/revenue' },
+  { icon: BarChart3, label: 'Campaigns List', path: '/campaigns-list' },
+  { icon: Target, label: 'Campaign Builder', path: '/campaigns' },
+  { icon: TrendingUp, label: 'Analytics', path: '/analytics' },
+  { icon: Activity, label: 'Revenue', path: '/revenue' },
   { icon: Users, label: 'Users', path: '/users' },
-  { icon: Activity, label: 'Activity', path: '/activity' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
