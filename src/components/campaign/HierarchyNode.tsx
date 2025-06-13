@@ -4,7 +4,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { BuilderBlock } from '@/types/campaign';
 import { X, Settings } from 'lucide-react';
 
-export interface HierarchyNodeData {
+export interface HierarchyNodeData extends Record<string, unknown> {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;
@@ -162,16 +162,63 @@ export const HierarchyNode = memo(({ data }: NodeProps<HierarchyNodeData>) => {
         )}
       </div>
 
-      {/* Connection Handles */}
+      {/* Connection Handles - All 4 sides */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="target-top"
+        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
+        style={{ top: -6 }}
+      />
       <Handle
         type="target"
         position={Position.Left}
+        id="target-left"
         className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
+        style={{ left: -6 }}
+      />
+      <Handle
+        type="target"
+        position={Position.Right}
+        id="target-right"
+        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
+        style={{ right: -6 }}
+      />
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="target-bottom"
+        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
+        style={{ bottom: -6 }}
+      />
+      
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="source-top"
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+        style={{ top: -6, left: '75%' }}
+      />
+      <Handle
+        type="source"
+        position={Position.Left}
+        id="source-left"
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+        style={{ left: -6, top: '75%' }}
       />
       <Handle
         type="source"
         position={Position.Right}
-        className="w-3 h-3 bg-blue-500/60 border-2 border-blue-400 rounded-full"
+        id="source-right"
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+        style={{ right: -6, top: '75%' }}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="source-bottom"
+        className="w-3 h-3 bg-green-500/60 border-2 border-green-400 rounded-full"
+        style={{ bottom: -6, left: '75%' }}
       />
     </div>
   );

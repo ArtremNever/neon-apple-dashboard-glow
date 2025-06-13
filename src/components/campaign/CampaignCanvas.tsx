@@ -62,7 +62,7 @@ export const CampaignCanvas = ({
     [blocks, selectedBlock, onBlockSelect, onBlockDelete]
   );
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState<HierarchyNodeData>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   // Apply zoom when it changes
@@ -76,10 +76,16 @@ export const CampaignCanvas = ({
     (params: Connection) => {
       const newEdge: Edge = {
         ...params,
-        id: `${params.source}-${params.target}`,
+        id: `${params.source}-${params.target}-${params.sourceHandle}-${params.targetHandle}`,
         type: 'smoothstep',
         animated: true,
         style: { stroke: '#3b82f6', strokeWidth: 2 },
+        markerEnd: {
+          type: 'arrowclosed' as const,
+          width: 20,
+          height: 20,
+          color: '#3b82f6',
+        },
       };
       setEdges((eds) => addEdge(newEdge, eds));
     },
@@ -102,6 +108,12 @@ export const CampaignCanvas = ({
   const onPaneClick = useCallback(() => {
     onCanvasClick();
   }, [onCanvasClick]);
+
+  // Handle edge click for deletion
+  const onEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    event.stopPropagation();
+    setEdges((edges) => edges.filter((e) => e.id !== edge.id));
+  }, [setEdges]);
 
   // Update nodes when blocks change
   useEffect(() => {
@@ -147,6 +159,7 @@ export const CampaignCanvas = ({
         onConnect={onConnect}
         onNodeDragStop={onNodeDragStop}
         onPaneClick={onPaneClick}
+        onEdgeClick={onEdgeClick}
         nodeTypes={nodeTypes}
         fitView
         className="bg-slate-950"
