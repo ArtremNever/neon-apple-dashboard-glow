@@ -1,288 +1,189 @@
 
 import { Layout } from '@/components/Layout';
 import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { DateRangePicker } from '@/components/DateRangePicker';
+import { EnhancedSourceMetricCard } from '@/components/EnhancedSourceMetricCard';
+import { AnalyticsHeader } from '@/components/analytics/AnalyticsHeader';
+import { AnalyticsTabs } from '@/components/analytics/AnalyticsTabs';
+import { PerformanceChart } from '@/components/analytics/PerformanceChart';
+import { AnalyticsTable } from '@/components/analytics/AnalyticsTable';
 import { 
-  TrendingUp, 
-  TrendingDown, 
-  BarChart3, 
-  PieChart, 
+  Eye, 
+  MousePointer, 
   Target, 
   DollarSign,
-  Users,
-  MousePointer,
-  Eye,
-  Filter,
-  Download
+  TrendingUp
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell } from 'recharts';
 
 const Analytics = () => {
   const [dateRange, setDateRange] = useState({ 
     from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 
     to: new Date() 
   });
+  const [activeTab, setActiveTab] = useState('overview');
+  const [activeFilters, setActiveFilters] = useState(0);
 
-  // Mock data for charts
+  // Mock data for performance chart
   const performanceData = [
-    { date: '2024-01-01', impressions: 125000, clicks: 2400, conversions: 156, spend: 3200 },
-    { date: '2024-01-02', impressions: 135000, clicks: 2600, conversions: 168, spend: 3400 },
-    { date: '2024-01-03', impressions: 128000, clicks: 2300, conversions: 142, spend: 3100 },
-    { date: '2024-01-04', impressions: 142000, clicks: 2800, conversions: 184, spend: 3600 },
-    { date: '2024-01-05', impressions: 138000, clicks: 2700, conversions: 176, spend: 3500 },
-    { date: '2024-01-06', impressions: 145000, clicks: 2900, conversions: 192, spend: 3700 },
-    { date: '2024-01-07', impressions: 152000, clicks: 3100, conversions: 208, spend: 3900 },
+    { date: '2024-01-01', impressions: 125000, clicks: 2400, conversions: 156, revenue: 3200 },
+    { date: '2024-01-02', impressions: 135000, clicks: 2600, conversions: 168, revenue: 3400 },
+    { date: '2024-01-03', impressions: 128000, clicks: 2300, conversions: 142, revenue: 3100 },
+    { date: '2024-01-04', impressions: 142000, clicks: 2800, conversions: 184, revenue: 3600 },
+    { date: '2024-01-05', impressions: 138000, clicks: 2700, conversions: 176, revenue: 3500 },
+    { date: '2024-01-06', impressions: 145000, clicks: 2900, conversions: 192, revenue: 3700 },
+    { date: '2024-01-07', impressions: 152000, clicks: 3100, conversions: 208, revenue: 3900 },
   ];
 
-  const platformData = [
-    { name: 'Facebook', value: 45, color: '#1877F2' },
-    { name: 'Google', value: 35, color: '#4285F4' },
-    { name: 'TikTok', value: 20, color: '#000000' },
+  // Mock data for analytics table
+  const tableData = [
+    {
+      id: '1',
+      mediaSource: 'mintegral_int',
+      total: 4854,
+      installs: 2400,
+      revenue: 15600,
+      ctr: 1.92,
+      status: 'active' as const,
+      campaigns: [
+        { id: '1-1', name: 'Summer Sale Campaign', installs: 1200, revenue: 8900, ctr: 2.1 },
+        { id: '1-2', name: 'Mobile App Install Q4', installs: 1200, revenue: 6700, ctr: 1.8 }
+      ]
+    },
+    {
+      id: '2',
+      mediaSource: 'facebook_int',
+      total: 3421,
+      installs: 1890,
+      revenue: 12340,
+      ctr: 2.12,
+      status: '**' as const,
+      campaigns: [
+        { id: '2-1', name: 'Brand Awareness Campaign', installs: 890, revenue: 6200, ctr: 2.3 }
+      ]
+    },
+    {
+      id: '3',
+      mediaSource: 'google_int',
+      total: 2156,
+      installs: 1456,
+      revenue: 8900,
+      ctr: 1.87,
+      status: 'active' as const
+    }
   ];
 
-  const campaignPerformance = [
-    { name: 'Summer Sale Campaign', impressions: 125000, clicks: 2400, conversions: 156, ctr: 1.92, cpa: 20.51, status: 'active' },
-    { name: 'Mobile App Install Q4', impressions: 89000, clicks: 1890, conversions: 245, ctr: 2.12, cpa: 24.90, status: 'active' },
-    { name: 'Brand Awareness Campaign', impressions: 45000, clicks: 890, conversions: 34, ctr: 1.98, cpa: 35.29, status: 'paused' },
-  ];
-
+  // KPI metrics data
   const metrics = [
     { 
       title: 'Total Impressions', 
       value: '1.2M', 
-      change: '+15.3%', 
       icon: Eye, 
-      trend: 'up' as const,
-      color: 'text-blue-400'
+      status: 'success' as const,
+      subText: '+15.3% vs last period',
+      trend: '+15.3%',
+      miniChartData: [
+        { value: 125 }, { value: 135 }, { value: 128 }, { value: 142 }, 
+        { value: 138 }, { value: 145 }, { value: 152 }
+      ]
     },
     { 
       title: 'Total Clicks', 
       value: '18.4K', 
-      change: '+12.8%', 
       icon: MousePointer, 
-      trend: 'up' as const,
-      color: 'text-green-400'
+      status: 'success' as const,
+      subText: '+12.8% vs last period',
+      trend: '+12.8%',
+      miniChartData: [
+        { value: 24 }, { value: 26 }, { value: 23 }, { value: 28 }, 
+        { value: 27 }, { value: 29 }, { value: 31 }
+      ]
     },
     { 
       title: 'Conversions', 
       value: '1,203', 
-      change: '+18.7%', 
       icon: Target, 
-      trend: 'up' as const,
-      color: 'text-purple-400'
+      status: 'success' as const,
+      subText: '+18.7% vs last period',
+      trend: '+18.7%',
+      miniChartData: [
+        { value: 156 }, { value: 168 }, { value: 142 }, { value: 184 }, 
+        { value: 176 }, { value: 192 }, { value: 208 }
+      ]
     },
     { 
-      title: 'Total Spend', 
+      title: 'Total Revenue', 
       value: '$24.8K', 
-      change: '+8.2%', 
       icon: DollarSign, 
-      trend: 'up' as const,
-      color: 'text-yellow-400'
-    },
+      status: 'warning' as const,
+      subText: '+8.2% vs last period',
+      trend: '+8.2%',
+      miniChartData: [
+        { value: 32 }, { value: 34 }, { value: 31 }, { value: 36 }, 
+        { value: 35 }, { value: 37 }, { value: 39 }
+      ]
+    }
   ];
+
+  const handleFiltersClick = () => {
+    console.log('Filters clicked');
+    // TODO: Implement filter panel
+  };
+
+  const handleExportClick = () => {
+    console.log('Export clicked');
+    // TODO: Implement export functionality
+  };
+
+  const handleTableSettingsClick = () => {
+    console.log('Table settings clicked');
+    // TODO: Implement table settings modal
+  };
 
   return (
     <Layout>
-      <div className="p-6 space-y-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen">
+      <div className="p-6 space-y-8 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Analytics</h1>
-            <p className="text-slate-400">Comprehensive campaign performance insights and metrics</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <DateRangePicker 
-              dateRange={dateRange} 
-              onDateRangeChange={setDateRange} 
-            />
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">
-              <Filter className="w-4 h-4 mr-2" />
-              Filters
-            </Button>
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
-          </div>
-        </div>
+        <AnalyticsHeader
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+          activeFiltersCount={activeFilters}
+          onFiltersClick={handleFiltersClick}
+          onExportClick={handleExportClick}
+        />
 
-        {/* Key Metrics */}
+        {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {metrics.map((metric, index) => (
-            <Card key={metric.title} className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-400 text-sm mb-1">{metric.title}</p>
-                    <p className="text-2xl font-bold text-white">{metric.value}</p>
-                    <div className="flex items-center mt-2">
-                      {metric.trend === 'up' ? 
-                        <TrendingUp className="w-4 h-4 text-green-400 mr-1" /> : 
-                        <TrendingDown className="w-4 h-4 text-red-400 mr-1" />
-                      }
-                      <span className={`text-sm ${metric.trend === 'up' ? 'text-green-400' : 'text-red-400'}`}>
-                        {metric.change}
-                      </span>
-                    </div>
-                  </div>
-                  <div className={`p-3 rounded-lg bg-slate-800/50`}>
-                    <metric.icon className={`w-6 h-6 ${metric.color}`} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <EnhancedSourceMetricCard
+              key={metric.title}
+              title={metric.title}
+              value={metric.value}
+              icon={metric.icon}
+              status={metric.status}
+              subText={metric.subText}
+              trend={metric.trend}
+              miniChartData={metric.miniChartData}
+              delay={index * 100}
+            />
           ))}
         </div>
 
-        {/* Charts Section */}
-        <Tabs defaultValue="performance" className="space-y-6">
-          <TabsList className="bg-slate-800/50 border-slate-600">
-            <TabsTrigger value="performance" className="data-[state=active]:bg-slate-700">Performance Trends</TabsTrigger>
-            <TabsTrigger value="platforms" className="data-[state=active]:bg-slate-700">Platform Distribution</TabsTrigger>
-            <TabsTrigger value="campaigns" className="data-[state=active]:bg-slate-700">Campaign Comparison</TabsTrigger>
-          </TabsList>
+        {/* Navigation Tabs */}
+        <AnalyticsTabs 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+        />
 
-          <TabsContent value="performance" className="space-y-6">
-            <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5" />
-                  Performance Over Time
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={performanceData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                      <XAxis dataKey="date" stroke="#9CA3AF" />
-                      <YAxis stroke="#9CA3AF" />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#1F2937', 
-                          border: '1px solid #374151',
-                          borderRadius: '0.5rem'
-                        }} 
-                      />
-                      <Line type="monotone" dataKey="impressions" stroke="#3B82F6" strokeWidth={2} />
-                      <Line type="monotone" dataKey="clicks" stroke="#10B981" strokeWidth={2} />
-                      <Line type="monotone" dataKey="conversions" stroke="#8B5CF6" strokeWidth={2} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="platforms" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <PieChart className="w-5 h-5" />
-                    Platform Distribution
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RechartsPieChart>
-                        <RechartsPieChart data={platformData} cx="50%" cy="50%" outerRadius={80} dataKey="value">
-                          {platformData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </RechartsPieChart>
-                        <Tooltip />
-                      </RechartsPieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-                <CardHeader>
-                  <CardTitle className="text-white">Platform Performance</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {platformData.map((platform) => (
-                    <div key={platform.name} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div 
-                          className="w-4 h-4 rounded-full" 
-                          style={{ backgroundColor: platform.color }}
-                        />
-                        <span className="text-slate-200">{platform.name}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-white font-semibold">{platform.value}%</span>
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="campaigns" className="space-y-6">
-            <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-white">Campaign Performance Comparison</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-slate-700">
-                        <th className="text-left py-3 px-4 text-slate-400 font-medium">Campaign</th>
-                        <th className="text-right py-3 px-4 text-slate-400 font-medium">Impressions</th>
-                        <th className="text-right py-3 px-4 text-slate-400 font-medium">Clicks</th>
-                        <th className="text-right py-3 px-4 text-slate-400 font-medium">CTR</th>
-                        <th className="text-right py-3 px-4 text-slate-400 font-medium">Conversions</th>
-                        <th className="text-right py-3 px-4 text-slate-400 font-medium">CPA</th>
-                        <th className="text-center py-3 px-4 text-slate-400 font-medium">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {campaignPerformance.map((campaign) => (
-                        <tr key={campaign.name} className="border-b border-slate-800 hover:bg-slate-800/30">
-                          <td className="py-4 px-4">
-                            <span className="text-white font-medium">{campaign.name}</span>
-                          </td>
-                          <td className="py-4 px-4 text-right text-slate-300">
-                            {campaign.impressions.toLocaleString()}
-                          </td>
-                          <td className="py-4 px-4 text-right text-slate-300">
-                            {campaign.clicks.toLocaleString()}
-                          </td>
-                          <td className="py-4 px-4 text-right text-slate-300">
-                            {campaign.ctr}%
-                          </td>
-                          <td className="py-4 px-4 text-right text-slate-300">
-                            {campaign.conversions}
-                          </td>
-                          <td className="py-4 px-4 text-right text-slate-300">
-                            ${campaign.cpa}
-                          </td>
-                          <td className="py-4 px-4 text-center">
-                            <Badge 
-                              variant={campaign.status === 'active' ? 'default' : 'secondary'}
-                              className={campaign.status === 'active' ? 'bg-green-600' : 'bg-yellow-600'}
-                            >
-                              {campaign.status}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        {/* Main Content Area */}
+        <div className="space-y-8">
+          {/* Performance Chart */}
+          <PerformanceChart data={performanceData} />
+          
+          {/* Analytics Table */}
+          <AnalyticsTable 
+            data={tableData} 
+            onSettingsClick={handleTableSettingsClick}
+          />
+        </div>
       </div>
     </Layout>
   );
