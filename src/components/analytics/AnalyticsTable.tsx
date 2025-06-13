@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +21,7 @@ interface TableData {
   installs: number;
   revenue: number;
   ctr: number;
-  status: 'active' | 'paused';
+  status: 'active' | 'paused' | '**';
   campaigns?: Array<{
     id: string;
     name: string;
@@ -248,6 +247,8 @@ export const AnalyticsTable = ({ data, onSettingsClick }: AnalyticsTableProps) =
                         className={cn(
                           row.status === 'active' 
                             ? 'bg-green-600 hover:bg-green-700' 
+                            : row.status === '**'
+                            ? 'bg-orange-600 hover:bg-orange-700'
                             : 'bg-yellow-600 hover:bg-yellow-700'
                         )}
                       >
