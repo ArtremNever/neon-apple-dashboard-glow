@@ -47,23 +47,28 @@ export const AuthForm = ({ mode, onToggleMode }: AuthFormProps) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-slate-900 border-slate-800">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl text-white">
-          {mode === 'signin' ? 'Welcome back' : 'Create account'}
+    <Card className="w-full max-w-md mx-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 shadow-2xl">
+      <CardHeader className="space-y-1 text-center">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-green-500/20 border border-green-500/30 flex items-center justify-center shadow-lg shadow-green-500/20">
+          <div className="w-8 h-8 rounded-lg bg-green-500/30 flex items-center justify-center">
+            <div className="w-4 h-4 bg-green-400 rounded-sm" />
+          </div>
+        </div>
+        <CardTitle className="text-3xl font-bold text-white">
+          {mode === 'signin' ? 'Welcome back' : 'Get started'}
         </CardTitle>
-        <CardDescription className="text-slate-400">
+        <CardDescription className="text-slate-400 text-lg">
           {mode === 'signin' 
-            ? 'Sign in to your account to continue' 
-            : 'Create an account to get started'
+            ? 'Sign in to access your dashboard' 
+            : 'Create your account in seconds'
           }
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <Button
           type="button"
           variant="outline"
-          className="w-full bg-slate-800 border-slate-700 text-white hover:bg-slate-700"
+          className="w-full h-12 bg-white/10 backdrop-blur-sm border-slate-600/50 text-white hover:bg-white/20 transition-all duration-200"
           onClick={handleGoogleSignIn}
           disabled={loading}
         >
@@ -90,26 +95,26 @@ export const AuthForm = ({ mode, onToggleMode }: AuthFormProps) => {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <Separator className="w-full bg-slate-700" />
+            <Separator className="w-full bg-slate-600/50" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-slate-900 px-2 text-slate-400">Or continue with</span>
+            <span className="bg-slate-900/80 px-3 text-slate-500 font-medium">Or continue with email</span>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {mode === 'signup' && (
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-white">Full Name</Label>
+              <Label htmlFor="fullName" className="text-white font-medium">Full Name</Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <Input
                   id="fullName"
                   type="text"
                   placeholder="Enter your full name"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-slate-400"
+                  className="h-12 pl-12 bg-slate-800/50 backdrop-blur-sm border-slate-600/50 text-white placeholder:text-slate-500 focus:border-green-500/50 focus:ring-green-500/20"
                   required
                 />
               </div>
@@ -117,32 +122,32 @@ export const AuthForm = ({ mode, onToggleMode }: AuthFormProps) => {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-white">Email</Label>
+            <Label htmlFor="email" className="text-white font-medium">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
               <Input
                 id="email"
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-slate-400"
+                className="h-12 pl-12 bg-slate-800/50 backdrop-blur-sm border-slate-600/50 text-white placeholder:text-slate-500 focus:border-green-500/50 focus:ring-green-500/20"
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-white">Password</Label>
+            <Label htmlFor="password" className="text-white font-medium">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10 bg-slate-800 border-slate-700 text-white placeholder:text-slate-400"
+                className="h-12 pl-12 pr-12 bg-slate-800/50 backdrop-blur-sm border-slate-600/50 text-white placeholder:text-slate-500 focus:border-green-500/50 focus:ring-green-500/20"
                 required
                 minLength={6}
               />
@@ -150,7 +155,7 @@ export const AuthForm = ({ mode, onToggleMode }: AuthFormProps) => {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 hover:bg-slate-700/50"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -164,17 +169,24 @@ export const AuthForm = ({ mode, onToggleMode }: AuthFormProps) => {
 
           <Button
             type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 text-white"
+            className="w-full h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold shadow-lg shadow-green-500/25 transition-all duration-200"
             disabled={loading}
           >
-            {loading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Sign Up'}
+            {loading ? (
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Loading...</span>
+              </div>
+            ) : (
+              mode === 'signin' ? 'Sign In' : 'Create Account'
+            )}
           </Button>
         </form>
 
         <div className="text-center">
           <Button
             variant="link"
-            className="text-slate-400 hover:text-white"
+            className="text-slate-400 hover:text-white font-medium"
             onClick={onToggleMode}
           >
             {mode === 'signin' 
