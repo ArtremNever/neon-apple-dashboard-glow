@@ -28,7 +28,7 @@ interface CampaignCanvasProps {
   zoom: number;
 }
 
-export interface HierarchyNodeData extends Record<string, unknown> {
+export interface HierarchyNodeData {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;
@@ -111,7 +111,7 @@ export const CampaignCanvas = ({
   }, [onCanvasClick]);
 
   // Update nodes when blocks change
-  useMemo(() => {
+  useEffect(() => {
     const newNodes: Node<HierarchyNodeData>[] = blocks.map((block) => ({
       id: block.id,
       type: 'hierarchy',
