@@ -1,4 +1,5 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,26 +15,26 @@
     --popover: 220 13% 10%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 125 82% 55%;
+    --primary: 200 91% 45%;
     --primary-foreground: 220 13% 8%;
 
     --secondary: 220 13% 15%;
-    --secondary-foreground: 125 82% 55%;
+    --secondary-foreground: 200 91% 45%;
 
     --muted: 220 13% 15%;
-    --muted-foreground: 125 82% 55%;
+    --muted-foreground: 200 91% 45%;
 
     --accent: 220 13% 15%;
-    --accent-foreground: 125 82% 55%;
+    --accent-foreground: 200 91% 45%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 125 82% 35%;
+    --border: 200 91% 35%;
     --input: 220 13% 12%;
-    --ring: 125 82% 55%;
+    --ring: 200 91% 45%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 }
 
@@ -43,16 +44,70 @@
   }
 
   body {
-    @apply bg-background text-foreground font-light;
+    @apply bg-background text-foreground font-normal;
     background: hsl(var(--background));
     min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    letter-spacing: -0.01em;
   }
 }
 
+@layer utilities {
+  /* Glassmorphism utilities */
+  .glass-light {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  
+  .glass-medium {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Modern hover effects */
+  .hover-lift {
+    @apply transition-all duration-250 hover:scale-[1.02] hover:-translate-y-1;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-250 hover:shadow-lg hover:shadow-primary-500/20;
+  }
+
+  /* Typography utilities */
+  .text-display {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  
+  .text-body {
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+  }
+  
+  .text-caption {
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+}
+
+/* Enhanced keyframes */
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -71,61 +126,75 @@
   }
 }
 
-@keyframes neon-glow {
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 5px #10b981, 0 0 10px #10b981, 0 0 15px #10b981;
+    box-shadow: 0 0 5px rgba(14, 165, 233, 0.3);
   }
   50% {
-    box-shadow: 0 0 10px #10b981, 0 0 20px #10b981, 0 0 30px #10b981;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.6);
   }
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.3s ease-out;
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.3s ease-out;
-}
-
-.animate-neon-glow {
-  animation: neon-glow 2s ease-in-out infinite;
-}
-
-/* React Flow Dark Theme with Neon Green Overrides */
+/* React Flow styling updates for modern look */
 .react-flow {
   background: #020617;
 }
 
 .react-flow__controls {
-  background: #0f172a !important;
-  border: 1px solid #10b981 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
 }
 
 .react-flow__controls button {
-  background: #1e293b !important;
-  border-bottom: 1px solid #10b981 !important;
-  color: #10b981 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.2) !important;
+  color: #0ea5e9 !important;
+  transition: all 0.25s ease !important;
 }
 
 .react-flow__controls button:hover {
-  background: #334155 !important;
-  color: #22c55e !important;
+  background: rgba(14, 165, 233, 0.1) !important;
+  color: #38bdf8 !important;
+  transform: scale(1.05);
 }
 
 .react-flow__handle {
-  background: #10b981 !important;
-  border: 2px solid #22c55e !important;
+  background: #0ea5e9 !important;
+  border: 2px solid #38bdf8 !important;
+  transition: all 0.25s ease !important;
 }
 
 .react-flow__handle:hover {
-  background: #22c55e !important;
-  border-color: #16a34a !important;
-  box-shadow: 0 0 10px #10b981;
+  background: #38bdf8 !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.4);
+  transform: scale(1.1);
 }
 
 .react-flow__edge-path {
-  stroke: #10b981 !important;
+  stroke: #0ea5e9 !important;
   stroke-width: 2;
 }
 
@@ -138,24 +207,4 @@
   to {
     stroke-dashoffset: -10;
   }
-}
-
-/* Node Resizer Styles with Neon Green */
-.react-flow__resize-control {
-  background: #10b981 !important;
-  border: 2px solid #22c55e !important;
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 2px !important;
-}
-
-.react-flow__resize-control:hover {
-  background: #22c55e !important;
-  border-color: #16a34a !important;
-  box-shadow: 0 0 5px #10b981;
-}
-
-.react-flow__resize-control.handle {
-  background: #10b981 !important;
-  border-color: #22c55e !important;
 }

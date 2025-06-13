@@ -28,7 +28,7 @@ interface CampaignCanvasProps {
   zoom: number;
 }
 
-export interface HierarchyNodeData {
+export interface HierarchyNodeData extends Record<string, unknown> {
   block: BuilderBlock;
   onSelect: (block: BuilderBlock) => void;
   onDelete: (blockId: string) => void;

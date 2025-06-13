@@ -1,7 +1,9 @@
+
 import { Layout } from '@/components/Layout';
 import { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, Users, Activity, Target, Zap, ArrowUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, Users, Activity, Target, Zap, ArrowUpRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ModernMetricCard } from '@/components/ModernMetricCard';
 
 const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -14,40 +16,54 @@ const Index = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const formattedTime = currentTime.toLocaleTimeString();
+  const formattedTime = currentTime.toLocaleTimeString('en-US', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+
+  // Sample sparkline data
+  const generateSparklineData = (trend: 'up' | 'down') => {
+    const baseValues = [45, 52, 48, 55, 51, 58, 62, 59, 65, 61, 68, 72];
+    if (trend === 'down') {
+      return baseValues.map((value, index) => ({ value: 80 - value + index * 2 }));
+    }
+    return baseValues.map(value => ({ value }));
+  };
 
   const metrics = [
     {
-      title: "Total Users",
+      title: "Active Users",
       value: "8,549",
       change: "+5.2%",
-      trend: "up",
+      trend: "up" as const,
       icon: Users,
-      color: "blue"
+      sparklineData: generateSparklineData('up'),
     },
     {
-      title: "Campaigns Active",
-      value: "42",
+      title: "Live Campaigns",
+      value: 42,
       change: "+12.5%",
-      trend: "up",
+      trend: "up" as const,
       icon: Target,
-      color: "green"
+      sparklineData: generateSparklineData('up'),
     },
     {
-      title: "Revenue",
-      value: "$124,500",
+      title: "Monthly Revenue",
+      value: "$124.5K",
       change: "+8.1%",
-      trend: "up",
+      trend: "up" as const,
       icon: TrendingUp,
-      color: "green"
+      sparklineData: generateSparklineData('up'),
     },
     {
-      title: "Performance",
+      title: "Performance Score",
       value: "94.2%",
       change: "-2.1%",
-      trend: "down",
+      trend: "down" as const,
       icon: Activity,
-      color: "orange"
+      sparklineData: generateSparklineData('down'),
     }
   ];
 
@@ -56,141 +72,150 @@ const Index = () => {
       user: "Alex Thompson",
       action: "completed project milestone",
       time: "2 minutes ago",
-      type: "success"
+      type: "success" as const
     },
     {
       user: "Sarah Chen",
       action: "updated campaign settings",
       time: "5 minutes ago",
-      type: "info"
+      type: "info" as const
     },
     {
       user: "Mike Johnson",
       action: "created new adset",
       time: "12 minutes ago",
-      type: "success"
+      type: "success" as const
     },
     {
       user: "Emma Wilson",
       action: "paused underperforming campaign",
       time: "18 minutes ago",
-      type: "warning"
+      type: "warning" as const
     }
   ];
 
   return (
     <Layout>
-      <div className="h-full p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-auto">
-        {/* Header Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 flex items-center justify-center border border-green-500/30">
-              <BarChart3 className="w-5 h-5 text-green-400" />
-            </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-              Analytics Hub
-            </h1>
-            <div className="ml-auto flex items-center gap-2 px-3 py-1.5 bg-green-500/10 rounded-lg border border-green-500/20">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm text-green-400 font-medium">Live Data</span>
-            </div>
-          </div>
-          <p className="text-slate-400">
-            Comprehensive overview of your business performance with real-time insights and actionable metrics
-          </p>
-        </div>
-
-        {/* Time Card */}
-        <Card className="mb-6 bg-gradient-to-r from-slate-800/50 to-slate-700/50 border-green-500/20 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-400">
-              <Zap className="w-5 h-5" />
-              Current Time
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-mono font-bold text-green-400">{formattedTime}</p>
-            <p className="text-sm text-slate-400 mt-1">Updated in real-time</p>
-          </CardContent>
-        </Card>
-
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {metrics.map((metric, index) => {
-            const Icon = metric.icon;
-            const isPositive = metric.trend === 'up';
-            
-            return (
-              <Card key={index} className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 border-green-500/20 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-slate-300 uppercase tracking-wide">
-                      {metric.title}
-                    </CardTitle>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      metric.color === 'green' ? 'bg-green-500/20 text-green-400' :
-                      metric.color === 'blue' ? 'bg-blue-500/20 text-blue-400' :
-                      'bg-orange-500/20 text-orange-400'
-                    }`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900/95 to-gray-950 overflow-auto">
+        {/* Main content with proper spacing */}
+        <div className="p-8 space-y-8">
+          {/* Header Section - Modern typography */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center backdrop-blur-sm">
+                    <Target className="w-6 h-6 text-primary-400" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold text-white">{metric.value}</p>
-                    <div className="flex items-center gap-1">
-                      {isPositive ? (
-                        <ArrowUp className="w-3 h-3 text-green-400" />
-                      ) : (
-                        <ArrowDown className="w-3 h-3 text-red-400" />
-                      )}
-                      <span className={`text-xs font-medium ${
-                        isPositive ? 'text-green-400' : 'text-red-400'
-                      }`}>
-                        {metric.change}
-                      </span>
-                      <span className="text-xs text-slate-500">vs last month</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* Recent Activity */}
-        <Card className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 border-green-500/20 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-400">
-              <Activity className="w-5 h-5" />
-              Live Activity
-              <span className="ml-auto text-xs text-slate-400">Recent team updates</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
-                    activity.type === 'success' ? 'bg-green-500/20 text-green-400' :
-                    activity.type === 'warning' ? 'bg-orange-500/20 text-orange-400' :
-                    'bg-blue-500/20 text-blue-400'
-                  }`}>
-                    {activity.user.split(' ').map(n => n[0]).join('')}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-slate-200">
-                      <span className="font-medium text-green-400">{activity.user}</span>{' '}
-                      {activity.action}
+                  <div>
+                    <h1 className="text-4xl font-semibold text-white tracking-tight">
+                      Analytics Hub
+                    </h1>
+                    <p className="text-gray-400 text-lg font-normal">
+                      Real-time insights and performance metrics
                     </p>
-                    <p className="text-xs text-slate-400">{activity.time}</p>
                   </div>
                 </div>
-              ))}
+              </div>
+              
+              {/* Live indicator */}
+              <div className="flex items-center space-x-3 px-4 py-2 bg-white/[0.08] rounded-xl border border-white/[0.12] backdrop-blur-md">
+                <div className="relative">
+                  <div className="w-2 h-2 bg-success-400 rounded-full animate-pulse" />
+                  <div className="absolute inset-0 w-2 h-2 bg-success-400 rounded-full animate-ping opacity-75" />
+                </div>
+                <span className="text-sm font-medium text-gray-300">Live Data</span>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Time Card - Glassmorphism */}
+          <Card className="bg-white/[0.08] border-0 backdrop-blur-md hover:bg-white/[0.12] transition-all duration-250">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center space-x-3 text-primary-400">
+                <div className="p-2 bg-primary-500/10 rounded-lg">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <span className="text-lg font-medium">Current Time</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <p className="text-4xl font-semibold text-white font-mono tracking-wider">
+                  {formattedTime}
+                </p>
+                <p className="text-sm text-gray-400">
+                  Updated in real-time • {currentTime.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Metrics Grid - 8pt grid system */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {metrics.map((metric, index) => (
+              <ModernMetricCard
+                key={metric.title}
+                {...metric}
+                delay={index * 100}
+              />
+            ))}
+          </div>
+
+          {/* Recent Activity - Modern card design */}
+          <Card className="bg-white/[0.08] border-0 backdrop-blur-md hover:bg-white/[0.12] transition-all duration-250">
+            <CardHeader className="pb-6">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center space-x-3 text-primary-400">
+                  <div className="p-2 bg-primary-500/10 rounded-lg">
+                    <Activity className="w-5 h-5" />
+                  </div>
+                  <span className="text-xl font-medium">Live Activity</span>
+                </CardTitle>
+                <button className="flex items-center space-x-2 text-sm text-gray-400 hover:text-primary-400 transition-colors duration-250 group">
+                  <span>View all</span>
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-250" />
+                </button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentActivity.map((activity, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-center space-x-4 p-4 bg-white/[0.04] rounded-xl border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.12] transition-all duration-250 group animate-fade-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <div className={`
+                      w-10 h-10 rounded-xl flex items-center justify-center text-sm font-semibold transition-all duration-250 group-hover:scale-110
+                      ${activity.type === 'success' ? 'bg-success-500/10 text-success-400 border border-success-500/20' :
+                        activity.type === 'warning' ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' :
+                        'bg-primary-500/10 text-primary-400 border border-primary-500/20'
+                      }
+                    `}>
+                      {activity.user.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium">
+                        <span className="text-primary-400">{activity.user}</span>{' '}
+                        <span className="font-normal">{activity.action}</span>
+                      </p>
+                      <p className="text-sm text-gray-400">{activity.time}</p>
+                    </div>
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-250">
+                      <ArrowUpRight className="w-4 h-4 text-gray-400" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </Layout>
   );

@@ -35,16 +35,19 @@ export function AppSidebar() {
 
   return (
     <Sidebar 
-      className="border-r border-green-500/30 bg-slate-900/95 backdrop-blur-xl"
+      className="border-r border-white/[0.08] bg-gray-950/80 backdrop-blur-xl"
       collapsible="icon"
     >
-      <SidebarHeader className="p-4">
-        <div className="flex items-center space-x-2 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-green-500/20 border border-green-500/50 flex items-center justify-center shadow-lg shadow-green-500/20 flex-shrink-0">
-            <Zap className="w-4 h-4 text-green-400" />
+      <SidebarHeader className="p-6">
+        <div className="flex items-center space-x-3 min-w-0">
+          <div className="w-10 h-10 rounded-2xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center shadow-lg shadow-primary-500/10 flex-shrink-0">
+            <Zap className="w-5 h-5 text-primary-400" />
           </div>
           {!isCollapsed && (
-            <span className="text-white font-semibold truncate">Dashboard</span>
+            <div className="flex flex-col">
+              <span className="text-white font-semibold text-lg truncate">Analytics</span>
+              <span className="text-xs text-gray-400 uppercase tracking-wide">Hub</span>
+            </div>
           )}
         </div>
       </SidebarHeader>
@@ -52,10 +55,12 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           {!isCollapsed && (
-            <SidebarGroupLabel className="text-green-400/60">Navigation</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-2">
+              Navigation
+            </SidebarGroupLabel>
           )}
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
@@ -64,15 +69,19 @@ export function AppSidebar() {
                       onClick={() => navigate(item.path)}
                       isActive={isActive}
                       className={`
+                        group relative rounded-xl transition-all duration-250 hover:scale-[1.02]
                         ${isActive 
-                          ? 'bg-green-500/20 text-green-400 border-r-2 border-green-500' 
-                          : 'text-green-400/60 hover:text-green-400 hover:bg-green-500/10'
+                          ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20 shadow-lg shadow-primary-500/10' 
+                          : 'text-gray-400 hover:text-white hover:bg-white/[0.08]'
                         }
                       `}
                       tooltip={isCollapsed ? item.label : undefined}
                     >
-                      <item.icon className="w-4 h-4" />
-                      {!isCollapsed && <span>{item.label}</span>}
+                      <item.icon className={`w-5 h-5 transition-all duration-250 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`} />
+                      {!isCollapsed && <span className="font-medium">{item.label}</span>}
+                      {isActive && !isCollapsed && (
+                        <div className="absolute right-3 w-1.5 h-1.5 bg-primary-400 rounded-full" />
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -83,10 +92,10 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {isCollapsed && (
             <div className="flex justify-center">
-              <SidebarTrigger className="text-green-400 hover:text-green-300 w-8 h-8" />
+              <SidebarTrigger className="text-gray-400 hover:text-primary-400 w-10 h-10 rounded-xl hover:bg-white/[0.08] transition-all duration-250" />
             </div>
           )}
           <UserMenu />
