@@ -16,7 +16,7 @@ const data = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-card/95 backdrop-blur-xl border border-green-500/20 rounded-xl p-4 shadow-2xl">
+      <div className="bg-card/95 backdrop-blur-xl border border-green-500/10 rounded-xl p-4 shadow-2xl">
         <p className="text-foreground font-semibold mb-2">{label}</p>
         {payload.map((entry: any, index: number) => (
           <div key={index} className="flex items-center gap-2 mb-1">
@@ -37,16 +37,16 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export const EnhancedChart = () => {
   return (
     <div className="relative group">
-      {/* Glow effect */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 via-emerald-500/15 to-green-500/10 rounded-2xl blur-sm opacity-75 group-hover:opacity-100 transition duration-1000"></div>
+      {/* Subtle glow effect */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-green-500/10 via-emerald-500/8 to-green-500/6 rounded-2xl blur-sm opacity-50 group-hover:opacity-75 transition duration-1000"></div>
       
-      <Card className="relative bg-card/80 backdrop-blur-xl border border-green-500/20 hover:border-green-500/40 transition-all duration-500">
+      <Card className="relative bg-card/60 backdrop-blur-xl border border-green-500/10 hover:border-green-500/20 transition-all duration-500">
         <div className="p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-500/20 rounded-xl border border-green-500/30">
-                <TrendingUp className="w-6 h-6 text-green-400" />
+              <div className="p-3 bg-green-500/10 rounded-xl border border-green-500/20">
+                <TrendingUp className="w-6 h-6 text-green-300" />
               </div>
               <div>
                 <h3 className="text-2xl font-semibold text-foreground">Revenue Analytics</h3>
@@ -57,17 +57,17 @@ export const EnhancedChart = () => {
             {/* Legend with enhanced styling */}
             <div className="hidden md:flex items-center gap-8">
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded-full bg-green-500 shadow-lg shadow-green-500/50"></div>
+                <div className="w-4 h-4 rounded-full bg-green-400 shadow-lg shadow-green-500/30"></div>
                 <div className="flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-green-400" />
-                  <span className="text-sm font-medium text-green-400">Revenue</span>
+                  <DollarSign className="w-4 h-4 text-green-300" />
+                  <span className="text-sm font-medium text-green-300">Revenue</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50"></div>
+                <div className="w-4 h-4 rounded-full bg-blue-400 shadow-lg shadow-blue-500/30"></div>
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm font-medium text-blue-400">Users</span>
+                  <Users className="w-4 h-4 text-blue-300" />
+                  <span className="text-sm font-medium text-blue-300">Users</span>
                 </div>
               </div>
             </div>
@@ -76,29 +76,29 @@ export const EnhancedChart = () => {
           {/* Chart */}
           <div className="h-80 relative">
             {/* Background grid effect */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-500/30 via-transparent to-blue-500/30"></div>
+            <div className="absolute inset-0 opacity-3">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-blue-500/20"></div>
             </div>
             
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
                 <defs>
                   <linearGradient id="revenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                    <stop offset="50%" stopColor="#10b981" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#34d399" stopOpacity={0.2}/>
+                    <stop offset="50%" stopColor="#34d399" stopOpacity={0.08}/>
+                    <stop offset="95%" stopColor="#34d399" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="users" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
-                    <stop offset="50%" stopColor="#3B82F6" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.2}/>
+                    <stop offset="50%" stopColor="#60a5fa" stopOpacity={0.08}/>
+                    <stop offset="95%" stopColor="#60a5fa" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 
                 <CartesianGrid 
                   strokeDasharray="3 3" 
                   stroke="hsl(var(--border))" 
-                  strokeOpacity={0.3}
+                  strokeOpacity={0.2}
                 />
                 
                 <XAxis 
@@ -121,34 +121,34 @@ export const EnhancedChart = () => {
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#10b981"
-                  strokeWidth={3}
+                  stroke="#34d399"
+                  strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#revenue)"
-                  dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                  dot={{ fill: '#34d399', strokeWidth: 2, r: 3 }}
                   activeDot={{ 
-                    r: 6, 
-                    fill: '#10b981',
+                    r: 5, 
+                    fill: '#34d399',
                     stroke: '#ffffff',
                     strokeWidth: 2,
-                    style: { filter: 'drop-shadow(0 0 6px #10b981)' }
+                    style: { filter: 'drop-shadow(0 0 4px #34d399)' }
                   }}
                 />
                 
                 <Area
                   type="monotone"
                   dataKey="value"
-                  stroke="#3B82F6"
-                  strokeWidth={3}
+                  stroke="#60a5fa"
+                  strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#users)"
-                  dot={{ fill: '#3B82F6', strokeWidth: 2, r: 4 }}
+                  dot={{ fill: '#60a5fa', strokeWidth: 2, r: 3 }}
                   activeDot={{ 
-                    r: 6, 
-                    fill: '#3B82F6',
+                    r: 5, 
+                    fill: '#60a5fa',
                     stroke: '#ffffff',
                     strokeWidth: 2,
-                    style: { filter: 'drop-shadow(0 0 6px #3B82F6)' }
+                    style: { filter: 'drop-shadow(0 0 4px #60a5fa)' }
                   }}
                 />
               </AreaChart>
@@ -156,18 +156,18 @@ export const EnhancedChart = () => {
           </div>
           
           {/* Bottom stats */}
-          <div className="grid grid-cols-3 gap-6 mt-8 pt-6 border-t border-border/50">
+          <div className="grid grid-cols-3 gap-6 mt-8 pt-6 border-t border-border/30">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-400">$28.4K</div>
-              <div className="text-sm text-muted-foreground">Avg. Revenue</div>
+              <div className="text-2xl font-bold text-green-300">$28.4K</div>
+              <div className="text-sm text-muted-foreground/80">Avg. Revenue</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-400">2.8K</div>
-              <div className="text-sm text-muted-foreground">Avg. Users</div>
+              <div className="text-2xl font-bold text-blue-300">2.8K</div>
+              <div className="text-sm text-muted-foreground/80">Avg. Users</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">18.2%</div>
-              <div className="text-sm text-muted-foreground">Avg. Growth</div>
+              <div className="text-2xl font-bold text-purple-300">18.2%</div>
+              <div className="text-sm text-muted-foreground/80">Avg. Growth</div>
             </div>
           </div>
         </div>

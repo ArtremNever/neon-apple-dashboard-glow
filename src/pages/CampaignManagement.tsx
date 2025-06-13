@@ -84,9 +84,9 @@ const CampaignManagement = () => {
       {/* Sidebar Navigation */}
       <Sidebar />
       
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
-        <div className="h-14 bg-slate-900 border-b border-green-500/30 flex items-center justify-between px-6">
+        <div className="h-14 bg-slate-900 border-b border-green-500/30 flex items-center justify-between px-6 flex-shrink-0">
           <div className="flex items-center gap-2 text-sm text-green-400/70">
             <span>Dashboard</span>
             <span>{'>'}</span>
@@ -96,10 +96,12 @@ const CampaignManagement = () => {
           <KpiForecast forecast={forecast} />
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 flex">
-          {/* Canvas Area */}
-          <div className="flex-1 flex flex-col">
+        {/* Main Content Area with Fixed Layout */}
+        <div className="flex-1 flex min-h-0">
+          {/* Canvas Area - Fixed width calculation */}
+          <div className="flex flex-col min-w-0" style={{ 
+            width: `calc(100% - ${selectedBlock ? '384px' : '0px'} - 384px)` 
+          }}>
             <CampaignToolbar
               onAddBlock={addBlock}
               onRunPlan={runPlan}
@@ -116,17 +118,18 @@ const CampaignManagement = () => {
             />
           </div>
 
-          {/* Side Panels Container */}
-          <div className="flex">
-            {/* Configuration Panel - conditionally rendered */}
-            {selectedBlock && (
+          {/* Configuration Panel - Fixed Width */}
+          {selectedBlock && (
+            <div className="w-96 flex-shrink-0">
               <CampaignSidePanel
                 selectedBlock={selectedBlock}
                 onBlockUpdate={updateBlock}
               />
-            )}
+            </div>
+          )}
 
-            {/* AI Chat Panel */}
+          {/* AI Chat Panel - Fixed Width */}
+          <div className="w-96 flex-shrink-0">
             <AiChatPanel />
           </div>
         </div>
