@@ -21,13 +21,13 @@ export const CampaignToolbar = ({
   const [history, setHistory] = useState<any[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
-  const blockTypes: Array<{ type: BuilderBlock['type']; label: string; icon: string; color: string }> = [
-    { type: 'client', label: 'Client', icon: '👤', color: 'text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30 hover:border-blue-400/50' },
-    { type: 'application', label: 'App', icon: '📱', color: 'text-purple-400 bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/30 hover:border-purple-400/50' },
-    { type: 'platform', label: 'Source', icon: '🌐', color: 'text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/30 hover:border-cyan-400/50' },
-    { type: 'campaign', label: 'Campaign', icon: '🎯', color: 'text-red-400 bg-red-500/10 hover:bg-red-500/20 border-red-500/30 hover:border-red-400/50' },
-    { type: 'adset', label: 'Adset', icon: '📊', color: 'text-orange-400 bg-orange-500/10 hover:bg-orange-500/20 border-orange-500/30 hover:border-orange-400/50' },
-    { type: 'creative', label: 'Creative', icon: '🎨', color: 'text-pink-400 bg-pink-500/10 hover:bg-pink-500/20 border-pink-500/30 hover:border-pink-400/50' },
+  const blockTypes: Array<{ type: BuilderBlock['type']; label: string; icon: string; gradient: string }> = [
+    { type: 'client', label: 'Client', icon: '👤', gradient: 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500' },
+    { type: 'application', label: 'App', icon: '📱', gradient: 'bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500' },
+    { type: 'platform', label: 'Source', icon: '🌐', gradient: 'bg-gradient-to-r from-cyan-500 via-blue-500 to-green-500' },
+    { type: 'campaign', label: 'Campaign', icon: '🎯', gradient: 'bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400' },
+    { type: 'adset', label: 'Adset', icon: '📊', gradient: 'bg-gradient-to-r from-orange-500 via-yellow-500 to-yellow-400' },
+    { type: 'creative', label: 'Creative', icon: '🎨', gradient: 'bg-gradient-to-r from-pink-600 via-purple-500 to-red-500' },
   ];
 
   const handleZoomIn = () => {
@@ -63,29 +63,30 @@ export const CampaignToolbar = ({
     <div className="h-16 bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 flex items-center justify-between px-6 relative overflow-hidden">
       {/* Left Side - Block Tools */}
       <div className="flex items-center gap-3 relative z-10">
-        {/* Compact Block Type Buttons */}
-        <div className="flex items-center gap-2">
-          {blockTypes.map(({ type, label, icon, color }) => (
+        {/* Beautiful Gradient Block Type Buttons */}
+        <div className="flex items-center gap-3">
+          {blockTypes.map(({ type, label, icon, gradient }) => (
             <button
               key={type}
               onClick={() => onAddBlock(type)}
               className={`
-                group relative px-3 py-2 rounded-lg text-sm font-medium 
-                transition-all duration-200 ease-out
-                ${color}
-                border backdrop-blur-sm
-                hover:scale-105 hover:shadow-lg
+                group relative px-4 py-2.5 rounded-full text-sm font-bold text-white
+                transition-all duration-300 ease-out
+                ${gradient}
+                hover:scale-105 hover:shadow-lg hover:shadow-current/25
                 active:scale-95
-                flex items-center gap-2 min-w-0
-                focus:outline-none focus:ring-2 focus:ring-current/30
+                flex items-center gap-2.5 min-w-0
+                focus:outline-none focus:ring-2 focus:ring-white/30
+                shadow-lg
               `}
             >
-              <span className="text-base flex-shrink-0 group-hover:scale-110 transition-transform duration-200">
+              <span className="text-base flex-shrink-0 group-hover:scale-110 transition-transform duration-200 drop-shadow-sm">
                 {icon}
               </span>
-              <span className="text-xs font-medium whitespace-nowrap">
+              <span className="text-xs font-bold whitespace-nowrap uppercase tracking-wide drop-shadow-sm">
                 {label}
               </span>
+              <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
           ))}
         </div>
