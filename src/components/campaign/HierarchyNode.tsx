@@ -1,4 +1,3 @@
-
 import { Handle, Position, NodeResizer } from '@xyflow/react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -97,25 +96,65 @@ export const HierarchyNode = ({ data }: HierarchyNodeProps) => {
         />
       )}
       
-      {/* Top Handle */}
+      {/* All Handles for connections in all directions */}
       <Handle
         type="target"
         position={Position.Top}
+        id="top"
         className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
       />
       
-      {/* Left Handle */}
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="top-source"
+        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+        style={{ left: '60%' }}
+      />
+      
       <Handle
         type="target"
         position={Position.Left}
+        id="left"
         className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
       />
       
-      {/* Right Handle */}
+      <Handle
+        type="source"
+        position={Position.Left}
+        id="left-source"
+        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+        style={{ top: '60%' }}
+      />
+      
+      <Handle
+        type="target"
+        position={Position.Right}
+        id="right"
+        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+      />
+      
       <Handle
         type="source"
         position={Position.Right}
+        id="right-source"
         className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+        style={{ top: '60%' }}
+      />
+      
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="bottom"
+        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+      />
+      
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="bottom-source"
+        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
+        style={{ left: '60%' }}
       />
       
       <Card 
@@ -175,13 +214,6 @@ export const HierarchyNode = ({ data }: HierarchyNodeProps) => {
           </span>
         </div>
       </Card>
-
-      {/* Bottom Handle */}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        className="w-3 h-3 bg-slate-600 border-2 border-slate-400"
-      />
     </>
   );
 };
