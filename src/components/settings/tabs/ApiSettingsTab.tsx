@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { settings as SettingsIcon } from 'lucide-react';
+import { Settings as SettingsIcon } from 'lucide-react';
 import { SettingsCard } from '../SettingsCard';
 import { SettingsInput } from '../SettingsInput';
 import { ApiKeyCard } from '../ApiKeyCard';

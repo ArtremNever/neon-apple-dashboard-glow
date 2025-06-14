@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { user } from 'lucide-react';
+import { User } from 'lucide-react';
 import { SettingsCard } from '../SettingsCard';
 import { SettingsInput } from '../SettingsInput';
 import { SettingsState } from '@/hooks/useSettings';
@@ -16,7 +16,7 @@ export const GeneralSettingsTab = ({ settings, onSettingChange }: GeneralSetting
       <SettingsCard
         title="Company Profile"
         description="Manage your company information and preferences"
-        icon={user}
+        icon={User}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SettingsInput
