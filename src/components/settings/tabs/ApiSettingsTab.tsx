@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Key } from 'lucide-react';
+import { settings as SettingsIcon } from 'lucide-react';
 import { SettingsCard } from '../SettingsCard';
 import { SettingsInput } from '../SettingsInput';
 import { ApiKeyCard } from '../ApiKeyCard';
@@ -32,7 +32,7 @@ export const ApiSettingsTab = ({ settings, onSettingChange }: ApiSettingsTabProp
       <SettingsCard
         title="API Keys & Integrations"
         description="Manage your API keys and third-party integrations"
-        icon={Key}
+        icon={SettingsIcon}
       >
         <div className="space-y-4">
           {apiKeys.map((api, index) => (
@@ -54,7 +54,7 @@ export const ApiSettingsTab = ({ settings, onSettingChange }: ApiSettingsTabProp
       <SettingsCard
         title="Data Management"
         description="Configure API limits and data retention policies"
-        icon={Key}
+        icon={SettingsIcon}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SettingsInput

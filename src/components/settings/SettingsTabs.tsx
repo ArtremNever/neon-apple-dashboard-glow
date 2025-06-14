@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Bell, Shield, Key, Palette } from 'lucide-react';
+import { user, bell, settings, zap, display } from 'lucide-react';
 import { SettingsState } from '@/hooks/useSettings';
 import { GeneralSettingsTab } from './tabs/GeneralSettingsTab';
 import { NotificationsSettingsTab } from './tabs/NotificationsSettingsTab';
@@ -19,23 +19,23 @@ export const SettingsTabs = ({ settings, onSettingChange }: SettingsTabsProps) =
     <Tabs defaultValue="general" className="space-y-6">
       <TabsList className="bg-slate-800/50 border-slate-600 grid grid-cols-5 w-full">
         <TabsTrigger value="general" className="data-[state=active]:bg-slate-700">
-          <User className="w-4 h-4 mr-2" />
+          <user className="w-4 h-4 mr-2" />
           General
         </TabsTrigger>
         <TabsTrigger value="notifications" className="data-[state=active]:bg-slate-700">
-          <Bell className="w-4 h-4 mr-2" />
+          <bell className="w-4 h-4 mr-2" />
           Notifications
         </TabsTrigger>
         <TabsTrigger value="security" className="data-[state=active]:bg-slate-700">
-          <Shield className="w-4 h-4 mr-2" />
+          <zap className="w-4 h-4 mr-2" />
           Security
         </TabsTrigger>
         <TabsTrigger value="api" className="data-[state=active]:bg-slate-700">
-          <Key className="w-4 h-4 mr-2" />
+          <settings className="w-4 h-4 mr-2" />
           API & Integrations
         </TabsTrigger>
         <TabsTrigger value="display" className="data-[state=active]:bg-slate-700">
-          <Palette className="w-4 h-4 mr-2" />
+          <display className="w-4 h-4 mr-2" />
           Display
         </TabsTrigger>
       </TabsList>

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Palette, AlertTriangle } from 'lucide-react';
+import { display, AlertTriangle } from 'lucide-react';
 import { SettingsCard } from '../SettingsCard';
 import { SettingsToggle } from '../SettingsToggle';
 import { DangerZone } from '../DangerZone';
@@ -27,7 +27,7 @@ export const DisplaySettingsTab = ({ settings, onSettingChange }: DisplaySetting
       <SettingsCard
         title="Display Preferences"
         description="Customize the appearance and behavior of the interface"
-        icon={Palette}
+        icon={display}
       >
         <div className="space-y-6">
           <SettingsToggle
