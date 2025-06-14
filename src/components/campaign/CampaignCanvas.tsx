@@ -71,16 +71,17 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
-      const newEdge = {
-        ...params,
+      const newEdge: Edge = {
         id: `edge-${params.source}-${params.target}`,
+        source: params.source!,
+        target: params.target!,
+        sourceHandle: params.sourceHandle,
+        targetHandle: params.targetHandle,
         animated: true,
         type: 'smoothstep',
         style: { 
           stroke: '#3b82f6',
-          strokeWidth: 3,
-          strokeDasharray: '10,5',
-          filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.4))'
+          strokeWidth: 2,
         },
         markerEnd: {
           type: 'arrowclosed',
@@ -148,9 +149,16 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
           transform: scale(1.25) !important;
         }
         
+        .react-flow__edge {
+          stroke-dasharray: 10,5 !important;
+          animation: dash 20s linear infinite !important;
+        }
+        
         .react-flow__edge-path {
-          stroke-dasharray: 10,5;
-          animation: dash 20s linear infinite;
+          stroke: #3b82f6 !important;
+          stroke-width: 2 !important;
+          stroke-dasharray: 10,5 !important;
+          animation: dash 20s linear infinite !important;
         }
         
         @keyframes dash {
@@ -160,14 +168,23 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
         }
         
         .react-flow__edge.animated .react-flow__edge-path {
-          stroke-dasharray: 10,5;
-          animation: dash 20s linear infinite;
+          stroke-dasharray: 10,5 !important;
+          animation: dash 20s linear infinite !important;
         }
         
         .react-flow__connection-line {
           stroke: #3b82f6 !important;
-          stroke-width: 3 !important;
+          stroke-width: 2 !important;
           stroke-dasharray: 10,5 !important;
+        }
+
+        .react-flow__edge .react-flow__edge-path {
+          stroke: #3b82f6 !important;
+          stroke-width: 2 !important;
+        }
+
+        .react-flow__edge-text {
+          fill: #ffffff !important;
         }
         `}
       </style>
@@ -191,8 +208,12 @@ const CampaignCanvas: React.FC<CampaignCanvasProps> = ({
         className="bg-transparent"
         connectionLineStyle={{
           stroke: '#3b82f6',
-          strokeWidth: 3,
+          strokeWidth: 2,
           strokeDasharray: '10,5',
+        }}
+        defaultEdgeOptions={{
+          style: { stroke: '#3b82f6', strokeWidth: 2 },
+          markerEnd: { type: 'arrowclosed', color: '#3b82f6' },
         }}
       >
         <Controls className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-xl [&>button]:bg-slate-700/80 [&>button]:border-slate-600/50 [&>button]:text-slate-200 [&>button:hover]:bg-slate-600/80" />
